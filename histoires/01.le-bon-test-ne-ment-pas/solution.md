@@ -1,9 +1,7 @@
-# Solution : Histoire 1 - Le bon test ne ment pas
-Prendre quelques instants pour découvrir la page [`Mutation Testing`](https://xtrem-tdd.netlify.app/flavours/mutation-testing/) si ce n'est pas déjà fait.
-
+# Histoire 1 - Le bon test ne ment pas
 Durant cette étape :
 - Lancer [`stryker`](https://stryker-mutator.io/docs/stryker-net/introduction/)
-    - Analyser les mutants survivants
+  - Analyser les mutants survivants
 - `Tuer` autant de mutants que possible (atteindre un score de mutation d'au moins 90%)
 
 ## Différents mutants
@@ -17,7 +15,7 @@ C'est le cas pour plusieurs classes : `ChasseurInconnu` et `PartieDeChasseServic
 
 `Cela fait-il du sens de vérifier ce genre de strings depuis nos tests ?`
 
-### [Statement mutation](https://stryker-mutator.io/docs/mutation-testing-elements/supported-mutators/#statements)
+### [Removal mutation](https://stryker-mutator.io/docs/stryker-net/mutations/#removal-mutators-statement-block)
 `Stryker` parvient à supprimer certains blocs de code, tels que :
 
 #### Ajout d'événements dans l'agrégat `PartieDeChasse`
@@ -26,7 +24,7 @@ C'est le cas pour plusieurs classes : `ChasseurInconnu` et `PartieDeChasseServic
 #### Sauvegarde via repository
 ![Statement mutation 2](img/statement-mutation2.webp)
 
-### [Linq Mutation](https://stryker-mutator.io/docs/mutation-testing-elements/supported-mutators/#linq)
+### [Linq Mutation](https://stryker-mutator.io/docs/stryker-net/mutations/#linq-methods-linq)
 `Stryker` parvient à changer certaines expressions `LinQ`.
 
 ![LinQ mutation](img/linq-mutation.webp)
