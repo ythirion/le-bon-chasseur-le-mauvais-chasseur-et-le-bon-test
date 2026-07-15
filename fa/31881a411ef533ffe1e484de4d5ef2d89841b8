@@ -1,0 +1,32 @@
+src/Bouchonnois.Tests/Bouchonnois.Tests.csproj
+  s_d45411aba0dfae::t_ac5289773aebc8 13
+src/Bouchonnois.Tests/Service/ScenarioTests.cs
+  s_d45411aba0dfae::t_e66a054632c5b2 91-92
+src/Bouchonnois.Tests/Service/PartieDeChasseServiceTests.cs
+  s_d45411aba0dfae::t_fec6fd5e1de1f8 30-43,56-57,70,87-88,113-126,137-138,158,178-179,199-200,220,240,265-278,289-290,310,330-331,351,371,395-408,419-420,440-441,461-462,486-499,510-511,531,533,553,555,579-592,594,613-620,622,643-656,658,682-695,697,718-731,733,753,755,867-868
+  s_d45411aba0dfae::t_a50bfbb28cf3ec 833-834
+  s_d45411aba0dfae::t_a390df7a329648 784-785
+src/Bouchonnois.Tests/Usings.cs
+  s_d45411aba0dfae::t_a393d5e078b01d 2
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "fa31881a411ef533ffe1e484de4d5ef2d89841b8",
+  "prompts": {},
+  "humans": {
+    "h_0a88d9aba8622a": {
+      "author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_d45411aba0dfae": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "098a10ff-ac3e-4620-806c-ea732582f855",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  }
+}
