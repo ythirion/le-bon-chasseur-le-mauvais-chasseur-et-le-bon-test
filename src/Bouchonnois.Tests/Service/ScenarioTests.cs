@@ -88,9 +88,8 @@ public class ScenarioTests
         time = time.Add(TimeSpan.FromMinutes(30));
         service.TerminerLaPartie(id);
 
-        service.ConsulterStatus(id)
-            .Should()
-            .BeEquivalentTo(
+        Check.That(service.ConsulterStatus(id))
+            .IsEqualTo(
                 @"15:30 - La partie de chasse est terminée, vainqueur : Robert - 3 galinettes
 15:00 - Robert tire sur une galinette
 14:41 - Bernard tire -> T'as plus de balles mon vieux, chasse à la main

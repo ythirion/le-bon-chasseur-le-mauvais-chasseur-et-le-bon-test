@@ -27,20 +27,20 @@ namespace Bouchonnois.Tests.Service
                 );
 
                 var savedPartieDeChasse = repository.SavedPartieDeChasse();
-                savedPartieDeChasse!.Id.Should().Be(id);
-                savedPartieDeChasse.Status.Should().Be(PartieStatus.EnCours);
-                savedPartieDeChasse.Terrain.Nom.Should().Be("Pitibon sur Sauldre");
-                savedPartieDeChasse.Terrain.NbGalinettes.Should().Be(3);
-                savedPartieDeChasse.Chasseurs.Should().HaveCount(3);
-                savedPartieDeChasse.Chasseurs[0].Nom.Should().Be("Dédé");
-                savedPartieDeChasse.Chasseurs[0].BallesRestantes.Should().Be(20);
-                savedPartieDeChasse.Chasseurs[0].NbGalinettes.Should().Be(0);
-                savedPartieDeChasse.Chasseurs[1].Nom.Should().Be("Bernard");
-                savedPartieDeChasse.Chasseurs[1].BallesRestantes.Should().Be(8);
-                savedPartieDeChasse.Chasseurs[1].NbGalinettes.Should().Be(0);
-                savedPartieDeChasse.Chasseurs[2].Nom.Should().Be("Robert");
-                savedPartieDeChasse.Chasseurs[2].BallesRestantes.Should().Be(12);
-                savedPartieDeChasse.Chasseurs[2].NbGalinettes.Should().Be(0);
+                Check.That(savedPartieDeChasse!.Id).IsEqualTo(id);
+                Check.That(savedPartieDeChasse.Status).IsEqualTo(PartieStatus.EnCours);
+                Check.That(savedPartieDeChasse.Terrain.Nom).IsEqualTo("Pitibon sur Sauldre");
+                Check.That(savedPartieDeChasse.Terrain.NbGalinettes).IsEqualTo(3);
+                Check.That(savedPartieDeChasse.Chasseurs).HasSize(3);
+                Check.That(savedPartieDeChasse.Chasseurs[0].Nom).IsEqualTo("Dédé");
+                Check.That(savedPartieDeChasse.Chasseurs[0].BallesRestantes).IsEqualTo(20);
+                Check.That(savedPartieDeChasse.Chasseurs[0].NbGalinettes).IsEqualTo(0);
+                Check.That(savedPartieDeChasse.Chasseurs[1].Nom).IsEqualTo("Bernard");
+                Check.That(savedPartieDeChasse.Chasseurs[1].BallesRestantes).IsEqualTo(8);
+                Check.That(savedPartieDeChasse.Chasseurs[1].NbGalinettes).IsEqualTo(0);
+                Check.That(savedPartieDeChasse.Chasseurs[2].Nom).IsEqualTo("Robert");
+                Check.That(savedPartieDeChasse.Chasseurs[2].BallesRestantes).IsEqualTo(12);
+                Check.That(savedPartieDeChasse.Chasseurs[2].NbGalinettes).IsEqualTo(0);
             }
 
             [Fact]
@@ -53,9 +53,8 @@ namespace Bouchonnois.Tests.Service
 
                 Action demarrerPartieSansChasseurs = () => service.Demarrer(terrainDeChasse, chasseurs);
 
-                demarrerPartieSansChasseurs.Should()
-                    .Throw<ImpossibleDeDémarrerUnePartieSansChasseur>();
-                repository.SavedPartieDeChasse().Should().BeNull();
+                Check.ThatCode(demarrerPartieSansChasseurs).Throws<ImpossibleDeDémarrerUnePartieSansChasseur>();
+                Check.That(repository.SavedPartieDeChasse()).IsNull();
             }
 
             [Fact]
@@ -68,8 +67,7 @@ namespace Bouchonnois.Tests.Service
 
                 Action demarrerPartieSansChasseurs = () => service.Demarrer(terrainDeChasse, chasseurs);
 
-                demarrerPartieSansChasseurs.Should()
-                    .Throw<ImpossibleDeDémarrerUnePartieSansGalinettes>();
+                Check.ThatCode(demarrerPartieSansChasseurs).Throws<ImpossibleDeDémarrerUnePartieSansGalinettes>();
             }
 
             [Fact]
@@ -86,9 +84,8 @@ namespace Bouchonnois.Tests.Service
 
                 Action demarrerPartieAvecChasseurSansBalle = () => service.Demarrer(terrainDeChasse, chasseurs);
 
-                demarrerPartieAvecChasseurSansBalle.Should()
-                    .Throw<ImpossibleDeDémarrerUnePartieAvecUnChasseurSansBalle>();
-                repository.SavedPartieDeChasse().Should().BeNull();
+                Check.ThatCode(demarrerPartieAvecChasseurSansBalle).Throws<ImpossibleDeDémarrerUnePartieAvecUnChasseurSansBalle>();
+                Check.That(repository.SavedPartieDeChasse()).IsNull();
             }
         }
 
@@ -113,20 +110,20 @@ namespace Bouchonnois.Tests.Service
                 service.TirerSurUneGalinette(id, "Bernard");
 
                 var savedPartieDeChasse = repository.SavedPartieDeChasse();
-                savedPartieDeChasse!.Id.Should().Be(id);
-                savedPartieDeChasse.Status.Should().Be(PartieStatus.EnCours);
-                savedPartieDeChasse.Terrain.Nom.Should().Be("Pitibon sur Sauldre");
-                savedPartieDeChasse.Terrain.NbGalinettes.Should().Be(2);
-                savedPartieDeChasse.Chasseurs.Should().HaveCount(3);
-                savedPartieDeChasse.Chasseurs[0].Nom.Should().Be("Dédé");
-                savedPartieDeChasse.Chasseurs[0].BallesRestantes.Should().Be(20);
-                savedPartieDeChasse.Chasseurs[0].NbGalinettes.Should().Be(0);
-                savedPartieDeChasse.Chasseurs[1].Nom.Should().Be("Bernard");
-                savedPartieDeChasse.Chasseurs[1].BallesRestantes.Should().Be(7);
-                savedPartieDeChasse.Chasseurs[1].NbGalinettes.Should().Be(1);
-                savedPartieDeChasse.Chasseurs[2].Nom.Should().Be("Robert");
-                savedPartieDeChasse.Chasseurs[2].BallesRestantes.Should().Be(12);
-                savedPartieDeChasse.Chasseurs[2].NbGalinettes.Should().Be(0);
+                Check.That(savedPartieDeChasse!.Id).IsEqualTo(id);
+                Check.That(savedPartieDeChasse.Status).IsEqualTo(PartieStatus.EnCours);
+                Check.That(savedPartieDeChasse.Terrain.Nom).IsEqualTo("Pitibon sur Sauldre");
+                Check.That(savedPartieDeChasse.Terrain.NbGalinettes).IsEqualTo(2);
+                Check.That(savedPartieDeChasse.Chasseurs).HasSize(3);
+                Check.That(savedPartieDeChasse.Chasseurs[0].Nom).IsEqualTo("Dédé");
+                Check.That(savedPartieDeChasse.Chasseurs[0].BallesRestantes).IsEqualTo(20);
+                Check.That(savedPartieDeChasse.Chasseurs[0].NbGalinettes).IsEqualTo(0);
+                Check.That(savedPartieDeChasse.Chasseurs[1].Nom).IsEqualTo("Bernard");
+                Check.That(savedPartieDeChasse.Chasseurs[1].BallesRestantes).IsEqualTo(7);
+                Check.That(savedPartieDeChasse.Chasseurs[1].NbGalinettes).IsEqualTo(1);
+                Check.That(savedPartieDeChasse.Chasseurs[2].Nom).IsEqualTo("Robert");
+                Check.That(savedPartieDeChasse.Chasseurs[2].BallesRestantes).IsEqualTo(12);
+                Check.That(savedPartieDeChasse.Chasseurs[2].NbGalinettes).IsEqualTo(0);
             }
 
             [Fact]
@@ -137,9 +134,8 @@ namespace Bouchonnois.Tests.Service
                 var service = new PartieDeChasseService(repository, () => DateTime.Now);
                 var tirerQuandPartieExistePas = () => service.TirerSurUneGalinette(id, "Bernard");
 
-                tirerQuandPartieExistePas.Should()
-                    .Throw<LaPartieDeChasseNexistePas>();
-                repository.SavedPartieDeChasse().Should().BeNull();
+                Check.ThatCode(tirerQuandPartieExistePas).Throws<LaPartieDeChasseNexistePas>();
+                Check.That(repository.SavedPartieDeChasse()).IsNull();
             }
 
             [Fact]
@@ -159,8 +155,7 @@ namespace Bouchonnois.Tests.Service
                 var service = new PartieDeChasseService(repository, () => DateTime.Now);
                 var tirerSansBalle = () => service.TirerSurUneGalinette(id, "Bernard");
 
-                tirerSansBalle.Should()
-                    .Throw<TasPlusDeBallesMonVieuxChasseALaMain>();
+                Check.ThatCode(tirerSansBalle).Throws<TasPlusDeBallesMonVieuxChasseALaMain>();
             }
 
             [Fact]
@@ -180,9 +175,8 @@ namespace Bouchonnois.Tests.Service
                 var service = new PartieDeChasseService(repository, () => DateTime.Now);
                 var tirerAlorsQuePasDeGalinettes = () => service.TirerSurUneGalinette(id, "Bernard");
 
-                tirerAlorsQuePasDeGalinettes.Should()
-                    .Throw<TasTropPicoléMonVieuxTasRienTouché>();
-                repository.SavedPartieDeChasse().Should().BeNull();
+                Check.ThatCode(tirerAlorsQuePasDeGalinettes).Throws<TasTropPicoléMonVieuxTasRienTouché>();
+                Check.That(repository.SavedPartieDeChasse()).IsNull();
             }
 
             [Fact]
@@ -202,9 +196,8 @@ namespace Bouchonnois.Tests.Service
                 var service = new PartieDeChasseService(repository, () => DateTime.Now);
                 var chasseurInconnuVeutTirer = () => service.TirerSurUneGalinette(id, "Chasseur inconnu");
 
-                chasseurInconnuVeutTirer.Should()
-                    .Throw<ChasseurInconnu>();
-                repository.SavedPartieDeChasse().Should().BeNull();
+                Check.ThatCode(chasseurInconnuVeutTirer).Throws<ChasseurInconnu>();
+                Check.That(repository.SavedPartieDeChasse()).IsNull();
             }
 
             [Fact]
@@ -224,8 +217,7 @@ namespace Bouchonnois.Tests.Service
                 var service = new PartieDeChasseService(repository, () => DateTime.Now);
                 var tirerEnPleinApéro = () => service.TirerSurUneGalinette(id, "Chasseur inconnu");
 
-                tirerEnPleinApéro.Should()
-                    .Throw<OnTirePasPendantLapéroCestSacré>();
+                Check.ThatCode(tirerEnPleinApéro).Throws<OnTirePasPendantLapéroCestSacré>();
             }
 
             [Fact]
@@ -245,8 +237,7 @@ namespace Bouchonnois.Tests.Service
                 var service = new PartieDeChasseService(repository, () => DateTime.Now);
                 var tirerQuandTerminée = () => service.TirerSurUneGalinette(id, "Chasseur inconnu");
 
-                tirerQuandTerminée.Should()
-                    .Throw<OnTirePasQuandLaPartieEstTerminée>();
+                Check.ThatCode(tirerQuandTerminée).Throws<OnTirePasQuandLaPartieEstTerminée>();
             }
         }
 
@@ -271,20 +262,20 @@ namespace Bouchonnois.Tests.Service
                 service.Tirer(id, "Bernard");
 
                 var savedPartieDeChasse = repository.SavedPartieDeChasse();
-                savedPartieDeChasse!.Id.Should().Be(id);
-                savedPartieDeChasse.Status.Should().Be(PartieStatus.EnCours);
-                savedPartieDeChasse.Terrain.Nom.Should().Be("Pitibon sur Sauldre");
-                savedPartieDeChasse.Terrain.NbGalinettes.Should().Be(3);
-                savedPartieDeChasse.Chasseurs.Should().HaveCount(3);
-                savedPartieDeChasse.Chasseurs[0].Nom.Should().Be("Dédé");
-                savedPartieDeChasse.Chasseurs[0].BallesRestantes.Should().Be(20);
-                savedPartieDeChasse.Chasseurs[0].NbGalinettes.Should().Be(0);
-                savedPartieDeChasse.Chasseurs[1].Nom.Should().Be("Bernard");
-                savedPartieDeChasse.Chasseurs[1].BallesRestantes.Should().Be(7);
-                savedPartieDeChasse.Chasseurs[1].NbGalinettes.Should().Be(0);
-                savedPartieDeChasse.Chasseurs[2].Nom.Should().Be("Robert");
-                savedPartieDeChasse.Chasseurs[2].BallesRestantes.Should().Be(12);
-                savedPartieDeChasse.Chasseurs[2].NbGalinettes.Should().Be(0);
+                Check.That(savedPartieDeChasse!.Id).IsEqualTo(id);
+                Check.That(savedPartieDeChasse.Status).IsEqualTo(PartieStatus.EnCours);
+                Check.That(savedPartieDeChasse.Terrain.Nom).IsEqualTo("Pitibon sur Sauldre");
+                Check.That(savedPartieDeChasse.Terrain.NbGalinettes).IsEqualTo(3);
+                Check.That(savedPartieDeChasse.Chasseurs).HasSize(3);
+                Check.That(savedPartieDeChasse.Chasseurs[0].Nom).IsEqualTo("Dédé");
+                Check.That(savedPartieDeChasse.Chasseurs[0].BallesRestantes).IsEqualTo(20);
+                Check.That(savedPartieDeChasse.Chasseurs[0].NbGalinettes).IsEqualTo(0);
+                Check.That(savedPartieDeChasse.Chasseurs[1].Nom).IsEqualTo("Bernard");
+                Check.That(savedPartieDeChasse.Chasseurs[1].BallesRestantes).IsEqualTo(7);
+                Check.That(savedPartieDeChasse.Chasseurs[1].NbGalinettes).IsEqualTo(0);
+                Check.That(savedPartieDeChasse.Chasseurs[2].Nom).IsEqualTo("Robert");
+                Check.That(savedPartieDeChasse.Chasseurs[2].BallesRestantes).IsEqualTo(12);
+                Check.That(savedPartieDeChasse.Chasseurs[2].NbGalinettes).IsEqualTo(0);
             }
 
             [Fact]
@@ -295,9 +286,8 @@ namespace Bouchonnois.Tests.Service
                 var service = new PartieDeChasseService(repository, () => DateTime.Now);
                 var tirerQuandPartieExistePas = () => service.Tirer(id, "Bernard");
 
-                tirerQuandPartieExistePas.Should()
-                    .Throw<LaPartieDeChasseNexistePas>();
-                repository.SavedPartieDeChasse().Should().BeNull();
+                Check.ThatCode(tirerQuandPartieExistePas).Throws<LaPartieDeChasseNexistePas>();
+                Check.That(repository.SavedPartieDeChasse()).IsNull();
             }
 
             [Fact]
@@ -317,8 +307,7 @@ namespace Bouchonnois.Tests.Service
                 var service = new PartieDeChasseService(repository, () => DateTime.Now);
                 var tirerSansBalle = () => service.Tirer(id, "Bernard");
 
-                tirerSansBalle.Should()
-                    .Throw<TasPlusDeBallesMonVieuxChasseALaMain>();
+                Check.ThatCode(tirerSansBalle).Throws<TasPlusDeBallesMonVieuxChasseALaMain>();
             }
 
             [Fact]
@@ -338,9 +327,8 @@ namespace Bouchonnois.Tests.Service
                 var service = new PartieDeChasseService(repository, () => DateTime.Now);
                 var chasseurInconnuVeutTirer = () => service.Tirer(id, "Chasseur inconnu");
 
-                chasseurInconnuVeutTirer.Should()
-                    .Throw<ChasseurInconnu>();
-                repository.SavedPartieDeChasse().Should().BeNull();
+                Check.ThatCode(chasseurInconnuVeutTirer).Throws<ChasseurInconnu>();
+                Check.That(repository.SavedPartieDeChasse()).IsNull();
             }
 
             [Fact]
@@ -360,8 +348,7 @@ namespace Bouchonnois.Tests.Service
                 var service = new PartieDeChasseService(repository, () => DateTime.Now);
                 var tirerEnPleinApéro = () => service.Tirer(id, "Chasseur inconnu");
 
-                tirerEnPleinApéro.Should()
-                    .Throw<OnTirePasPendantLapéroCestSacré>();
+                Check.ThatCode(tirerEnPleinApéro).Throws<OnTirePasPendantLapéroCestSacré>();
             }
 
             [Fact]
@@ -381,8 +368,7 @@ namespace Bouchonnois.Tests.Service
                 var service = new PartieDeChasseService(repository, () => DateTime.Now);
                 var tirerQuandTerminée = () => service.Tirer(id, "Chasseur inconnu");
 
-                tirerQuandTerminée.Should()
-                    .Throw<OnTirePasQuandLaPartieEstTerminée>();
+                Check.ThatCode(tirerQuandTerminée).Throws<OnTirePasQuandLaPartieEstTerminée>();
             }
         }
 
@@ -406,20 +392,20 @@ namespace Bouchonnois.Tests.Service
                 service.PrendreLapéro(id);
 
                 var savedPartieDeChasse = repository.SavedPartieDeChasse();
-                savedPartieDeChasse!.Id.Should().Be(id);
-                savedPartieDeChasse.Status.Should().Be(PartieStatus.Apéro);
-                savedPartieDeChasse.Terrain.Nom.Should().Be("Pitibon sur Sauldre");
-                savedPartieDeChasse.Terrain.NbGalinettes.Should().Be(3);
-                savedPartieDeChasse.Chasseurs.Should().HaveCount(3);
-                savedPartieDeChasse.Chasseurs[0].Nom.Should().Be("Dédé");
-                savedPartieDeChasse.Chasseurs[0].BallesRestantes.Should().Be(20);
-                savedPartieDeChasse.Chasseurs[0].NbGalinettes.Should().Be(0);
-                savedPartieDeChasse.Chasseurs[1].Nom.Should().Be("Bernard");
-                savedPartieDeChasse.Chasseurs[1].BallesRestantes.Should().Be(8);
-                savedPartieDeChasse.Chasseurs[1].NbGalinettes.Should().Be(0);
-                savedPartieDeChasse.Chasseurs[2].Nom.Should().Be("Robert");
-                savedPartieDeChasse.Chasseurs[2].BallesRestantes.Should().Be(12);
-                savedPartieDeChasse.Chasseurs[2].NbGalinettes.Should().Be(0);
+                Check.That(savedPartieDeChasse!.Id).IsEqualTo(id);
+                Check.That(savedPartieDeChasse.Status).IsEqualTo(PartieStatus.Apéro);
+                Check.That(savedPartieDeChasse.Terrain.Nom).IsEqualTo("Pitibon sur Sauldre");
+                Check.That(savedPartieDeChasse.Terrain.NbGalinettes).IsEqualTo(3);
+                Check.That(savedPartieDeChasse.Chasseurs).HasSize(3);
+                Check.That(savedPartieDeChasse.Chasseurs[0].Nom).IsEqualTo("Dédé");
+                Check.That(savedPartieDeChasse.Chasseurs[0].BallesRestantes).IsEqualTo(20);
+                Check.That(savedPartieDeChasse.Chasseurs[0].NbGalinettes).IsEqualTo(0);
+                Check.That(savedPartieDeChasse.Chasseurs[1].Nom).IsEqualTo("Bernard");
+                Check.That(savedPartieDeChasse.Chasseurs[1].BallesRestantes).IsEqualTo(8);
+                Check.That(savedPartieDeChasse.Chasseurs[1].NbGalinettes).IsEqualTo(0);
+                Check.That(savedPartieDeChasse.Chasseurs[2].Nom).IsEqualTo("Robert");
+                Check.That(savedPartieDeChasse.Chasseurs[2].BallesRestantes).IsEqualTo(12);
+                Check.That(savedPartieDeChasse.Chasseurs[2].NbGalinettes).IsEqualTo(0);
             }
 
             [Fact]
@@ -430,9 +416,8 @@ namespace Bouchonnois.Tests.Service
                 var service = new PartieDeChasseService(repository, () => DateTime.Now);
                 var apéroQuandPartieExistePas = () => service.PrendreLapéro(id);
 
-                apéroQuandPartieExistePas.Should()
-                    .Throw<LaPartieDeChasseNexistePas>();
-                repository.SavedPartieDeChasse().Should().BeNull();
+                Check.ThatCode(apéroQuandPartieExistePas).Throws<LaPartieDeChasseNexistePas>();
+                Check.That(repository.SavedPartieDeChasse()).IsNull();
             }
 
             [Fact]
@@ -452,9 +437,8 @@ namespace Bouchonnois.Tests.Service
                 var service = new PartieDeChasseService(repository, () => DateTime.Now);
                 var prendreLApéroQuandOnPrendDéjàLapéro = () => service.PrendreLapéro(id);
 
-                prendreLApéroQuandOnPrendDéjàLapéro.Should()
-                    .Throw<OnEstDéjàEnTrainDePrendreLapéro>();
-                repository.SavedPartieDeChasse().Should().BeNull();
+                Check.ThatCode(prendreLApéroQuandOnPrendDéjàLapéro).Throws<OnEstDéjàEnTrainDePrendreLapéro>();
+                Check.That(repository.SavedPartieDeChasse()).IsNull();
             }
 
             [Fact]
@@ -474,9 +458,8 @@ namespace Bouchonnois.Tests.Service
                 var service = new PartieDeChasseService(repository, () => DateTime.Now);
                 var prendreLapéroQuandTerminée = () => service.PrendreLapéro(id);
 
-                prendreLapéroQuandTerminée.Should()
-                    .Throw<OnPrendPasLapéroQuandLaPartieEstTerminée>();
-                repository.SavedPartieDeChasse().Should().BeNull();
+                Check.ThatCode(prendreLapéroQuandTerminée).Throws<OnPrendPasLapéroQuandLaPartieEstTerminée>();
+                Check.That(repository.SavedPartieDeChasse()).IsNull();
             }
         }
 
@@ -500,20 +483,20 @@ namespace Bouchonnois.Tests.Service
                 service.ReprendreLaPartie(id);
 
                 var savedPartieDeChasse = repository.SavedPartieDeChasse();
-                savedPartieDeChasse!.Id.Should().Be(id);
-                savedPartieDeChasse.Status.Should().Be(PartieStatus.EnCours);
-                savedPartieDeChasse.Terrain.Nom.Should().Be("Pitibon sur Sauldre");
-                savedPartieDeChasse.Terrain.NbGalinettes.Should().Be(3);
-                savedPartieDeChasse.Chasseurs.Should().HaveCount(3);
-                savedPartieDeChasse.Chasseurs[0].Nom.Should().Be("Dédé");
-                savedPartieDeChasse.Chasseurs[0].BallesRestantes.Should().Be(20);
-                savedPartieDeChasse.Chasseurs[0].NbGalinettes.Should().Be(0);
-                savedPartieDeChasse.Chasseurs[1].Nom.Should().Be("Bernard");
-                savedPartieDeChasse.Chasseurs[1].BallesRestantes.Should().Be(8);
-                savedPartieDeChasse.Chasseurs[1].NbGalinettes.Should().Be(0);
-                savedPartieDeChasse.Chasseurs[2].Nom.Should().Be("Robert");
-                savedPartieDeChasse.Chasseurs[2].BallesRestantes.Should().Be(12);
-                savedPartieDeChasse.Chasseurs[2].NbGalinettes.Should().Be(0);
+                Check.That(savedPartieDeChasse!.Id).IsEqualTo(id);
+                Check.That(savedPartieDeChasse.Status).IsEqualTo(PartieStatus.EnCours);
+                Check.That(savedPartieDeChasse.Terrain.Nom).IsEqualTo("Pitibon sur Sauldre");
+                Check.That(savedPartieDeChasse.Terrain.NbGalinettes).IsEqualTo(3);
+                Check.That(savedPartieDeChasse.Chasseurs).HasSize(3);
+                Check.That(savedPartieDeChasse.Chasseurs[0].Nom).IsEqualTo("Dédé");
+                Check.That(savedPartieDeChasse.Chasseurs[0].BallesRestantes).IsEqualTo(20);
+                Check.That(savedPartieDeChasse.Chasseurs[0].NbGalinettes).IsEqualTo(0);
+                Check.That(savedPartieDeChasse.Chasseurs[1].Nom).IsEqualTo("Bernard");
+                Check.That(savedPartieDeChasse.Chasseurs[1].BallesRestantes).IsEqualTo(8);
+                Check.That(savedPartieDeChasse.Chasseurs[1].NbGalinettes).IsEqualTo(0);
+                Check.That(savedPartieDeChasse.Chasseurs[2].Nom).IsEqualTo("Robert");
+                Check.That(savedPartieDeChasse.Chasseurs[2].BallesRestantes).IsEqualTo(12);
+                Check.That(savedPartieDeChasse.Chasseurs[2].NbGalinettes).IsEqualTo(0);
             }
 
             [Fact]
@@ -524,9 +507,8 @@ namespace Bouchonnois.Tests.Service
                 var service = new PartieDeChasseService(repository, () => DateTime.Now);
                 var reprendrePartieQuandPartieExistePas = () => service.ReprendreLaPartie(id);
 
-                reprendrePartieQuandPartieExistePas.Should()
-                    .Throw<LaPartieDeChasseNexistePas>();
-                repository.SavedPartieDeChasse().Should().BeNull();
+                Check.ThatCode(reprendrePartieQuandPartieExistePas).Throws<LaPartieDeChasseNexistePas>();
+                Check.That(repository.SavedPartieDeChasse()).IsNull();
             }
 
             [Fact]
@@ -546,10 +528,9 @@ namespace Bouchonnois.Tests.Service
                 var service = new PartieDeChasseService(repository, () => DateTime.Now);
                 var reprendreLaPartieQuandChasseEnCours = () => service.ReprendreLaPartie(id);
 
-                reprendreLaPartieQuandChasseEnCours.Should()
-                    .Throw<LaChasseEstDéjàEnCours>();
+                Check.ThatCode(reprendreLaPartieQuandChasseEnCours).Throws<LaChasseEstDéjàEnCours>();
 
-                repository.SavedPartieDeChasse().Should().BeNull();
+                Check.That(repository.SavedPartieDeChasse()).IsNull();
             }
 
             [Fact]
@@ -569,10 +550,9 @@ namespace Bouchonnois.Tests.Service
                 var service = new PartieDeChasseService(repository, () => DateTime.Now);
                 var prendreLapéroQuandTerminée = () => service.ReprendreLaPartie(id);
 
-                prendreLapéroQuandTerminée.Should()
-                    .Throw<QuandCestFiniCestFini>();
+                Check.ThatCode(prendreLapéroQuandTerminée).Throws<QuandCestFiniCestFini>();
 
-                repository.SavedPartieDeChasse().Should().BeNull();
+                Check.That(repository.SavedPartieDeChasse()).IsNull();
             }
         }
 
@@ -596,22 +576,22 @@ namespace Bouchonnois.Tests.Service
                 var meilleurChasseur = service.TerminerLaPartie(id);
 
                 var savedPartieDeChasse = repository.SavedPartieDeChasse();
-                savedPartieDeChasse!.Id.Should().Be(id);
-                savedPartieDeChasse.Status.Should().Be(PartieStatus.Terminée);
-                savedPartieDeChasse.Terrain.Nom.Should().Be("Pitibon sur Sauldre");
-                savedPartieDeChasse.Terrain.NbGalinettes.Should().Be(3);
-                savedPartieDeChasse.Chasseurs.Should().HaveCount(3);
-                savedPartieDeChasse.Chasseurs[0].Nom.Should().Be("Dédé");
-                savedPartieDeChasse.Chasseurs[0].BallesRestantes.Should().Be(20);
-                savedPartieDeChasse.Chasseurs[0].NbGalinettes.Should().Be(0);
-                savedPartieDeChasse.Chasseurs[1].Nom.Should().Be("Bernard");
-                savedPartieDeChasse.Chasseurs[1].BallesRestantes.Should().Be(8);
-                savedPartieDeChasse.Chasseurs[1].NbGalinettes.Should().Be(0);
-                savedPartieDeChasse.Chasseurs[2].Nom.Should().Be("Robert");
-                savedPartieDeChasse.Chasseurs[2].BallesRestantes.Should().Be(12);
-                savedPartieDeChasse.Chasseurs[2].NbGalinettes.Should().Be(2);
+                Check.That(savedPartieDeChasse!.Id).IsEqualTo(id);
+                Check.That(savedPartieDeChasse.Status).IsEqualTo(PartieStatus.Terminée);
+                Check.That(savedPartieDeChasse.Terrain.Nom).IsEqualTo("Pitibon sur Sauldre");
+                Check.That(savedPartieDeChasse.Terrain.NbGalinettes).IsEqualTo(3);
+                Check.That(savedPartieDeChasse.Chasseurs).HasSize(3);
+                Check.That(savedPartieDeChasse.Chasseurs[0].Nom).IsEqualTo("Dédé");
+                Check.That(savedPartieDeChasse.Chasseurs[0].BallesRestantes).IsEqualTo(20);
+                Check.That(savedPartieDeChasse.Chasseurs[0].NbGalinettes).IsEqualTo(0);
+                Check.That(savedPartieDeChasse.Chasseurs[1].Nom).IsEqualTo("Bernard");
+                Check.That(savedPartieDeChasse.Chasseurs[1].BallesRestantes).IsEqualTo(8);
+                Check.That(savedPartieDeChasse.Chasseurs[1].NbGalinettes).IsEqualTo(0);
+                Check.That(savedPartieDeChasse.Chasseurs[2].Nom).IsEqualTo("Robert");
+                Check.That(savedPartieDeChasse.Chasseurs[2].BallesRestantes).IsEqualTo(12);
+                Check.That(savedPartieDeChasse.Chasseurs[2].NbGalinettes).IsEqualTo(2);
 
-                meilleurChasseur.Should().Be("Robert");
+                Check.That(meilleurChasseur).IsEqualTo("Robert");
             }
 
             [Fact]
@@ -630,16 +610,16 @@ namespace Bouchonnois.Tests.Service
                 var meilleurChasseur = service.TerminerLaPartie(id);
 
                 var savedPartieDeChasse = repository.SavedPartieDeChasse();
-                savedPartieDeChasse!.Id.Should().Be(id);
-                savedPartieDeChasse.Status.Should().Be(PartieStatus.Terminée);
-                savedPartieDeChasse.Terrain.Nom.Should().Be("Pitibon sur Sauldre");
-                savedPartieDeChasse.Terrain.NbGalinettes.Should().Be(3);
-                savedPartieDeChasse.Chasseurs.Should().HaveCount(1);
-                savedPartieDeChasse.Chasseurs[0].Nom.Should().Be("Robert");
-                savedPartieDeChasse.Chasseurs[0].BallesRestantes.Should().Be(12);
-                savedPartieDeChasse.Chasseurs[0].NbGalinettes.Should().Be(2);
+                Check.That(savedPartieDeChasse!.Id).IsEqualTo(id);
+                Check.That(savedPartieDeChasse.Status).IsEqualTo(PartieStatus.Terminée);
+                Check.That(savedPartieDeChasse.Terrain.Nom).IsEqualTo("Pitibon sur Sauldre");
+                Check.That(savedPartieDeChasse.Terrain.NbGalinettes).IsEqualTo(3);
+                Check.That(savedPartieDeChasse.Chasseurs).HasSize(1);
+                Check.That(savedPartieDeChasse.Chasseurs[0].Nom).IsEqualTo("Robert");
+                Check.That(savedPartieDeChasse.Chasseurs[0].BallesRestantes).IsEqualTo(12);
+                Check.That(savedPartieDeChasse.Chasseurs[0].NbGalinettes).IsEqualTo(2);
 
-                meilleurChasseur.Should().Be("Robert");
+                Check.That(meilleurChasseur).IsEqualTo("Robert");
             }
 
             [Fact]
@@ -660,22 +640,22 @@ namespace Bouchonnois.Tests.Service
                 var meilleurChasseur = service.TerminerLaPartie(id);
 
                 var savedPartieDeChasse = repository.SavedPartieDeChasse();
-                savedPartieDeChasse!.Id.Should().Be(id);
-                savedPartieDeChasse.Status.Should().Be(PartieStatus.Terminée);
-                savedPartieDeChasse.Terrain.Nom.Should().Be("Pitibon sur Sauldre");
-                savedPartieDeChasse.Terrain.NbGalinettes.Should().Be(3);
-                savedPartieDeChasse.Chasseurs.Should().HaveCount(3);
-                savedPartieDeChasse.Chasseurs[0].Nom.Should().Be("Dédé");
-                savedPartieDeChasse.Chasseurs[0].BallesRestantes.Should().Be(20);
-                savedPartieDeChasse.Chasseurs[0].NbGalinettes.Should().Be(2);
-                savedPartieDeChasse.Chasseurs[1].Nom.Should().Be("Bernard");
-                savedPartieDeChasse.Chasseurs[1].BallesRestantes.Should().Be(8);
-                savedPartieDeChasse.Chasseurs[1].NbGalinettes.Should().Be(2);
-                savedPartieDeChasse.Chasseurs[2].Nom.Should().Be("Robert");
-                savedPartieDeChasse.Chasseurs[2].BallesRestantes.Should().Be(12);
-                savedPartieDeChasse.Chasseurs[2].NbGalinettes.Should().Be(0);
+                Check.That(savedPartieDeChasse!.Id).IsEqualTo(id);
+                Check.That(savedPartieDeChasse.Status).IsEqualTo(PartieStatus.Terminée);
+                Check.That(savedPartieDeChasse.Terrain.Nom).IsEqualTo("Pitibon sur Sauldre");
+                Check.That(savedPartieDeChasse.Terrain.NbGalinettes).IsEqualTo(3);
+                Check.That(savedPartieDeChasse.Chasseurs).HasSize(3);
+                Check.That(savedPartieDeChasse.Chasseurs[0].Nom).IsEqualTo("Dédé");
+                Check.That(savedPartieDeChasse.Chasseurs[0].BallesRestantes).IsEqualTo(20);
+                Check.That(savedPartieDeChasse.Chasseurs[0].NbGalinettes).IsEqualTo(2);
+                Check.That(savedPartieDeChasse.Chasseurs[1].Nom).IsEqualTo("Bernard");
+                Check.That(savedPartieDeChasse.Chasseurs[1].BallesRestantes).IsEqualTo(8);
+                Check.That(savedPartieDeChasse.Chasseurs[1].NbGalinettes).IsEqualTo(2);
+                Check.That(savedPartieDeChasse.Chasseurs[2].Nom).IsEqualTo("Robert");
+                Check.That(savedPartieDeChasse.Chasseurs[2].BallesRestantes).IsEqualTo(12);
+                Check.That(savedPartieDeChasse.Chasseurs[2].NbGalinettes).IsEqualTo(0);
 
-                meilleurChasseur.Should().Be("Dédé, Bernard");
+                Check.That(meilleurChasseur).IsEqualTo("Dédé, Bernard");
             }
 
             [Fact]
@@ -699,22 +679,22 @@ namespace Bouchonnois.Tests.Service
                 var meilleurChasseur = service.TerminerLaPartie(id);
 
                 var savedPartieDeChasse = repository.SavedPartieDeChasse();
-                savedPartieDeChasse!.Id.Should().Be(id);
-                savedPartieDeChasse.Status.Should().Be(PartieStatus.Terminée);
-                savedPartieDeChasse.Terrain.Nom.Should().Be("Pitibon sur Sauldre");
-                savedPartieDeChasse.Terrain.NbGalinettes.Should().Be(3);
-                savedPartieDeChasse.Chasseurs.Should().HaveCount(3);
-                savedPartieDeChasse.Chasseurs[0].Nom.Should().Be("Dédé");
-                savedPartieDeChasse.Chasseurs[0].BallesRestantes.Should().Be(20);
-                savedPartieDeChasse.Chasseurs[0].NbGalinettes.Should().Be(0);
-                savedPartieDeChasse.Chasseurs[1].Nom.Should().Be("Bernard");
-                savedPartieDeChasse.Chasseurs[1].BallesRestantes.Should().Be(8);
-                savedPartieDeChasse.Chasseurs[1].NbGalinettes.Should().Be(0);
-                savedPartieDeChasse.Chasseurs[2].Nom.Should().Be("Robert");
-                savedPartieDeChasse.Chasseurs[2].BallesRestantes.Should().Be(12);
-                savedPartieDeChasse.Chasseurs[2].NbGalinettes.Should().Be(0);
+                Check.That(savedPartieDeChasse!.Id).IsEqualTo(id);
+                Check.That(savedPartieDeChasse.Status).IsEqualTo(PartieStatus.Terminée);
+                Check.That(savedPartieDeChasse.Terrain.Nom).IsEqualTo("Pitibon sur Sauldre");
+                Check.That(savedPartieDeChasse.Terrain.NbGalinettes).IsEqualTo(3);
+                Check.That(savedPartieDeChasse.Chasseurs).HasSize(3);
+                Check.That(savedPartieDeChasse.Chasseurs[0].Nom).IsEqualTo("Dédé");
+                Check.That(savedPartieDeChasse.Chasseurs[0].BallesRestantes).IsEqualTo(20);
+                Check.That(savedPartieDeChasse.Chasseurs[0].NbGalinettes).IsEqualTo(0);
+                Check.That(savedPartieDeChasse.Chasseurs[1].Nom).IsEqualTo("Bernard");
+                Check.That(savedPartieDeChasse.Chasseurs[1].BallesRestantes).IsEqualTo(8);
+                Check.That(savedPartieDeChasse.Chasseurs[1].NbGalinettes).IsEqualTo(0);
+                Check.That(savedPartieDeChasse.Chasseurs[2].Nom).IsEqualTo("Robert");
+                Check.That(savedPartieDeChasse.Chasseurs[2].BallesRestantes).IsEqualTo(12);
+                Check.That(savedPartieDeChasse.Chasseurs[2].NbGalinettes).IsEqualTo(0);
 
-                meilleurChasseur.Should().Be("Brocouille");
+                Check.That(meilleurChasseur).IsEqualTo("Brocouille");
             }
 
             [Fact]
@@ -735,22 +715,22 @@ namespace Bouchonnois.Tests.Service
                 var meilleurChasseur = service.TerminerLaPartie(id);
 
                 var savedPartieDeChasse = repository.SavedPartieDeChasse();
-                savedPartieDeChasse!.Id.Should().Be(id);
-                savedPartieDeChasse.Status.Should().Be(PartieStatus.Terminée);
-                savedPartieDeChasse.Terrain.Nom.Should().Be("Pitibon sur Sauldre");
-                savedPartieDeChasse.Terrain.NbGalinettes.Should().Be(3);
-                savedPartieDeChasse.Chasseurs.Should().HaveCount(3);
-                savedPartieDeChasse.Chasseurs[0].Nom.Should().Be("Dédé");
-                savedPartieDeChasse.Chasseurs[0].BallesRestantes.Should().Be(20);
-                savedPartieDeChasse.Chasseurs[0].NbGalinettes.Should().Be(3);
-                savedPartieDeChasse.Chasseurs[1].Nom.Should().Be("Bernard");
-                savedPartieDeChasse.Chasseurs[1].BallesRestantes.Should().Be(8);
-                savedPartieDeChasse.Chasseurs[1].NbGalinettes.Should().Be(3);
-                savedPartieDeChasse.Chasseurs[2].Nom.Should().Be("Robert");
-                savedPartieDeChasse.Chasseurs[2].BallesRestantes.Should().Be(12);
-                savedPartieDeChasse.Chasseurs[2].NbGalinettes.Should().Be(3);
+                Check.That(savedPartieDeChasse!.Id).IsEqualTo(id);
+                Check.That(savedPartieDeChasse.Status).IsEqualTo(PartieStatus.Terminée);
+                Check.That(savedPartieDeChasse.Terrain.Nom).IsEqualTo("Pitibon sur Sauldre");
+                Check.That(savedPartieDeChasse.Terrain.NbGalinettes).IsEqualTo(3);
+                Check.That(savedPartieDeChasse.Chasseurs).HasSize(3);
+                Check.That(savedPartieDeChasse.Chasseurs[0].Nom).IsEqualTo("Dédé");
+                Check.That(savedPartieDeChasse.Chasseurs[0].BallesRestantes).IsEqualTo(20);
+                Check.That(savedPartieDeChasse.Chasseurs[0].NbGalinettes).IsEqualTo(3);
+                Check.That(savedPartieDeChasse.Chasseurs[1].Nom).IsEqualTo("Bernard");
+                Check.That(savedPartieDeChasse.Chasseurs[1].BallesRestantes).IsEqualTo(8);
+                Check.That(savedPartieDeChasse.Chasseurs[1].NbGalinettes).IsEqualTo(3);
+                Check.That(savedPartieDeChasse.Chasseurs[2].Nom).IsEqualTo("Robert");
+                Check.That(savedPartieDeChasse.Chasseurs[2].BallesRestantes).IsEqualTo(12);
+                Check.That(savedPartieDeChasse.Chasseurs[2].NbGalinettes).IsEqualTo(3);
 
-                meilleurChasseur.Should().Be("Dédé, Bernard, Robert");
+                Check.That(meilleurChasseur).IsEqualTo("Dédé, Bernard, Robert");
             }
 
             [Fact]
@@ -770,10 +750,9 @@ namespace Bouchonnois.Tests.Service
                 var service = new PartieDeChasseService(repository, () => DateTime.Now);
                 var prendreLapéroQuandTerminée = () => service.TerminerLaPartie(id);
 
-                prendreLapéroQuandTerminée.Should()
-                    .Throw<QuandCestFiniCestFini>();
+                Check.ThatCode(prendreLapéroQuandTerminée).Throws<QuandCestFiniCestFini>();
 
-                repository.SavedPartieDeChasse().Should().BeNull();
+                Check.That(repository.SavedPartieDeChasse()).IsNull();
             }
         }
 
@@ -802,8 +781,8 @@ namespace Bouchonnois.Tests.Service
 
                 var status = service.ConsulterStatus(id);
 
-                status.Should()
-                    .Be(
+                Check.That(status)
+                    .IsEqualTo(
                         "09:00 - La partie de chasse commence à Pitibon sur Sauldre avec Dédé (20 balles), Bernard (8 balles), Robert (12 balles)"
                     );
             }
@@ -851,8 +830,8 @@ namespace Bouchonnois.Tests.Service
 
                 var status = service.ConsulterStatus(id);
 
-                status.Should()
-                    .BeEquivalentTo(
+                Check.That(status)
+                    .IsEqualTo(
                         @"15:30 - La partie de chasse est terminée, vainqueur :  Robert - 3 galinettes
 15:00 - Robert tire sur une galinette
 14:41 - Bernard tire -> T'as plus de balles mon vieux, chasse à la main
@@ -885,9 +864,8 @@ namespace Bouchonnois.Tests.Service
                 var service = new PartieDeChasseService(repository, () => DateTime.Now);
                 var reprendrePartieQuandPartieExistePas = () => service.ConsulterStatus(id);
 
-                reprendrePartieQuandPartieExistePas.Should()
-                    .Throw<LaPartieDeChasseNexistePas>();
-                repository.SavedPartieDeChasse().Should().BeNull();
+                Check.ThatCode(reprendrePartieQuandPartieExistePas).Throws<LaPartieDeChasseNexistePas>();
+                Check.That(repository.SavedPartieDeChasse()).IsNull();
             }
         }
     }
