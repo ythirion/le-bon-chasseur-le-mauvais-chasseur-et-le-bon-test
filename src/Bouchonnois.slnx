@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Bouchonnois.Tests/Bouchonnois.Tests.csproj" />
+  <Project Path="Bouchonnois/Bouchonnois.csproj" />
+</Solution>
