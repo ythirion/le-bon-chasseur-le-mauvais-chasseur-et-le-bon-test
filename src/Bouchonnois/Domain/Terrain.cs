@@ -1,13 +1,9 @@
-namespace Bouchonnois.Domain
-{
-    public class Terrain
-    {
-        public Terrain(string nom)
-        {
-            Nom = nom;
-        }
+namespace Bouchonnois.Domain;
 
-        public string Nom { get; }
-        public int NbGalinettes { get; set; }
-    }
+public class Terrain
+{
+    public Terrain(string nom) => Nom = nom;
+
+    public string Nom { get; }
+    public int NbGalinettes { get; set; }
 }

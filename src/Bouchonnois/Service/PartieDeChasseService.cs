@@ -32,7 +32,7 @@ namespace Bouchonnois.Service
                     }
                 )
             {
-                Events = new List<Event>()
+                Events = []
             };
 
             foreach (var chasseur in chasseurs)
@@ -53,7 +53,7 @@ namespace Bouchonnois.Service
                 throw new ImpossibleDeDémarrerUnePartieSansChasseur();
             }
 
-            string chasseursToString = string.Join(
+            var chasseursToString = string.Join(
                 ", ",
                 partieDeChasse.Chasseurs.Select(c => c.Nom + $" ({c.BallesRestantes} balles)")
             );
