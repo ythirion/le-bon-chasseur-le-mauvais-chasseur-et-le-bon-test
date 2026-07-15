@@ -168,3 +168,6 @@ Une fois que tu as compris *pourquoi* le mutant survit sur ce premier test, corr
 Pour créer de bons tests, il est important de toujours se concentrer sur l'écriture de bonnes assertions - et encore mieux, de développer à l'aide de `T.D.D.`
 
 Une bonne assertion ne se contente pas de vérifier qu'une exception attendue est levée : elle vérifie que le comportement métier attendu s'est bien produit (message, effets de bord, état sauvegardé, ...).
+
+## Solution
+Guide étape par étape disponible [ici](solution.md).

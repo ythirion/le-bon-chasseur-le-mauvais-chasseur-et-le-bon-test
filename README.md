@@ -42,7 +42,7 @@ Une base de code en `C#` / `.NET 10` : les chasseurs du Bouchonnois et leurs par
 
 À chaque histoire, un symptôme, un diagnostic, un remède.
 
-- **Histoire 1 : Le bon test ne ment pas.** Mutation testing : faire la chasse aux assertions qui passent toujours, parce que *"never trust a test you haven't seen fail"*.
+- [Histoire 1 : Le bon test ne ment pas.](histoires/01.le-bon-test-ne-ment-pas/enonce.md) Mutation testing : faire la chasse aux assertions qui passent toujours, parce que *"never trust a test you haven't seen fail"*.
 - **Histoire 2 : Le bon test, on le lit.**
   Test Data Builders, Object Mothers, custom assertions, DSL Given/When/Then : transformer un test de 30 lignes en spec métier lisible en 5 secondes.
 - **Histoire 3 : Le bon test, on le maintient.**
