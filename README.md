@@ -1,4 +1,10 @@
 # Le bon chasseur, le mauvais chasseur, et le bon test
+
+[![SonarCloud Analysis](https://github.com/ythirion/le-bon-chasseur-le-mauvais-chasseur-et-le-bon-test/actions/workflows/sonarcloud.yml/badge.svg)](https://github.com/ythirion/le-bon-chasseur-le-mauvais-chasseur-et-le-bon-test/actions/workflows/sonarcloud.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ythirion_le-bon-chasseur-le-mauvais-chasseur-et-le-bon-test&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=ythirion_le-bon-chasseur-le-mauvais-chasseur-et-le-bon-test)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=ythirion_le-bon-chasseur-le-mauvais-chasseur-et-le-bon-test&metric=coverage)](https://sonarcloud.io/summary/new_code?id=ythirion_le-bon-chasseur-le-mauvais-chasseur-et-le-bon-test)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 > "Le mauvais chasseur, il voit un truc qui bouge, il tire. 
 > Le bon chasseur, il voit un truc qui bouge, il tire… mais c'est un bon chasseur."
 
