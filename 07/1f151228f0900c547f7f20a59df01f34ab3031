@@ -1,0 +1,29 @@
+histoires/01.le-bon-test-ne-ment-pas/enonce.md
+  s_f1dee49b81863e::t_eae701b5f7cb11 170-173
+README.md
+  h_0a88d9aba8622a 45
+histoires/01.le-bon-test-ne-ment-pas/solution.md
+  h_0a88d9aba8622a 66,68,110,130
+  s_f1dee49b81863e::t_6e02a1656bb818 1-65,67,69-109,111-129,131-191
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "071f151228f0900c547f7f20a59df01f34ab3031",
+  "prompts": {},
+  "humans": {
+    "h_0a88d9aba8622a": {
+      "author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_f1dee49b81863e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cd81b02d-d0dd-4816-92f3-1d3d9521e422",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  }
+}
