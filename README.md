@@ -11,21 +11,26 @@
 ![Couverture de l'atelier "Le bon chasseur, le mauvais chasseur, et le bon test"](img/le-bon-chasseur-le-mauvais-chasseur-et-le-bon-test.webp)
 > "Le mauvais test, il assert un truc, il passe au vert. Le bon test, il assert un truc, il passe au vert… mais c'est un bon test."
 
-- Concrètement, qu'est-ce qui sépare les deux ? 
-- Pourquoi certaines suites de tests deviennent un harnais qui permet de refactorer en confiance, et d'autres un boulet qu'on désactive au premier sprint chargé ?
+Vu de loin, les deux tests se ressemblent : verts, rapides, présents dans la CI depuis toujours. Vu de près, un seul des deux protège vraiment quelque chose.
+
+Concrètement, qu'est-ce qui sépare un vrai bon test d'un test qui fait semblant ? Pourquoi certaines suites de tests deviennent un harnais qui permet de refactorer en confiance, et d'autres un boulet qu'on désactive au premier sprint chargé ? C'est cette question qu'on va disséquer, une histoire à la fois.
 
 ## Origine
-Atelier créé pour le [Devfest Dijon 2026](https://devfest.developers-group-dijon.fr/) en me basant sur un précédent atelier nommé le [Refactoring du Bouchonnois](https://github.com/ythirion/refactoring-du-bouchonnois/). 
+Atelier créé pour le [Devfest Dijon 2026](https://devfest.developers-group-dijon.fr/) en me basant sur un précédent atelier nommé le [Refactoring du Bouchonnois](https://github.com/ythirion/refactoring-du-bouchonnois/).
 
 ## Le contexte
-Nos vaillants chasseurs du Bouchonnois ont besoin de pouvoir gérer leurs parties de chasse.  
-Ils ont commencé à faire développer 1 système de gestion par l'entreprise `Toshiba` mais ne sont pas satisfaits.  
+Nos vaillants chasseurs du Bouchonnois ont besoin de pouvoir gérer leurs parties de chasse.
+Ils ont fait développer un système de gestion par l'entreprise `Toshiba`... et depuis, plus rien n'avance.
 
-L'entreprise leur parle d'une soi-disant `dette technique` qui les ralentit dans le développement de nouvelles fonctionnalités...
+Chaque nouvelle fonctionnalité prend plus de temps que la précédente. L'entreprise leur parle d'une soi-disant `dette technique` qui les ralentit - sans jamais vraiment l'expliquer.
 
 [![Les Inconnus](img/inconnus.webp)](https://youtu.be/QuGcoOJKXT8?si=N0e-w8GhgEnrBWv4)
 
-Les chasseurs comptent sur nous pour améliorer la situation.
+Pourtant, sur le papier, tout va bien : la CI est verte, les tests passent, le coverage affiche de bons chiffres. Sauf que personne n'ose plus toucher au code sans croiser les doigts. 
+
+> Un signe qui ne trompe pas : quand une suite de tests verte n'inspire plus confiance à personne, le problème n'est pas dans le code de production. Il est dans les tests eux-mêmes.
+
+Les chasseurs comptent sur nous pour aller voir ce qui se cache vraiment derrière ce vert.
 
 ### Example Mapping
 Ils ont fait quelques ateliers avec `Toshiba` et ont réussi à clarifier ce qui est attendu du système.
@@ -40,20 +45,17 @@ Version PDF disponible [ici](example-mapping/example-mapping.pdf)
 ## L'atelier
 Une base de code en `C#` / `.NET 10` : les chasseurs du Bouchonnois et leurs parties de chasse aux galinettes qu'on va reprendre ensemble.
 
-À chaque histoire, un symptôme, un diagnostic, un remède.
+Sauf qu'ici, le gibier n'est pas sur le terrain de Pitibon sur Sauldre. Il est dans les tests. À chaque histoire, on part à l'affût d'une espèce différente de mauvais test - celui qui ment, celui qu'on ne comprend plus, celui qu'on n'ose plus toucher - avec, à chaque fois, le même déroulé : un symptôme, un diagnostic, un remède.
 
-- [Histoire 1 : Le bon test ne ment pas.](histoires/01.le-bon-test-ne-ment-pas/enonce.md) Mutation testing : faire la chasse aux assertions qui passent toujours, parce que *"never trust a test you haven't seen fail"*.
-- **Histoire 2 : Le bon test, on le lit.**
-  Test Data Builders, Object Mothers, custom assertions, DSL Given/When/Then : transformer un test de 30 lignes en spec métier lisible en 5 secondes.
-- **Histoire 3 : Le bon test, on le maintient.**
-  SRP, DRY, hiérarchie de classes : les principes Clean Code s'appliquent aux tests autant qu'au code de prod.
-- **Histoire 4 : Le bon test, parfois, ne s'écrit pas à la main.**
-  Approval Testing pour les scénarios à grosses assertions et ses pièges.
-- **Histoire 5 : Le bon test couvre ce que tu n'as pas pensé à tester.**
-  Property-Based Testing : une propriété, 100 exécutions, des cas tordus que tu n'aurais jamais imaginés.
-- **Histoire 6 : Le bon test protège l'architecture.**
-  Tests d'architecture : matérialiser les règles d'oignon, d'hexagonal, de Clean Architecture en tests qui échouent au premier merge incorrect.
+- [Histoire 1 : Le bon test ne ment pas](histoires/01.le-bon-test-ne-ment-pas/enonce.md) : la chasse aux mutants, pour débusquer les assertions qui passent toujours, parce que *"never trust a test you haven't seen fail"*.
+- **Histoire 2 : Le bon test, on le lit** : Test Data Builders, Object Mothers, DSL Given/When/Then - ou comment transformer un test de 30 lignes en spec métier lisible en 5 secondes.
+- **Histoire 3 : Le bon test, on le maintient** : SRP, DRY, hiérarchie de classes - les principes Clean Code s'appliquent aux tests autant qu'au code de prod.
+- **Histoire 4 : Le bon test, parfois, ne s'écrit pas à la main** : l'Approval Testing pour les scénarios à grosses assertions, et les pièges qui vont avec.
+- **Histoire 5 : Le bon test couvre ce que tu n'as pas pensé à tester** : une propriété, 100 exécutions, et les cas tordus que t'aurais mis des mois à imaginer seul.
+- **Histoire 6 : Le bon test protège l'architecture** : matérialiser les règles d'oignon, d'hexagonal, de Clean Architecture en tests qui échouent au premier merge incorrect.
 
-**Pour qui ?**
+### Pour qui ?
 Développeur·se·s, tech leads, toute personne qui a déjà soupiré devant un fichier de tests de 900 lignes.
 Des exemples concrets transposables à tous les langages.
+
+Une fois cet atelier terminé, tu ne regarderas plus jamais un ✅ vert de la même façon.
