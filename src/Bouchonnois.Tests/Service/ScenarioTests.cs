@@ -9,7 +9,7 @@ public class ScenarioTests
     [Fact]
     public void DéroulerUnePartie()
     {
-        var time = new DateTime(2024, 4, 25, 9, 0, 0);
+        var time = new DateTime(2024, 4, 25, 9, 0, 0, DateTimeKind.Utc);
         var repository = new PartieDeChasseRepositoryForTests();
         var service = new PartieDeChasseService(repository, () => time);
         var chasseurs = new List<(string, int)>
