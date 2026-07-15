@@ -1,0 +1,74 @@
+src/Bouchonnois.Tests/Bouchonnois.Tests.csproj
+  h_0a88d9aba8622a 1-31
+src/Bouchonnois/Domain/Exceptions/TasTropPicoléMonVieuxTasRienTouché.cs
+  h_0a88d9aba8622a 1-6
+src/Bouchonnois/Domain/Exceptions/LaPartieDeChasseNexistePas.cs
+  h_0a88d9aba8622a 1-5
+src/Bouchonnois/Domain/Exceptions/QuandCestFiniCestFini.cs
+  h_0a88d9aba8622a 1-6
+src/Bouchonnois/Domain/Exceptions/ImpossibleDeDémarrerUnePartieAvecUnChasseurSansBalle.cs
+  h_0a88d9aba8622a 1-6
+src/Bouchonnois/Domain/Terrain.cs
+  h_0a88d9aba8622a 1-13
+src/Bouchonnois/Domain/PartieStatus.cs
+  h_0a88d9aba8622a 1-9
+src/Bouchonnois/Service/PartieDeChasseService.cs
+  h_0a88d9aba8622a 1-295
+src/Bouchonnois/Domain/Event.cs
+  h_0a88d9aba8622a 1-9
+src/Bouchonnois/Domain/Exceptions/OnTirePasQuandLaPartieEstTerminée.cs
+  h_0a88d9aba8622a 1-6
+src/Bouchonnois/Domain/Exceptions/LaChasseEstDéjàEnCours.cs
+  h_0a88d9aba8622a 1-6
+src/Bouchonnois.Tests/Doubles/PartieDeChasseRepositoryForTests.cs
+  h_0a88d9aba8622a 1-25
+src/Bouchonnois/Domain/Exceptions/ImpossibleDeDémarrerUnePartieSansChasseur.cs
+  h_0a88d9aba8622a 1-6
+src/Bouchonnois/Domain/Exceptions/TasPlusDeBallesMonVieuxChasseALaMain.cs
+  h_0a88d9aba8622a 1-6
+src/Bouchonnois/Domain/Exceptions/OnEstDéjàEnTrainDePrendreLapéro.cs
+  h_0a88d9aba8622a 1-6
+src/Bouchonnois/Domain/Exceptions/OnPrendPasLapéroQuandLaPartieEstTerminée.cs
+  h_0a88d9aba8622a 1-6
+src/Bouchonnois/Bouchonnois.csproj
+  h_0a88d9aba8622a 1-13
+src/Bouchonnois/Domain/Exceptions/ImpossibleDeDémarrerUnePartieSansGalinettes.cs
+  h_0a88d9aba8622a 1-6
+src/Bouchonnois/Domain/Exceptions/ChasseurInconnu.cs
+  h_0a88d9aba8622a 1-10
+README.md
+  h_0a88d9aba8622a 1-53
+src/Bouchonnois.Tests/Service/PartieDeChasseServiceTests.cs
+  h_0a88d9aba8622a 1-894
+src/Bouchonnois/Domain/Exceptions/OnTirePasPendantLapéroCestSacré.cs
+  h_0a88d9aba8622a 1-6
+src/Bouchonnois/Domain/Chasseur.cs
+  h_0a88d9aba8622a 1-14
+.gitignore
+  s_d45411aba0dfae::t_a14b9d1248681a 1-39
+src/Bouchonnois.Tests/Service/ScenarioTests.cs
+  h_0a88d9aba8622a 1-116
+src/Bouchonnois/Domain/PartieDeChasse.cs
+  h_0a88d9aba8622a 1-42
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "cd3abb1a6c6968067df5da115ba12db2288da377",
+  "prompts": {},
+  "humans": {
+    "h_0a88d9aba8622a": {
+      "author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_d45411aba0dfae": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "098a10ff-ac3e-4620-806c-ea732582f855",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  }
+}
