@@ -57,7 +57,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           ./.sonar/scanner/dotnet-sonarscanner begin \
-            /k:"le-bon-chasseur-le-mauvais-chasseur-et-le-bon-test" \
+            /k:"ythirion_le-bon-chasseur-le-mauvais-chasseur-et-le-bon-test" \
             /o:"ythirion" \
             /d:sonar.token="${SONAR_TOKEN}" \
             /d:sonar.host.url="https://sonarcloud.io" \
