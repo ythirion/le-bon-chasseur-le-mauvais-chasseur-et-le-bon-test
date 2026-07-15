@@ -1,0 +1,14 @@
+histoires/01.le-bon-test-ne-ment-pas/solution.md
+  h_0a88d9aba8622a 1,18,27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "9fd1a9ddc9ec53930c6a2d22dba286d190829b3f",
+  "prompts": {},
+  "humans": {
+    "h_0a88d9aba8622a": {
+      "author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  }
+}
