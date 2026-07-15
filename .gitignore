@@ -37,3 +37,5 @@ Desktop.ini
 !**/[Pp]ackages/build/
 *.nuget.props
 *.nuget.targets
+
+StrykerOutput/
