@@ -1,0 +1,24 @@
+.github/workflows/sonarcloud.yml
+  s_f1dee49b81863e::t_aba3d093373b31 60
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "7514535f2ce955b63ef504f2e5944b9ff9189411",
+  "prompts": {},
+  "humans": {
+    "h_0a88d9aba8622a": {
+      "author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_f1dee49b81863e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cd81b02d-d0dd-4816-92f3-1d3d9521e422",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  }
+}
