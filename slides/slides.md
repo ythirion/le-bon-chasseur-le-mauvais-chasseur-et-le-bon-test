@@ -101,17 +101,13 @@ layout: section
 
 <div class="flex-1">
 
-Outside-in Code Review
+# Outside-in Code Review
 - [ ] Technologies utilisées
 - [ ] Compiler / exécuter le code : analyser les potentiels `Warning`
 - [ ] Analyser la structure de la solution afin de comprendre l'architecture en place
 - [ ] Regarder les dépendances afin de comprendre les interactions potentielles du système
-
-<br/>
-
-Récolter des metrics
-- [ ] Récupérer le `code coverage`
-- [ ] Regarder le rapport d'analyse static de code
+- [ ] Calculer le `code coverage`
+- [ ] Analyser le rapport d'analyse static de code
 - [ ] Identifier s'il y a des [`hotspots`](https://understandlegacycode.com/blog/focus-refactoring-with-hotspots-analysis/) et où ils sont localisés
 
 </div>
@@ -120,16 +116,157 @@ Récolter des metrics
     </a>
 </div>
 
+<!-- Libyear, Analyse comportementale de code, skill claude associée, C4 model, ... -->
+
 ---
 layout: section
 ---
 
-# La base de code
+# Technologies utilisées
 
 - `C#` / `.NET 10`
 - `xUnit` + `NFluent`
 - Coverage : `coverlet`
 - Analyse statique de code : `SonarCloud`
+
+---
+layout: section
+---
+
+# Compiler
+
+![Build .NET 10 app](/build.webp)
+
+<div class="accent-badge mt-8">Aucun warning</div>
+
+---
+layout: section
+---
+
+# Architecture / Dépendance
+
+<img src="/dependencies.webp" class="w-4/5 mx-auto" />
+
+---
+layout: section
+---
+
+# Calculer le code coverage
+
+<img src="/coverage.webp" class="w-4/5 mx-auto" />
+
+---
+layout: section
+---
+
+# Analyse static de code
+
+<div class="flex items-center gap-4">
+    <img src="/sonar.webp" class="w-1/2 object-contain" />
+    <img src="/sonar-cc.webp" class="w-1/2 object-contain" />
+</div>
+
+---
+layout: section
+---
+
+# Analyse comportementale de code
+
+<img src="/hotspot.webp" class="w-2/3 mx-auto" />
+
+---
+codeSlide: true
+---
+
+# Où se cache la complexité...
+
+```csharp {*}{maxHeight:'380px'}
+namespace Bouchonnois.Service
+{
+    public class PartieDeChasseService
+    {
+        ...
+        
+        public void TirerSurUneGalinette(Guid id, string chasseur)
+        {
+            var partieDeChasse = _repository.GetById(id);
+
+            if (partieDeChasse == null)
+            {
+                throw new LaPartieDeChasseNexistePas();
+            }
+
+            if (partieDeChasse.Terrain.NbGalinettes != 0)
+            {
+                if (partieDeChasse.Status != PartieStatus.Apéro)
+                {
+                    if (partieDeChasse.Status != PartieStatus.Terminée)
+                    {
+                        if (partieDeChasse.Chasseurs.Exists(c => c.Nom == chasseur))
+                        {
+                            var chasseurQuiTire = partieDeChasse.Chasseurs.First(c => c.Nom == chasseur);
+
+                            if (chasseurQuiTire.BallesRestantes == 0)
+                            {
+                                partieDeChasse.Events.Add(new Event(_timeProvider(),
+                                    $"{chasseur} veut tirer sur une galinette -> T'as plus de balles mon vieux, chasse à la main"));
+                                _repository.Save(partieDeChasse);
+
+                                throw new TasPlusDeBallesMonVieuxChasseALaMain();
+                            }
+
+                            chasseurQuiTire.BallesRestantes--;
+                            chasseurQuiTire.NbGalinettes++;
+                            partieDeChasse.Terrain.NbGalinettes--;
+                            partieDeChasse.Events.Add(new Event(_timeProvider(), $"{chasseur} tire sur une galinette"));
+                        }
+                        else
+                        {
+                            throw new ChasseurInconnu(chasseur);
+                        }
+                    }
+                    else
+                    {
+                        partieDeChasse.Events.Add(new Event(_timeProvider(),
+                            $"{chasseur} veut tirer -> On tire pas quand la partie est terminée"));
+                        _repository.Save(partieDeChasse);
+
+                        throw new OnTirePasQuandLaPartieEstTerminée();
+                    }
+                }
+                else
+                {
+                    partieDeChasse.Events.Add(new Event(_timeProvider(),
+                        $"{chasseur} veut tirer -> On tire pas pendant l'apéro, c'est sacré !!!"));
+                    _repository.Save(partieDeChasse);
+                    throw new OnTirePasPendantLapéroCestSacré();
+                }
+            }
+            else
+            {
+                throw new TasTropPicoléMonVieuxTasRienTouché();
+            }
+
+            _repository.Save(partieDeChasse);
+        }
+        ...
+    }
+}
+```
+
+<style>
+:deep(pre) {
+  font-size: 0.7em;
+}
+</style>
+
+<v-click>
+
+Il vérifie le *type* de l'exception. Pas le message métier, pas l'événement ajouté, pas la sauvegarde.
+
+**Ce test ment.**
+
+</v-click>
 
 ---
 codeSlide: true
@@ -198,4 +335,3 @@ layout: statement
 
 Vladimir Khorikov
 
-<div class="accent-badge mt-8">On code en live à partir d'ici</div>

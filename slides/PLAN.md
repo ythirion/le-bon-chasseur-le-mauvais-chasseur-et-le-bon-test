@@ -1,14 +1,6 @@
-- Avant de nous lancer
-  - Outside-In
-- Etat des lieux
-	- Technologies utilisées
-    - Outside-in Code Review
-	- L'orga du repo
-	- Metrics
-	- 100% coverage
-	- Montrer un exemple de code... (Legacy - difficile à comprendre)
 	- Types de code
 		- Positionne le code sur le quadrant (Service)
+	- Hotspot
 - Anatomie d'un test
 	- Glue xUnit
 	- Nommage
