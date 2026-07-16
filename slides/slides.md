@@ -41,6 +41,14 @@ layout: section
 layout: section
 ---
 
+# Qui connait le Bouchonnois ?
+
+<img src="/inconnus.webp" class="w-2/3 mx-auto rounded-lg" />
+
+---
+layout: section
+---
+
 # Le contexte
 
 Nos vaillants chasseurs du Bouchonnois ont besoin de pouvoir gérer leurs parties de chasse.

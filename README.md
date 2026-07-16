@@ -10,6 +10,7 @@
 > Le bon chasseur, il voit un truc qui bouge, il tire… mais c'est un bon chasseur."
 
 ![Couverture de l'atelier "Le bon chasseur, le mauvais chasseur, et le bon test"](img/le-bon-chasseur-le-mauvais-chasseur-et-le-bon-test.webp)
+
 > "Le mauvais test, il assert un truc, il passe au vert. Le bon test, il assert un truc, il passe au vert… mais c'est un bon test."
 
 Vu de loin, les deux tests se ressemblent : verts, rapides, présents dans la CI depuis toujours. Vu de près, un seul des deux protège vraiment quelque chose.
