@@ -10,6 +10,7 @@
 <style scoped>
 .statement-slide {
   background: var(--sv-green);
+  font-style: italic;
 }
 
 .accent-corner {

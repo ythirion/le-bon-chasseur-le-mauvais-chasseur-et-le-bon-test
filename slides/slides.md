@@ -47,6 +47,14 @@ layout: section
 <img src="/inconnus.webp" class="w-2/3 mx-auto rounded-lg" />
 
 ---
+layout: section
+---
+
+# Leur philosophie
+
+<img src="/quote-chasseurs.webp" class="w-3/4 mx-auto rounded-lg" />
+
+---
 codeSlide: true
 ---
 
