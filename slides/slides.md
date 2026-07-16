@@ -3,8 +3,7 @@ theme: default
 layout: cover
 title: Le bon chasseur, le mauvais chasseur, et le bon test
 info: |
-  Atelier Devfest Dijon 2026 — Mutation Testing, Test Data Builders,
-  Approval Testing, Property-Based Testing, Tests d'architecture.
+  Atelier Devfest Dijon 2026
 class: text-center
 highlighter: shiki
 lineNumbers: true
@@ -15,33 +14,28 @@ mdc: true
 css: unocss
 ---
 
-<!-- Toute la slide est portée par l'image de couverture (cover.vue) -->
-
 ---
 layout: section
 ---
+
+<div class="flex items-center gap-16">
+
+<div class="flex-1">
 
 # Qui suis-je ?
 
 <div class="accent-badge mb-6">Yoan Thirion</div>
 
-- 🎯 TODO : rôle / titre (ex. Software Crafter, Coach Agile...)
-- 🐙 GitHub : [@ythirion](https://github.com/ythirion)
-- 🐦 TODO : X / LinkedIn / Bluesky
-- ✍️ TODO : blog / newsletter
+- Responsable de la pédagogie - [école Coda Dijon](https://coda.school/)
+- Software Crafter, Coach Agile, Juste un Dév
+- GitHub : [@ythirion](https://github.com/ythirion)
+- LinkedIn : [yoanthirion](https://www.linkedin.com/in/yoanthirion/)
 
-<!--
-  Placeholder à compléter avec ta bio réelle : parcours, missions actuelles,
-  liens vers tes talks / articles précédents.
--->
+</div>
 
----
-layout: statement
----
+<img src="/ythirion.webp" class="w-56 h-56 rounded-full object-cover flex-shrink-0" style="border: 4px solid var(--sv-yellow)" />
 
-# "Never trust a test you haven't seen fail."
-
-Vladimir Khorikov
+</div>
 
 ---
 layout: section
@@ -139,3 +133,11 @@ layout: statement
 Des questions ?
 
 <div class="accent-badge mt-6">#sharingiscaring</div>
+
+---
+layout: statement
+---
+
+# "Never trust a test you haven't seen fail."
+
+Vladimir Khorikov
