@@ -1,0 +1,16 @@
+slides/slides.md
+  h_0a88d9aba8622a 50-56
+slides/layouts/statement.vue
+  h_0a88d9aba8622a 13
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "2c8bf0e654d618dcab1c10bd7e7de0f8ca0314d2",
+  "prompts": {},
+  "humans": {
+    "h_0a88d9aba8622a": {
+      "author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  }
+}
