@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Bungee&family=Quicksand:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+  --sv-green: #1b3b32;
+  --sv-green-deep: #10241f;
+  --sv-yellow: #f2c14e;
+  --sv-orange: #dd7a4c;
+  --sv-cream: #faf7f0;
+  --sv-brown: #5c4033;
+
+  --slidev-theme-primary: var(--sv-orange);
+}
+
+.slidev-layout {
+  font-family: 'Quicksand', ui-sans-serif, system-ui, sans-serif;
+  background: var(--sv-cream);
+  color: var(--sv-green);
+}
+
+.slidev-layout h1,
+.slidev-layout h2,
+.slidev-layout h3 {
+  font-family: 'Bungee', ui-sans-serif, system-ui, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--sv-green);
+}
+
+.slidev-layout h1 {
+  font-size: 2.75rem;
+  line-height: 1.2;
+}
+
+.slidev-layout strong {
+  color: var(--sv-orange);
+}
+
+.slidev-layout a {
+  color: var(--sv-orange);
+}
+
+.slidev-layout code {
+  font-family: 'Fira Code', ui-monospace, monospace;
+}
+
+/* Dark, illustrated slides (cover / section / statement) */
+.slidev-layout.cover,
+.slidev-layout.section,
+.slidev-layout.statement {
+  background: var(--sv-green);
+  color: var(--sv-cream);
+}
+
+.slidev-layout.cover h1,
+.slidev-layout.cover h2,
+.slidev-layout.section h1,
+.slidev-layout.section h2,
+.slidev-layout.statement h1,
+.slidev-layout.statement h2 {
+  color: var(--sv-cream);
+}
+
+.accent-badge {
+  display: inline-block;
+  background: var(--sv-yellow);
+  color: var(--sv-green);
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.5em 1.2em;
+  font-size: 0.8rem;
+}
+
+.slidev-page {
+  background: var(--sv-cream);
+}

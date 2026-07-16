@@ -1,6 +1,7 @@
 # Le bon chasseur, le mauvais chasseur, et le bon test
 
 [![SonarCloud Analysis](https://github.com/ythirion/le-bon-chasseur-le-mauvais-chasseur-et-le-bon-test/actions/workflows/sonarcloud.yml/badge.svg)](https://github.com/ythirion/le-bon-chasseur-le-mauvais-chasseur-et-le-bon-test/actions/workflows/sonarcloud.yml)
+[![Publish Slides](https://github.com/ythirion/le-bon-chasseur-le-mauvais-chasseur-et-le-bon-test/actions/workflows/slides.yml/badge.svg)](https://github.com/ythirion/le-bon-chasseur-le-mauvais-chasseur-et-le-bon-test/actions/workflows/slides.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ythirion_le-bon-chasseur-le-mauvais-chasseur-et-le-bon-test&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=ythirion_le-bon-chasseur-le-mauvais-chasseur-et-le-bon-test)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=ythirion_le-bon-chasseur-le-mauvais-chasseur-et-le-bon-test&metric=coverage)](https://sonarcloud.io/summary/new_code?id=ythirion_le-bon-chasseur-le-mauvais-chasseur-et-le-bon-test)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -53,6 +54,26 @@ Sauf qu'ici, le gibier n'est pas sur le terrain de Pitibon sur Sauldre. Il est d
 - **Histoire 4 : Le bon test, parfois, ne s'écrit pas à la main** : l'Approval Testing pour les scénarios à grosses assertions, et les pièges qui vont avec.
 - **Histoire 5 : Le bon test couvre ce que tu n'as pas pensé à tester** : une propriété, 100 exécutions, et les cas tordus que t'aurais mis des mois à imaginer seul.
 - **Histoire 6 : Le bon test protège l'architecture** : matérialiser les règles d'oignon, d'hexagonal, de Clean Architecture en tests qui échouent au premier merge incorrect.
+
+## Slides
+Les slides de présentation ([Slidev](https://sli.dev/), thème custom repris de la charte visuelle de l'atelier) sont dans [`slides/`](slides).
+
+En ligne : **https://ythirion.github.io/le-bon-chasseur-le-mauvais-chasseur-et-le-bon-test/**
+(publiées automatiquement sur GitHub Pages à chaque changement dans `slides/` sur `main`)
+
+**Lancer en local**
+```bash
+cd slides
+npm install
+npm run dev
+```
+Puis ouvre [http://localhost:3030](http://localhost:3030).
+
+**Autres commandes utiles**
+```bash
+npm run build   # build statique dans slides/dist
+npm run export  # export en PDF
+```
 
 ### Pour qui ?
 Développeur·se·s, tech leads, toute personne qui a déjà soupiré devant un fichier de tests de 900 lignes.
