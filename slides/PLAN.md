@@ -1,6 +1,5 @@
-- Réplique bon mauvais chasseur
-- Example Mapping - comprendre le métier
-	- Use Cases couverts documentés
+- Avant de nous lancer
+  - Outside-In
 - Etat des lieux
 	- Technologies utilisées
     - Outside-in Code Review

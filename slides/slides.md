@@ -97,16 +97,39 @@ codeSlide: true
 layout: section
 ---
 
-# La base de code
+<div class="flex items-center gap-12">
 
-Les chasseurs du Bouchonnois et leurs parties de chasse aux galinettes.
+<div class="flex-1">
+
+Outside-in Code Review
+- [ ] Technologies utilisées
+- [ ] Compiler / exécuter le code : analyser les potentiels `Warning`
+- [ ] Analyser la structure de la solution afin de comprendre l'architecture en place
+- [ ] Regarder les dépendances afin de comprendre les interactions potentielles du système
+
+<br/>
+
+Récolter des metrics
+- [ ] Récupérer le `code coverage`
+- [ ] Regarder le rapport d'analyse static de code
+- [ ] Identifier s'il y a des [`hotspots`](https://understandlegacycode.com/blog/focus-refactoring-with-hotspots-analysis/) et où ils sont localisés
+
+</div>
+    <a href="https://canva.link/4b9mxwe0oxw67js" target="_blank">
+        <img src="/outside-in-discovery.webp" class="w-56 flex-shrink-0" />
+    </a>
+</div>
+
+---
+layout: section
+---
+
+# La base de code
 
 - `C#` / `.NET 10`
 - `xUnit` + `NFluent`
 - Coverage : `coverlet`
 - Analyse statique de code : `SonarCloud`
-
-<div class="accent-badge mt-8">On code en live à partir d'ici</div>
 
 ---
 codeSlide: true
@@ -174,3 +197,5 @@ layout: statement
 # "Never trust a test you haven't seen fail."
 
 Vladimir Khorikov
+
+<div class="accent-badge mt-8">On code en live à partir d'ici</div>
