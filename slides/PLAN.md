@@ -1,0 +1,35 @@
+- Qui je suis
+- Bouchonnois
+- Le contexte
+- Example Mapping - comprendre le métier
+	- Use Cases couverts documentés
+- Etat des lieux
+	- Outside-in Code Review
+	- L'orga du repo
+	- Metrics
+	- 100% coverage
+	- Montrer un exemple de code... (Legacy - difficile à comprendre)
+	- Types de code
+		- Positionne le code sur le quadrant (Service)
+- Anatomie d'un test
+	- Glue xUnit
+	- Nommage
+	- 3A
+- Qualité des tests...
+	- Qu'est ce que vous identifiez comme axe d'amélioration ici ?
+	- Gros test avec beaucoup d'assertions
+- Le bon test ne ment pas
+	- Tests Don't Lie - Stranger Things
+	- Un test qui contient un mensonge
+	- Quoi mais on a 100% de code coverage - comment c'est possible ?
+	- Code Coverage et Branch Coverage - métrique quantitative pas qualitative
+		- Bon indicateur négatif mais pas un bon indicateur positif
+	- Mutation Testing à la rescousse
+		- Démo : mutation à la main
+	- Stryker : trouve des mutants - screen
+		- Démo : tueur de mutant - assert EventHasBeenEmitted
+	- A few minutes later
+	- Plus de mutants
+...
+- Conclusion : revenir sur la phrase -> comment distinguer un bon test d'un mauvais test
+- QR Code slides
