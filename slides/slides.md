@@ -47,28 +47,43 @@ layout: section
 <img src="/inconnus.webp" class="w-2/3 mx-auto rounded-lg" />
 
 ---
-layout: section
+codeSlide: true
 ---
+
+<div class="flex items-center gap-12">
+
+<div class="flex-1">
+
 
 # Le contexte
 
-Nos vaillants chasseurs du Bouchonnois ont besoin de pouvoir gérer leurs parties de chasse.
+> Nos valeureux chasseurs du Bouchonnois ont besoin de pouvoir gérer leurs parties de chasse.
 
 Ils ont fait développer un système de gestion par l'entreprise `Toshiba`... et depuis, plus rien n'avance.
 
 - Chaque nouvelle fonctionnalité prend plus de temps que la précédente
-- L'entreprise parle d'une soi-disant **dette technique**, sans jamais l'expliquer
-- La CI est verte, le coverage est bon... mais personne n'ose plus toucher au code
+- L'entreprise parle d'une soi-disant `dette technique`, sans jamais l'expliquer
+
+</div>
+
+<img src="/chasseur.webp" class="w-56 flex-shrink-0" />
+
+</div>
 
 ---
-layout: statement
+codeSlide: true
 ---
 
-# Un signe qui ne trompe pas
+<div class="relative h-full flex items-center justify-center">
 
-Quand une suite de tests verte n'inspire plus confiance à personne, le problème n'est pas dans le code de production.
+<img src="/example-mapping.webp" class="max-h-full max-w-full object-contain rounded-lg" />
 
-**Il est dans les tests eux-mêmes.**
+<a href="https://xtrem-tdd.netlify.app/Flavours/Practices/example-mapping" target="_blank" class="link-preview link-preview-sm absolute top-1 right-1">
+  <div class="link-preview-title">Example Mapping</div>
+  <div class="link-preview-url">xtrem-tdd.netlify.app/Flavours/Practices/example-mapping</div>
+</a>
+
+</div>
 
 ---
 layout: section
@@ -78,11 +93,10 @@ layout: section
 
 Les chasseurs du Bouchonnois et leurs parties de chasse aux galinettes.
 
-- 🧱 `C#` / `.NET 10`
-- 🧪 `xUnit` + `NFluent`
-- 📊 Coverage : `coverlet`
-- 🧬 Mutation Testing : `Stryker.NET`
-- ☁️ Analyse continue : `SonarCloud`
+- `C#` / `.NET 10`
+- `xUnit` + `NFluent`
+- Coverage : `coverlet`
+- Analyse statique de code : `SonarCloud`
 
 <div class="accent-badge mt-8">On code en live à partir d'ici</div>
 

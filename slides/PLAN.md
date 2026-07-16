@@ -1,10 +1,9 @@
-- Qui je suis
-- Bouchonnois
-- Le contexte
+- Réplique bon mauvais chasseur
 - Example Mapping - comprendre le métier
 	- Use Cases couverts documentés
 - Etat des lieux
-	- Outside-in Code Review
+	- Technologies utilisées
+    - Outside-in Code Review
 	- L'orga du repo
 	- Metrics
 	- 100% coverage
