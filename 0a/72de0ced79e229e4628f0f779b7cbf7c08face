@@ -1,0 +1,28 @@
+slides/slides.md
+  s_f1dee49b81863e::t_8c6d0830616808 21-24,34,36,38
+  h_0a88d9aba8622a 29-30,32,136-143
+.github/workflows/slides.yml
+  s_f1dee49b81863e::t_a31235508b6e70 52-54
+  s_f1dee49b81863e::t_d274d820f446bd 19-20
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "0a72de0ced79e229e4628f0f779b7cbf7c08face",
+  "prompts": {},
+  "humans": {
+    "h_0a88d9aba8622a": {
+      "author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_f1dee49b81863e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cd81b02d-d0dd-4816-92f3-1d3d9521e422",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  }
+}
