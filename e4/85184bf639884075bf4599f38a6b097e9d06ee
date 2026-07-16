@@ -1,0 +1,47 @@
+slides/package.json
+  s_f1dee49b81863e::t_9416aba04aea81 1-15
+.github/workflows/slides.yml
+  s_f1dee49b81863e::t_b22e8d2a953a48 1-25,27-28,30-43,45-46,48-61
+  h_0a88d9aba8622a 26,29,44,47
+.gitignore
+  h_0a88d9aba8622a 1,9,15,19,22,27,35,37-41
+slides/uno.config.ts
+  s_f1dee49b81863e::t_68f19ff71d7158 1-16
+slides/layouts/cover.vue
+  s_f1dee49b81863e::t_49f151d13e1cb3 1-8
+slides/layouts/statement.vue
+  s_f1dee49b81863e::t_6a2f166bdbcc0a 1-41
+slides/layouts/section.vue
+  s_f1dee49b81863e::t_55278faaf94574 1-41
+slides/style.css
+  s_f1dee49b81863e::t_35890cec656816 1-77
+README.md
+  s_f1dee49b81863e::t_62271cbfcecb04 58-77
+  s_f1dee49b81863e::t_05ff1cfa5367d1 4
+slides/slides.md
+  h_0a88d9aba8622a 10
+  s_f1dee49b81863e::t_90b78b49e67cd5 1-9,11-141
+slides/package-lock.json
+  s_f1dee49b81863e::t_b3626b2d720539 1-11512
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "e485184bf639884075bf4599f38a6b097e9d06ee",
+  "prompts": {},
+  "humans": {
+    "h_0a88d9aba8622a": {
+      "author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_f1dee49b81863e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cd81b02d-d0dd-4816-92f3-1d3d9521e422",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  }
+}
