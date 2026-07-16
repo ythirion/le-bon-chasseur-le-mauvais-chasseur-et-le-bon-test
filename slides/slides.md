@@ -1,5 +1,6 @@
 ---
 theme: default
+colorSchema: light
 layout: cover
 title: Le bon chasseur, le mauvais chasseur, et le bon test
 info: |
@@ -85,6 +86,8 @@ Les chasseurs du Bouchonnois et leurs parties de chasse aux galinettes.
 
 <div class="accent-badge mt-8">On code en live à partir d'ici</div>
 
+---
+codeSlide: true
 ---
 
 # Un test, en apparence propre
