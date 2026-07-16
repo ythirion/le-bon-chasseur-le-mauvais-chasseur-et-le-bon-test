@@ -143,7 +143,7 @@ layout: section
 layout: section
 ---
 
-# Architecture / Dépendance
+# Architecture / Dépendances
 
 <img src="/dependencies.webp" class="w-4/5 mx-auto" />
 
@@ -175,129 +175,161 @@ layout: section
 <img src="/hotspot.webp" class="w-2/3 mx-auto" />
 
 ---
+layout: section
+---
+
+<img src="/codescene.webp" class="w-4/5 mx-auto" />
+<br/>
+2 hostpots : PartieDeChasseService.cs, PartieDeChasseServiceTests.cs
+
+---
 codeSlide: true
 ---
 
-# Où se cache la complexité...
+# La complexité...
 
-```csharp {*}{maxHeight:'380px'}
-namespace Bouchonnois.Service
+```csharp {all|27,34,39}{maxHeight:'380px'}
+public void TirerSurUneGalinette(Guid id, string chasseur)
 {
-    public class PartieDeChasseService
+    var partieDeChasse = _repository.GetById(id);
+    if (partieDeChasse == null)
     {
-        ...
-        
-        public void TirerSurUneGalinette(Guid id, string chasseur)
+        throw new LaPartieDeChasseNexistePas();
+    }
+    if (partieDeChasse.Terrain.NbGalinettes != 0)
+    {
+        if (partieDeChasse.Status != PartieStatus.Apéro)
         {
-            var partieDeChasse = _repository.GetById(id);
-
-            if (partieDeChasse == null)
+            if (partieDeChasse.Status != PartieStatus.Terminée)
             {
-                throw new LaPartieDeChasseNexistePas();
-            }
-
-            if (partieDeChasse.Terrain.NbGalinettes != 0)
-            {
-                if (partieDeChasse.Status != PartieStatus.Apéro)
+                if (partieDeChasse.Chasseurs.Exists(c => c.Nom == chasseur))
                 {
-                    if (partieDeChasse.Status != PartieStatus.Terminée)
-                    {
-                        if (partieDeChasse.Chasseurs.Exists(c => c.Nom == chasseur))
-                        {
-                            var chasseurQuiTire = partieDeChasse.Chasseurs.First(c => c.Nom == chasseur);
-
-                            if (chasseurQuiTire.BallesRestantes == 0)
-                            {
-                                partieDeChasse.Events.Add(new Event(_timeProvider(),
-                                    $"{chasseur} veut tirer sur une galinette -> T'as plus de balles mon vieux, chasse à la main"));
-                                _repository.Save(partieDeChasse);
-
-                                throw new TasPlusDeBallesMonVieuxChasseALaMain();
-                            }
-
-                            chasseurQuiTire.BallesRestantes--;
-                            chasseurQuiTire.NbGalinettes++;
-                            partieDeChasse.Terrain.NbGalinettes--;
-                            partieDeChasse.Events.Add(new Event(_timeProvider(), $"{chasseur} tire sur une galinette"));
-                        }
-                        else
-                        {
-                            throw new ChasseurInconnu(chasseur);
-                        }
-                    }
-                    else
-                    {
-                        partieDeChasse.Events.Add(new Event(_timeProvider(),
-                            $"{chasseur} veut tirer -> On tire pas quand la partie est terminée"));
-                        _repository.Save(partieDeChasse);
-
-                        throw new OnTirePasQuandLaPartieEstTerminée();
-                    }
+                    ...
                 }
                 else
                 {
-                    partieDeChasse.Events.Add(new Event(_timeProvider(),
-                        $"{chasseur} veut tirer -> On tire pas pendant l'apéro, c'est sacré !!!"));
-                    _repository.Save(partieDeChasse);
-                    throw new OnTirePasPendantLapéroCestSacré();
+                    throw new ChasseurInconnu(chasseur);
                 }
             }
             else
             {
-                throw new TasTropPicoléMonVieuxTasRienTouché();
+                partieDeChasse.Events.Add(new Event(_timeProvider(), $"{chasseur} veut tirer -> On tire pas quand la partie est terminée"));
+                _repository.Save(partieDeChasse);
+                throw new OnTirePasQuandLaPartieEstTerminée();
             }
-
-            _repository.Save(partieDeChasse);
         }
-        ...
+        else
+        {
+            partieDeChasse.Events.Add(new Event(_timeProvider(), $"{chasseur} veut tirer -> On tire pas pendant l'apéro, c'est sacré !!!"));
+            _repository.Save(partieDeChasse);
+            throw new OnTirePasPendantLapéroCestSacré();
+        }
     }
+    else
+    {
+        throw new TasTropPicoléMonVieuxTasRienTouché();
+    }
+    _repository.Save(partieDeChasse);
 }
 ```
 
-<style>
-:deep(pre) {
-  font-size: 0.7em;
-}
-</style>
+---
+layout: section
+---
 
-<v-click>
+# Avant d'aller plus loin
+Et si on faisait l'anatomie d'un test ?
+Qu'est ce que vous associez à cela ?
 
-Il vérifie le *type* de l'exception. Pas le message métier, pas l'événement ajouté, pas la sauvegarde.
+---
+layout: section
+---
 
-**Ce test ment.**
-
-</v-click>
+<img src="/anatomie.webp"  />
 
 ---
 codeSlide: true
 ---
 
-# Un test, en apparence propre
+# Anatomie d'un test
 
-La CI est verte. Voici un test de `PartieDeChasseServiceTests.cs` :
+```csharp {all|1|6-7|9-12|14-15|17-19}
+public class AddANewComment
+{
+    private const string Author = "Les Inconnus";
+    private const string AComment = "C'est exactement ça !!!";
+    
+    [Fact]
+    public void In_An_Article_Include_Author_And_Text()
+    {
+        // Arrange
+        var article = new Article(
+            "Chasse = Un Art ?",
+            "C'est sur que la chasse c'est un art, pour d'autres ça peut être la peinture, la musique, tout ça mais pour nous c'est la chasse quoi c'est un art…");
+        
+        // Act
+        var updatedArticle = article.AddComment(Author, AComment);
 
-```csharp {all|1-8|10-11|all}
+        // Assert
+        updatedArticle.IsRight.Should().BeTrue();
+        AssertComment(updatedArticle.RightUnsafe().Comments.Head, Author, AComment);
+    }
+    ...
+}   
+```
+
+---
+codeSlide: true
+---
+
+# Un test du Bouchonnois
+
+```csharp {all|16-30}{maxHeight:'380px'}
 [Fact]
-public void EchoueAvecUnChasseurNayantPlusDeBalles()
+public void AvecUnChasseurAyantDesBallesEtAssezDeGalinettesSurLeTerrain()
 {
     var id = Guid.NewGuid();
     var repository = new PartieDeChasseRepositoryForTests();
-    repository.Add(/* ... Bernard, 0 balle ... */);
-
+    repository.Add(new PartieDeChasse(id, new Terrain("Pitibon sur Sauldre") {NbGalinettes = 3},
+    [
+        new("Dédé") { BallesRestantes = 20 },
+        new("Bernard") { BallesRestantes = 8 },
+        new("Robert") { BallesRestantes = 12 }
+    ]));
     var service = new PartieDeChasseService(repository, () => DateTime.Now);
-    var tirerSansBalle = () => service.TirerSurUneGalinette(id, "Bernard");
 
-    Check.ThatCode(tirerSansBalle)
-        .Throws<TasPlusDeBallesMonVieuxChasseALaMain>();
+    service.TirerSurUneGalinette(id, "Bernard");
+
+    var savedPartieDeChasse = repository.SavedPartieDeChasse();
+    Check.That(savedPartieDeChasse!.Id).IsEqualTo(id);
+    Check.That(savedPartieDeChasse.Status).IsEqualTo(PartieStatus.EnCours);
+    Check.That(savedPartieDeChasse.Terrain.Nom).IsEqualTo("Pitibon sur Sauldre");
+    Check.That(savedPartieDeChasse.Terrain.NbGalinettes).IsEqualTo(2);
+    Check.That(savedPartieDeChasse.Chasseurs).HasSize(3);
+    Check.That(savedPartieDeChasse.Chasseurs[0].Nom).IsEqualTo("Dédé");
+    Check.That(savedPartieDeChasse.Chasseurs[0].BallesRestantes).IsEqualTo(20);
+    Check.That(savedPartieDeChasse.Chasseurs[0].NbGalinettes).IsEqualTo(0);
+    Check.That(savedPartieDeChasse.Chasseurs[1].Nom).IsEqualTo("Bernard");
+    Check.That(savedPartieDeChasse.Chasseurs[1].BallesRestantes).IsEqualTo(7);
+    Check.That(savedPartieDeChasse.Chasseurs[1].NbGalinettes).IsEqualTo(1);
+    Check.That(savedPartieDeChasse.Chasseurs[2].Nom).IsEqualTo("Robert");
+    Check.That(savedPartieDeChasse.Chasseurs[2].BallesRestantes).IsEqualTo(12);
+    Check.That(savedPartieDeChasse.Chasseurs[2].NbGalinettes).IsEqualTo(0);
 }
 ```
 
 <v-click>
+# Qu'est ce que vous identifiez comme axe d'amélioration ici ?
+</v-click>
 
-Il vérifie le *type* de l'exception. Pas le message métier, pas l'événement ajouté, pas la sauvegarde.
+---
+layout: section
+---
 
-**Ce test ment.**
+<img src="/tests-dont-lie.webp"  />
 
+<v-click>
+Le bon test ne ment pas
 </v-click>
 
 ---
@@ -334,4 +366,3 @@ layout: statement
 # "Never trust a test you haven't seen fail."
 
 Vladimir Khorikov
-
