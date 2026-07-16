@@ -1,0 +1,16 @@
+slides/PLAN.md
+  h_0a88d9aba8622a 1-2,5-6
+slides/slides.md
+  h_0a88d9aba8622a 146,178-184,189,191-192,200-201,203,205,207,211,216-218,223,225,228-232,237-238,240-242,244-246,248,254-283,285,287,289,293-298,303-317,322,329,331
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "77df9adc36f5d77028bbd621f894098766111bdd",
+  "prompts": {},
+  "humans": {
+    "h_0a88d9aba8622a": {
+      "author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  }
+}
