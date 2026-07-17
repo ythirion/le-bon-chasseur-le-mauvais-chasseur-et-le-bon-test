@@ -387,7 +387,7 @@ codeSlide: true
 
 # Un test du Bouchonnois
 
-```csharp {all|1|4|6-15|17-18|20-35|all}{maxHeight:'380px'}
+```csharp {all|1|4|6-15|17-18|20-35}{maxHeight:'380px'}
 public class TirerSurUneGalinette
 {
     [Fact]
@@ -427,36 +427,27 @@ public class TirerSurUneGalinette
 }
 ```
 
-<v-click>
-Qu'est ce que vous identifiez comme axe d'amélioration ici ?
-</v-click>
-
 ---
 layout: section
 ---
-
-<img src="/tests-dont-lie.webp"  />
-
-<v-click>
-Le bon test ne ment pas
-</v-click>
-
----
-layout: section
----
-
-# Au programme
+# Quelques histoires
+Maintenant qu'on a une meilleure vue sur le code, appliquons les préceptes des meilleurs devs du Bouchonnois :
 
 <div class="text-lg space-y-3 mt-4">
 
-1. **Le bon test ne ment pas** — Mutation Testing
-2. **Le bon test, on le lit** — Test Data Builders, DSL Given/When/Then
-3. **Le bon test, on le maintient** — Clean Code appliqué aux tests
-4. **Le bon test, parfois, ne s'écrit pas à la main** — Approval Testing
-5. **Le bon test couvre ce que tu n'as pas pensé à tester** — Property-Based Testing
-6. **Le bon test protège l'architecture** — Tests d'architecture
+1. **Le bon test ne ment pas**
+2. **Le bon test, on le lit**
+3. **Le bon test, on le maintient**
+4. **Le bon test, parfois, ne s'écrit pas à la main**
+5. **Le bon test couvre ce que tu n'as pas pensé à tester**
+6. **Le bon test protège l'architecture**
 
 </div>
+
+---
+layout: image
+image: /01.le-bon-test-ne-ment-pas/tests-dont-lie.webp
+---
 
 ---
 layout: statement

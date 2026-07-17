@@ -1,5 +1,3 @@
-- Tour rapide dans le code
-- Ajouter class diagram
 - Un test qui contient un mensonge
 - Quoi mais on a 100% de code coverage - comment c'est possible ?
 - Code Coverage et Branch Coverage - métrique quantitative pas qualitative
