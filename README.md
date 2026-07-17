@@ -6,6 +6,11 @@
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=ythirion_le-bon-chasseur-le-mauvais-chasseur-et-le-bon-test&metric=coverage)](https://sonarcloud.io/summary/new_code?id=ythirion_le-bon-chasseur-le-mauvais-chasseur-et-le-bon-test)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
+[![CodeScene general](https://codescene.io/images/analyzed-by-codescene-badge.svg)](https://codescene.io/projects/82673)
+[![CodeScene Average Code Health](https://codescene.io/projects/82673/status-badges/average-code-health)](https://codescene.io/projects/82673)
+[![CodeScene Hotspot Code Health](https://codescene.io/projects/82673/status-badges/hotspot-code-health)](https://codescene.io/projects/82673)
+[![CodeScene System Mastery](https://codescene.io/projects/82673/status-badges/system-mastery)](https://codescene.io/projects/82673)
+
 > "Le mauvais chasseur, il voit un truc qui bouge, il tire. 
 > Le bon chasseur, il voit un truc qui bouge, il tire… mais c'est un bon chasseur."
 

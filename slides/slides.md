@@ -148,12 +148,109 @@ layout: section
 <img src="/dependencies.webp" class="w-4/5 mx-auto" />
 
 ---
+codeSlide: true
+---
+
+<div class="h-full flex flex-col">
+
+# Le code, en bref
+
+<div class="mermaid-fit flex-1 min-h-0">
+
+```mermaid {scale: 0.28}
+ classDiagram 
+    class PartieDeChasseService {
+        -IPartieDeChasseRepository _repository
+        -Func~DateTime~ _timeProvider
+        +Demarrer(terrainDeChasse, chasseurs) Guid
+        +TirerSurUneGalinette(id, chasseur) void
+        +Tirer(id, chasseur) void
+        +PrendreLapéro(id) void
+        +ReprendreLaPartie(id) void
+        +TerminerLaPartie(id) string
+        +ConsulterStatus(id) string
+    }
+
+    class IPartieDeChasseRepository {
+        <<interface>>
+        +Save(partieDeChasse) void
+        +GetById(partieDeChasseId) PartieDeChasse
+    }
+
+    class PartieDeChasse {
+        +Guid Id
+        +List~Chasseur~ Chasseurs
+        +Terrain Terrain
+        +PartieStatus Status
+        +List~Event~ Events
+    }
+
+    class Chasseur {
+        +string Nom
+        +int BallesRestantes
+        +int NbGalinettes
+    }
+
+    class Terrain {
+        +string Nom
+        +int NbGalinettes
+    }
+
+    class Event {
+        <<record>>
+        +DateTime Date
+        +string Message
+        +ToString() string
+    }
+
+    class PartieStatus {
+        <<enumeration>>
+        EnCours
+        Apéro
+        Terminée
+    }
+
+    class Exceptions {
+        <<exceptions>>
+        ChasseurInconnu
+        ImpossibleDeDémarrerUnePartieAvecUnChasseurSansBalle
+        ImpossibleDeDémarrerUnePartieSansChasseur
+        ImpossibleDeDémarrerUnePartieSansGalinettes
+        LaChasseEstDéjàEnCours
+        LaPartieDeChasseNexistePas
+        OnEstDéjàEnTrainDePrendreLapéro
+        OnPrendPasLapéroQuandLaPartieEstTerminée
+        OnTirePasPendantLapéroCestSacré
+        OnTirePasQuandLaPartieEstTerminée
+        QuandCestFiniCestFini
+        TasPlusDeBallesMonVieuxChasseALaMain
+        TasTropPicoléMonVieuxTasRienTouché
+    }
+
+    PartieDeChasseService --> IPartieDeChasseRepository : uses
+    PartieDeChasseService ..> PartieDeChasse : manipule
+    PartieDeChasseService ..> Exceptions : throws
+    IPartieDeChasseRepository --> PartieDeChasse : persists
+    PartieDeChasse "1" *-- "0...*" Chasseur : Chasseurs
+    PartieDeChasse "1" *-- "1" Terrain : Terrain
+    PartieDeChasse "1" *-- "0...*" Event : Events
+    PartieDeChasse --> PartieStatus : Status
+```
+
+</div>
+
+</div>
+
+---
 layout: section
 ---
 
 # Calculer le code coverage
 
-<img src="/coverage.webp" class="w-4/5 mx-auto" />
+<div class="flex flex-col items-center gap-4">
+  <img src="/tests-du-bouchonnois.webp" class="w-1/2" />
+  <img src="/coverage.webp" />
+</div>
 
 ---
 layout: section
@@ -161,10 +258,16 @@ layout: section
 
 # Analyse static de code
 
-<div class="flex items-center gap-4">
-    <img src="/sonar.webp" class="w-1/2 object-contain" />
-    <img src="/sonar-cc.webp" class="w-1/2 object-contain" />
-</div>
+<img src="/sonar.webp" class="w-4/5 mx-auto" />
+
+---
+layout: section
+---
+
+
+# Analyse static de code
+
+<img src="/sonar-cc.webp" class="w-4/5 mx-auto" />
 
 ---
 layout: section
@@ -284,42 +387,48 @@ codeSlide: true
 
 # Un test du Bouchonnois
 
-```csharp {all|16-30}{maxHeight:'380px'}
-[Fact]
-public void AvecUnChasseurAyantDesBallesEtAssezDeGalinettesSurLeTerrain()
+```csharp {all|1|4|6-15|17-18|20-35|all}{maxHeight:'380px'}
+public class TirerSurUneGalinette
 {
-    var id = Guid.NewGuid();
-    var repository = new PartieDeChasseRepositoryForTests();
-    repository.Add(new PartieDeChasse(id, new Terrain("Pitibon sur Sauldre") {NbGalinettes = 3},
-    [
-        new("Dédé") { BallesRestantes = 20 },
-        new("Bernard") { BallesRestantes = 8 },
-        new("Robert") { BallesRestantes = 12 }
-    ]));
-    var service = new PartieDeChasseService(repository, () => DateTime.Now);
-
-    service.TirerSurUneGalinette(id, "Bernard");
-
-    var savedPartieDeChasse = repository.SavedPartieDeChasse();
-    Check.That(savedPartieDeChasse!.Id).IsEqualTo(id);
-    Check.That(savedPartieDeChasse.Status).IsEqualTo(PartieStatus.EnCours);
-    Check.That(savedPartieDeChasse.Terrain.Nom).IsEqualTo("Pitibon sur Sauldre");
-    Check.That(savedPartieDeChasse.Terrain.NbGalinettes).IsEqualTo(2);
-    Check.That(savedPartieDeChasse.Chasseurs).HasSize(3);
-    Check.That(savedPartieDeChasse.Chasseurs[0].Nom).IsEqualTo("Dédé");
-    Check.That(savedPartieDeChasse.Chasseurs[0].BallesRestantes).IsEqualTo(20);
-    Check.That(savedPartieDeChasse.Chasseurs[0].NbGalinettes).IsEqualTo(0);
-    Check.That(savedPartieDeChasse.Chasseurs[1].Nom).IsEqualTo("Bernard");
-    Check.That(savedPartieDeChasse.Chasseurs[1].BallesRestantes).IsEqualTo(7);
-    Check.That(savedPartieDeChasse.Chasseurs[1].NbGalinettes).IsEqualTo(1);
-    Check.That(savedPartieDeChasse.Chasseurs[2].Nom).IsEqualTo("Robert");
-    Check.That(savedPartieDeChasse.Chasseurs[2].BallesRestantes).IsEqualTo(12);
-    Check.That(savedPartieDeChasse.Chasseurs[2].NbGalinettes).IsEqualTo(0);
+    [Fact]
+    public void AvecUnChasseurAyantDesBallesEtAssezDeGalinettesSurLeTerrain()
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+        var repository = new PartieDeChasseRepositoryForTests();
+        repository.Add(new PartieDeChasse(id, new Terrain("Pitibon sur Sauldre") {NbGalinettes = 3},
+        [
+            new("Dédé") { BallesRestantes = 20 },
+            new("Bernard") { BallesRestantes = 8 },
+            new("Robert") { BallesRestantes = 12 }
+        ]));
+        var service = new PartieDeChasseService(repository, () => DateTime.Now);
+    
+        // Act
+        service.TirerSurUneGalinette(id, "Bernard");
+    
+        // Assert
+        var savedPartieDeChasse = repository.SavedPartieDeChasse();
+        Check.That(savedPartieDeChasse!.Id).IsEqualTo(id);
+        Check.That(savedPartieDeChasse.Status).IsEqualTo(PartieStatus.EnCours);
+        Check.That(savedPartieDeChasse.Terrain.Nom).IsEqualTo("Pitibon sur Sauldre");
+        Check.That(savedPartieDeChasse.Terrain.NbGalinettes).IsEqualTo(2);
+        Check.That(savedPartieDeChasse.Chasseurs).HasSize(3);
+        Check.That(savedPartieDeChasse.Chasseurs[0].Nom).IsEqualTo("Dédé");
+        Check.That(savedPartieDeChasse.Chasseurs[0].BallesRestantes).IsEqualTo(20);
+        Check.That(savedPartieDeChasse.Chasseurs[0].NbGalinettes).IsEqualTo(0);
+        Check.That(savedPartieDeChasse.Chasseurs[1].Nom).IsEqualTo("Bernard");
+        Check.That(savedPartieDeChasse.Chasseurs[1].BallesRestantes).IsEqualTo(7);
+        Check.That(savedPartieDeChasse.Chasseurs[1].NbGalinettes).IsEqualTo(1);
+        Check.That(savedPartieDeChasse.Chasseurs[2].Nom).IsEqualTo("Robert");
+        Check.That(savedPartieDeChasse.Chasseurs[2].BallesRestantes).IsEqualTo(12);
+        Check.That(savedPartieDeChasse.Chasseurs[2].NbGalinettes).IsEqualTo(0);
+    }
 }
 ```
 
 <v-click>
-# Qu'est ce que vous identifiez comme axe d'amélioration ici ?
+Qu'est ce que vous identifiez comme axe d'amélioration ici ?
 </v-click>
 
 ---

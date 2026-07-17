@@ -114,3 +114,10 @@
 .link-preview.link-preview-sm .link-preview-url {
   font-size: 0.65rem;
 }
+
+.mermaid-fit {
+  overflow: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

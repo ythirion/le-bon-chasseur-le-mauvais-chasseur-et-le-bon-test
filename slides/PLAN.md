@@ -1,3 +1,5 @@
+- Tour rapide dans le code
+- Ajouter class diagram
 - Un test qui contient un mensonge
 - Quoi mais on a 100% de code coverage - comment c'est possible ?
 - Code Coverage et Branch Coverage - métrique quantitative pas qualitative
@@ -5,7 +7,8 @@
 - Mutation Testing à la rescousse
 	- Démo : mutation à la main
 - Stryker : trouve des mutants - screen
-	- Démo : tueur de mutant - assert EventHasBeenEmitted
+  - Avoir un rapport sous la main
+  - Démo : tueur de mutant - assert EventHasBeenEmitted
 - A few minutes later
 - Plus de mutants
 ...
