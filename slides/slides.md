@@ -582,7 +582,7 @@ Mutation Score (%) = ( Mutants tués / Mutants générés ) × 100
 </div>
 
 ---
-layout: section
+codeSlide: true
 ---
 
 # Démo : mutation
@@ -692,18 +692,7 @@ codeSlide: true
 
 # Démo : tueur de mutant
 
-```csharp {all|1-2|4-7}
-private static readonly DateTime Now = new(2024, 6, 6, 14, 50, 45);
-private static readonly Func<DateTime> TimeProvider = () => Now;
-
-private static void AssertEventHasBeenEmitted(PartieDeChasse partieDeChasse, string expectedMessage)
-{
-    Check.That(partieDeChasse.Events).HasSize(1);
-    Check.That(partieDeChasse.Events[0]).IsEqualTo(new Event(Now, expectedMessage));
-}
-```
-
-<div class="mt-6 text-lg">On fige le temps, puis on vérifie le <strong>dernier événement métier</strong> plutôt que la seule absence d'exception.</div>
+<img src="/01.le-bon-test-ne-ment-pas/mutant.webp" class="w-64 mx-auto rounded-lg mt-8" />
 
 ---
 layout: image
