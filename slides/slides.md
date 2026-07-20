@@ -379,6 +379,28 @@ public class AddANewComment
 ```
 
 ---
+layout: section
+---
+# Quelques histoires
+Maintenant qu'on a une meilleure vue sur le code, appliquons les préceptes des meilleurs devs du Bouchonnois :
+
+<div class="text-lg space-y-3 mt-4">
+
+1. **Le bon test ne ment pas**
+2. **Le bon test, on le lit**
+3. **Le bon test, on le maintient**
+4. **Le bon test, parfois, ne s'écrit pas à la main**
+5. **Le bon test couvre ce que tu n'as pas pensé à tester**
+6. **Le bon test protège l'architecture**
+
+</div>
+
+---
+layout: image
+image: /01.le-bon-test-ne-ment-pas/tests-dont-lie.webp
+---
+
+---
 codeSlide: true
 ---
 
@@ -425,38 +447,20 @@ public class TirerSurUneGalinette
 ```
 
 ---
-layout: section
----
-# Quelques histoires
-Maintenant qu'on a une meilleure vue sur le code, appliquons les préceptes des meilleurs devs du Bouchonnois :
-
-<div class="text-lg space-y-3 mt-4">
-
-1. **Le bon test ne ment pas**
-2. **Le bon test, on le lit**
-3. **Le bon test, on le maintient**
-4. **Le bon test, parfois, ne s'écrit pas à la main**
-5. **Le bon test couvre ce que tu n'as pas pensé à tester**
-6. **Le bon test protège l'architecture**
-
-</div>
-
----
-layout: image
-image: /01.le-bon-test-ne-ment-pas/tests-dont-lie.webp
----
-
----
 codeSlide: true
 ---
 
 # Et le code de production qu'il exerce ?
 
 ```csharp
-chasseurQuiTire.BallesRestantes--;
-chasseurQuiTire.NbGalinettes++;
-partieDeChasse.Terrain.NbGalinettes--;
-partieDeChasse.Events.Add(new Event(_timeProvider(), $"{chasseur} tire sur une galinette"));
+public void TirerSurUneGalinette(Guid id, string chasseur)
+{
+    ...
+    chasseurQuiTire.BallesRestantes--;
+    chasseurQuiTire.NbGalinettes++;
+    partieDeChasse.Terrain.NbGalinettes--;
+    partieDeChasse.Events.Add(new Event(_timeProvider(), $"{chasseur} tire sur une galinette"));
+}
 ```
 
 <div class="mt-8 text-lg">
@@ -544,7 +548,7 @@ public static boolean isLong(String s) {
 layout: statement
 ---
 
-# Bon indicateur négatif, mauvais indicateur positif
+# Code Coverage : bon indicateur négatif, mauvais indicateur positif
 
 <div class="accent-badge mt-6">Le coverage ne dit jamais si ce que tu as testé est bien testé</div>
 
@@ -581,15 +585,15 @@ Mutation Score (%) = ( Mutants tués / Mutants générés ) × 100
 layout: section
 ---
 
-# Démo : mutation à la main
+# Démo : mutation
 
 <div class="text-lg space-y-3 max-w-2xl">
 
-1. On choisit une ligne du code de production (ex : `partieDeChasse.Events.Add(...)`)
-2. On la modifie/supprime à la main - c'est notre `mutant`
-3. On relance la suite de tests
+- On choisit une ligne du code de production
+- On la modifie/supprime à la main - c'est notre `mutant`
+- On relance la suite de tests
 
-<div class="accent-badge mt-4">Les tests passent toujours -> le mutant a survécu 👻</div>
+<div class="accent-badge mt-4">Les tests passent toujours : le mutant a survécu...</div>
 
 </div>
 
@@ -614,10 +618,16 @@ dotnet stryker
 
 </div>
 
-<a href="https://stryker-mutator.io/docs/stryker-net/introduction/" target="_blank" class="link-preview flex-shrink-0 w-72">
+<div class="flex flex-col items-center gap-4 flex-shrink-0 w-72">
+
+<img src="/01.le-bon-test-ne-ment-pas/stryker.webp" class="w-full rounded-lg" />
+
+<a href="https://stryker-mutator.io/docs/stryker-net/introduction/" target="_blank" class="link-preview w-full">
   <div class="link-preview-title">Stryker.NET</div>
   <div class="link-preview-url">stryker-mutator.io/docs/stryker-net</div>
 </a>
+
+</div>
 
 </div>
 
@@ -625,7 +635,24 @@ dotnet stryker
 layout: section
 ---
 
-# Exemple de rapport de mutation
+# Exemples de Mutators
+
+<div class="flex flex-row items-center justify-center gap-4">
+  <img src="/01.le-bon-test-ne-ment-pas/arithmetic-mutators.webp" class="w-1/3 rounded-lg" />
+  <img src="/01.le-bon-test-ne-ment-pas/logical-mutators.webp" class="w-1/3 rounded-lg" />
+  <img src="/01.le-bon-test-ne-ment-pas/removal-mutators.webp" class="w-1/3 rounded-lg" />
+</div>
+
+<a href="https://stryker-mutator.io/docs/stryker-net/mutations/" target="_blank" class="link-preview link-preview-sm mt-6 mx-auto w-fit">
+  <div class="link-preview-title">Mutators</div>
+  <div class="link-preview-url">stryker-mutator.io/docs/stryker-net/mutations</div>
+</a>
+
+---
+layout: section
+---
+
+# Rapport de mutation
 
 <img src="/01.le-bon-test-ne-ment-pas/sample-report.webp" class="mx-auto rounded-lg" />
 
@@ -647,8 +674,7 @@ layout: section
 # Removal / Statement mutation
 
 <div class="flex flex-col items-center gap-4">
-  <img src="/01.le-bon-test-ne-ment-pas/statement-mutation1.webp" class="w-3/5 rounded-lg" />
-  <img src="/01.le-bon-test-ne-ment-pas/statement-mutation2.webp" class="w-3/5 rounded-lg" />
+  <img src="/01.le-bon-test-ne-ment-pas/statement-mutation1.webp" class="rounded-lg" />
 </div>
 
 ---
@@ -657,7 +683,7 @@ layout: section
 
 # LinQ mutation
 
-<img src="/01.le-bon-test-ne-ment-pas/linq-mutation.webp" class="w-3/5 mx-auto rounded-lg" />
+<img src="/01.le-bon-test-ne-ment-pas/linq-mutation.webp" class="mx-auto rounded-lg" />
 
 
 ---
@@ -680,28 +706,17 @@ private static void AssertEventHasBeenEmitted(PartieDeChasse partieDeChasse, str
 <div class="mt-6 text-lg">On fige le temps, puis on vérifie le <strong>dernier événement métier</strong> plutôt que la seule absence d'exception.</div>
 
 ---
-layout: section
+layout: image
+image: /01.le-bon-test-ne-ment-pas/a-few-minutes-later.webp
 ---
-
-# A few minutes later...
-
-<div class="w-4/5 mx-auto aspect-video flex items-center justify-center rounded-lg border-4 border-dashed" style="border-color: var(--sv-yellow)">
-  <span class="text-lg opacity-80">📸 Placeholder : capture d'écran de la session de mutation killing en cours</span>
-</div>
 
 ---
 layout: section
 ---
-
-<div class="flex flex-col items-center gap-6 text-center">
 
 # Plus de mutants !
 
-<div class="w-4/5 aspect-video flex items-center justify-center rounded-lg border-4 border-dashed" style="border-color: var(--sv-yellow)">
-  <span class="text-lg opacity-80">📸 Placeholder : capture du score de mutation final</span>
-</div>
-
-</div>
+<img src="/01.le-bon-test-ne-ment-pas/mutation-100.webp" class="mx-auto rounded-lg" />
 
 ---
 layout: statement
