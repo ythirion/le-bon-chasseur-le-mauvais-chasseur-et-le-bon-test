@@ -47,12 +47,9 @@ layout: section
 <img src="/inconnus.webp" class="w-2/3 mx-auto rounded-lg" />
 
 ---
-layout: section
+layout: image
+image: /quote-chasseurs.webp
 ---
-
-# Leur philosophie
-
-<img src="/quote-chasseurs.webp" class="w-3/4 mx-auto rounded-lg" />
 
 ---
 codeSlide: true
@@ -448,6 +445,263 @@ Maintenant qu'on a une meilleure vue sur le code, appliquons les préceptes des 
 layout: image
 image: /01.le-bon-test-ne-ment-pas/tests-dont-lie.webp
 ---
+
+---
+codeSlide: true
+---
+
+# Et le code de production qu'il exerce ?
+
+```csharp
+chasseurQuiTire.BallesRestantes--;
+chasseurQuiTire.NbGalinettes++;
+partieDeChasse.Terrain.NbGalinettes--;
+partieDeChasse.Events.Add(new Event(_timeProvider(), $"{chasseur} tire sur une galinette"));
+```
+
+<div class="mt-8 text-lg">
+
+4 lignes de comportement métier. **Combien sont réellement vérifiées** par le test précédent ?
+
+</div>
+
+---
+layout: section
+---
+
+# Ce test ment
+
+<div class="text-lg space-y-4 max-w-3xl">
+
+Le test vérifie l'`Id`, le `Status`, le `Terrain`, et l'état des 3 `Chasseurs`... mais jamais `Events`.
+
+`Events` reconstitue **tout l'historique** d'une partie de chasse. Si un événement disparaît, se duplique ou change de contenu, ce test ne le verra **jamais**.
+
+<div class="accent-badge mt-4">Plus un test a l'air minutieux, plus il inspire confiance à tort</div>
+
+</div>
+
+---
+layout: section
+---
+
+<div class="flex flex-col items-center gap-6 text-center">
+
+# Quoi ?! Mais on a 100% de code coverage !
+
+<div class="accent-badge">100% coverage sur tous les fichiers</div>
+
+</div>
+
+---
+layout: section
+---
+
+<img src="/01.le-bon-test-ne-ment-pas/coverage-service.webp" class="w-3/4 mx-auto rounded-lg" />
+
+---
+codeSlide: true
+---
+
+# Code Coverage
+
+> La couverture de code mesure quelle portion du code source est **exécutée** par la suite de tests.
+
+```
+Code Coverage (%) = ( Lignes exécutées par les tests / Lignes exécutables totales ) × 100
+```
+
+<div class="mt-6 space-y-2 text-lg">
+
+- Une couverture **faible** (ex : 10%) prouve qu'on ne teste pas assez ✅
+- Une couverture **élevée** (même 100%) ne prouve **pas** qu'on a de bons tests ❌
+
+</div>
+
+---
+codeSlide: true
+---
+
+# Branch Coverage
+
+La couverture de branches se concentre sur les structures de contrôle (`if`, `switch`) : combien de chemins sont traversés par au moins un test.
+
+```
+Branch Coverage (%) = ( Branches exécutées par au moins un test / Nombre total de branches ) × 100
+```
+
+```java
+// 2 chemins possibles : length > 5 et length <= 5
+// Un test sur un seul chemin = 50% de branch coverage
+public static boolean isLong(String s) {
+    return s.length() > 5;
+}
+```
+
+<div class="mt-4 text-lg">1 test (`isLong("hello") == false`) → 100% de <strong>Code Coverage</strong>, seulement 50% de <strong>Branch Coverage</strong>.</div>
+
+---
+layout: statement
+---
+
+# Bon indicateur négatif, mauvais indicateur positif
+
+<div class="accent-badge mt-6">Le coverage ne dit jamais si ce que tu as testé est bien testé</div>
+
+---
+codeSlide: true
+---
+
+<div class="flex items-center gap-12">
+
+<div class="flex-1">
+
+# Le Mutation Testing à la rescousse ?
+
+Introduire volontairement un petit bug (un `mutant`) dans le code de production, puis relancer les tests.
+
+```
+Mutation Score (%) = ( Mutants tués / Mutants générés ) × 100
+```
+
+<div class="mt-6 space-y-2 text-lg">
+
+- Un test échoue → le mutant est **tué** → le comportement est réellement vérifié
+- Tous les tests passent → le mutant **survit** → aucun test ne vérifie ce comportement
+
+</div>
+
+</div>
+
+<img src="/01.le-bon-test-ne-ment-pas/mutant.webp" class="w-56 flex-shrink-0 rounded-lg" />
+
+</div>
+
+---
+layout: section
+---
+
+# Démo : mutation à la main
+
+<div class="text-lg space-y-3 max-w-2xl">
+
+1. On choisit une ligne du code de production (ex : `partieDeChasse.Events.Add(...)`)
+2. On la modifie/supprime à la main - c'est notre `mutant`
+3. On relance la suite de tests
+
+<div class="accent-badge mt-4">Les tests passent toujours -> le mutant a survécu 👻</div>
+
+</div>
+
+---
+layout: section
+---
+
+<div class="flex items-center gap-12">
+
+<div class="flex-1">
+
+# Stryker : trouve des mutants pour nous
+
+```bash
+dotnet tool install -g dotnet-stryker
+```
+
+```bash
+cd src
+dotnet stryker
+```
+
+</div>
+
+<a href="https://stryker-mutator.io/docs/stryker-net/introduction/" target="_blank" class="link-preview flex-shrink-0 w-72">
+  <div class="link-preview-title">Stryker.NET</div>
+  <div class="link-preview-url">stryker-mutator.io/docs/stryker-net</div>
+</a>
+
+</div>
+
+---
+layout: section
+---
+
+# Exemple de rapport de mutation
+
+<img src="/01.le-bon-test-ne-ment-pas/sample-report.webp" class="mx-auto rounded-lg" />
+
+---
+layout: section
+---
+
+# String mutation
+
+<div class="flex flex-row items-center justify-center gap-4">
+  <img src="/01.le-bon-test-ne-ment-pas/string-mutation1.webp" class="w-2/5 rounded-lg" />
+  <img src="/01.le-bon-test-ne-ment-pas/string-mutation2.webp" class="w-2/5 rounded-lg" />
+</div>
+
+---
+layout: section
+---
+
+# Removal / Statement mutation
+
+<div class="flex flex-col items-center gap-4">
+  <img src="/01.le-bon-test-ne-ment-pas/statement-mutation1.webp" class="w-3/5 rounded-lg" />
+  <img src="/01.le-bon-test-ne-ment-pas/statement-mutation2.webp" class="w-3/5 rounded-lg" />
+</div>
+
+---
+layout: section
+---
+
+# LinQ mutation
+
+<img src="/01.le-bon-test-ne-ment-pas/linq-mutation.webp" class="w-3/5 mx-auto rounded-lg" />
+
+
+---
+codeSlide: true
+---
+
+# Démo : tueur de mutant
+
+```csharp {all|1-2|4-7}
+private static readonly DateTime Now = new(2024, 6, 6, 14, 50, 45);
+private static readonly Func<DateTime> TimeProvider = () => Now;
+
+private static void AssertEventHasBeenEmitted(PartieDeChasse partieDeChasse, string expectedMessage)
+{
+    Check.That(partieDeChasse.Events).HasSize(1);
+    Check.That(partieDeChasse.Events[0]).IsEqualTo(new Event(Now, expectedMessage));
+}
+```
+
+<div class="mt-6 text-lg">On fige le temps, puis on vérifie le <strong>dernier événement métier</strong> plutôt que la seule absence d'exception.</div>
+
+---
+layout: section
+---
+
+# A few minutes later...
+
+<div class="w-4/5 mx-auto aspect-video flex items-center justify-center rounded-lg border-4 border-dashed" style="border-color: var(--sv-yellow)">
+  <span class="text-lg opacity-80">📸 Placeholder : capture d'écran de la session de mutation killing en cours</span>
+</div>
+
+---
+layout: section
+---
+
+<div class="flex flex-col items-center gap-6 text-center">
+
+# Plus de mutants !
+
+<div class="w-4/5 aspect-video flex items-center justify-center rounded-lg border-4 border-dashed" style="border-color: var(--sv-yellow)">
+  <span class="text-lg opacity-80">📸 Placeholder : capture du score de mutation final</span>
+</div>
+
+</div>
 
 ---
 layout: statement
