@@ -1,0 +1,31 @@
+histoires/02.le-bon-test-on-le-lit/solution.md
+  s_376ff76ce8bed6::t_6bb84f2bc2fbb9 282-291,296,299,309,321,326-331,349-352,356-365
+  s_376ff76ce8bed6::t_2c710122d6cc71 482-484,488
+  s_376ff76ce8bed6::t_9c9a68cec32957 413-415
+  s_376ff76ce8bed6::t_4ac1a79d67d21a 491-497
+  s_376ff76ce8bed6::t_e456f2bc4877ee 208
+  s_376ff76ce8bed6::t_b92952cb1d41f4 222-227
+  s_376ff76ce8bed6::t_c501eb21c22b75 205
+  s_376ff76ce8bed6::t_0655521a0c8a90 144
+  s_376ff76ce8bed6::t_ecb8728def6ecb 146,149,159-164,183-198
+histoires/02.le-bon-test-on-le-lit/enonce.md
+  s_376ff76ce8bed6::t_0b2ec33f77963a 98,100-104
+  s_376ff76ce8bed6::t_8646a5bda1746f 113
+  s_376ff76ce8bed6::t_af7c980effd02a 125-126
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "9bd49a87284dbcb3d03132d7f796925349323fda",
+  "prompts": {},
+  "sessions": {
+    "s_376ff76ce8bed6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d7f85c57-10b1-40c7-b74f-7159dd35de88",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  }
+}
