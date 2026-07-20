@@ -55,11 +55,10 @@ Une base de code en `C#` / `.NET 10` : les chasseurs du Bouchonnois et leurs par
 Sauf qu'ici, le gibier n'est pas sur le terrain de Pitibon sur Sauldre. Il est dans les tests. À chaque histoire, on part à l'affût d'une espèce différente de mauvais test - celui qui ment, celui qu'on ne comprend plus, celui qu'on n'ose plus toucher - avec, à chaque fois, le même déroulé : un symptôme, un diagnostic, un remède.
 
 - [Histoire 1 : Le bon test ne ment pas](histoires/01.le-bon-test-ne-ment-pas/enonce.md) : la chasse aux mutants, pour débusquer les assertions qui passent toujours, parce que *"never trust a test you haven't seen fail"*.
-- **Histoire 2 : Le bon test, on le lit** : Test Data Builders, Object Mothers, DSL Given/When/Then - ou comment transformer un test de 30 lignes en spec métier lisible en 5 secondes.
-- **Histoire 3 : Le bon test, on le maintient** : SRP, DRY, hiérarchie de classes - les principes Clean Code s'appliquent aux tests autant qu'au code de prod.
-- **Histoire 4 : Le bon test, parfois, ne s'écrit pas à la main** : l'Approval Testing pour les scénarios à grosses assertions, et les pièges qui vont avec.
-- **Histoire 5 : Le bon test couvre ce que tu n'as pas pensé à tester** : une propriété, 100 exécutions, et les cas tordus que t'aurais mis des mois à imaginer seul.
-- **Histoire 6 : Le bon test protège l'architecture** : matérialiser les règles d'oignon, d'hexagonal, de Clean Architecture en tests qui échouent au premier merge incorrect.
+- [Histoire 2 : Le bon test, on le lit](histoires/02.le-bon-test-on-le-lit/enonce.md) : Test Data Builders, Object Mothers, DSL Given/When/Then - ou comment transformer un test de 30 lignes en spec métier lisible en 5 secondes.
+- **Histoire 3 : Le bon test, parfois, ne s'écrit pas à la main** : l'Approval Testing pour les scénarios à grosses assertions, et les pièges qui vont avec.
+- **Histoire 4 : Le bon test couvre ce que tu n'as pas pensé à tester** : une propriété, 100 exécutions, et les cas tordus que t'aurais mis des mois à imaginer seul.
+- **Histoire 5 : Le bon test protège l'architecture** : matérialiser les règles d'oignon, d'hexagonal, de Clean Architecture en tests qui échouent au premier merge incorrect.
 
 ## Slides
 Les slides de présentation ([Slidev](https://sli.dev/), thème custom repris de la charte visuelle de l'atelier) sont dans [`slides/`](slides).
