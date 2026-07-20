@@ -1,0 +1,60 @@
+src/Bouchonnois.Tests/Unit/Service/TirerSurUneGalinette.cs
+  h_0a88d9aba8622a 17-19,44,97,115
+  s_376ff76ce8bed6::t_2c60ac9032fbf6 1-16,20-43,45-96,98-114,116-117
+src/Bouchonnois.Tests/Acceptance/ScenarioTests.cs
+  s_376ff76ce8bed6::t_b034ecb5a9570b 1,111
+src/Bouchonnois.Tests/Assertions/PartieDeChasseAssertions.cs
+  h_0a88d9aba8622a 5,11,17,29
+  s_376ff76ce8bed6::t_675e45c91b74a3 1-4,6-10,12-16,18-28,30-38
+src/Bouchonnois.Tests/Unit/Service/ReprendreLaPartieDeChasse.cs
+  s_376ff76ce8bed6::t_ae426f5a0a8a73 1-17,20-61
+  h_0a88d9aba8622a 18-19
+src/Bouchonnois.Tests/Unit/Service/TerminerLaPartieDeChasse.cs
+  s_376ff76ce8bed6::t_fa2f79100e21e0 1-17,20-34,37-51,54-69,72-90,93-111
+  h_0a88d9aba8622a 18-19,35-36,52-53,70-71,91-92
+src/Bouchonnois.Tests/Unit/Service/Tirer.cs
+  s_376ff76ce8bed6::t_77ba12fe1cea5c 1-16,20-43,45-77,79-94,96-97
+  h_0a88d9aba8622a 17-19,44,78,95
+src/Bouchonnois.Tests/Unit/Service/ConsulterStatus.cs
+  s_376ff76ce8bed6::t_c4feb7ce9d6b33 1,3,5-6,8-13,15-16,18,20-24,26-34,36-53,55-56,58-59,61,63-65,86-87,89-92,94-95,97
+src/Bouchonnois.Tests/Builders/PartieDeChasseBuilder.cs
+  s_376ff76ce8bed6::t_fd71810552b983 1-2,4-57
+  h_0a88d9aba8622a 3
+src/Bouchonnois.Tests/Builders/ChasseurBuilder.cs
+  h_0a88d9aba8622a 3
+  s_376ff76ce8bed6::t_d4f327cde82c8a 1-2,4-33
+src/Bouchonnois.Tests/Unit/Service/PartieDeChasseServiceTest.cs
+  h_0a88d9aba8622a 6,17,21
+  s_376ff76ce8bed6::t_4dfcd175171bf1 9,14
+  s_376ff76ce8bed6::t_2458042129fbce 1-5,7-8,10-13,15-16,18-20,22-24
+src/Bouchonnois.Tests/Unit/Service/DemarrerUnePartieDeChasse.cs
+  h_0a88d9aba8622a 21-26
+  s_376ff76ce8bed6::t_b701aafb74a3b9 30-31,33-34,36,38-40,42-46,48,50-52,54-57,59-69
+  s_376ff76ce8bed6::t_5a8e3c2c80a45e 1-20,27-29,32,35,37,41,47,49,53,58,70-71
+src/Bouchonnois.Tests/Unit/Service/PrendreLApéro.cs
+  s_376ff76ce8bed6::t_17043701cce221 1-16,19-61
+  h_0a88d9aba8622a 17-18
+src/Bouchonnois.Tests/Usings.cs
+  s_376ff76ce8bed6::t_a815f47a3294c9 2-10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "e473b14273e4df5de3e6e3180615baab79d5c3db",
+  "prompts": {},
+  "humans": {
+    "h_0a88d9aba8622a": {
+      "author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_376ff76ce8bed6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d7f85c57-10b1-40c7-b74f-7159dd35de88",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  }
+}
