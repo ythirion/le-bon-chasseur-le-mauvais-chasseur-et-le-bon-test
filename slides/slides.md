@@ -708,6 +708,498 @@ layout: section
 <img src="/01.le-bon-test-ne-ment-pas/mutation-100.webp" class="mx-auto rounded-lg" />
 
 ---
+layout: image
+image: /02.le-bon-test-on-le-lit/le-bon-test-on-le-lit.webp
+---
+
+---
+layout: statement
+---
+
+# "Any fool can write code that a computer can understand. Good programmers write code that humans can understand."
+
+Martin Fowler
+
+---
+codeSlide: true
+---
+
+# Un test qu'il faut déchiffrer
+
+On a tué nos mutants (Histoire 1). `Events` est vérifié partout, `Stryker` est content. Regardons `AvecUnChasseurAyantDesBallesEtAssezDeGalinettesSurLeTerrain` une fois corrigé :
+
+```csharp {all|17-25|27|29-37}{maxHeight:'340px'}
+public class PartieDeChasseServiceTests
+{
+    private static readonly DateTime Now = new(2024, 6, 6, 14, 50, 45);
+    private static readonly Func<DateTime> TimeProvider = () => Now;
+
+    private static void AssertLastEvent(PartieDeChasse partieDeChasse, string expectedMessage)
+    {
+        Check.That(partieDeChasse.Events).HasSize(1);
+        Check.That(partieDeChasse.Events[0]).IsEqualTo(new Event(Now, expectedMessage));
+    }
+
+    public class TirerSurUneGalinette
+    {
+        [Fact]
+        public void AvecUnChasseurAyantDesBallesEtAssezDeGalinettesSurLeTerrain()
+        {
+            var id = Guid.NewGuid();
+            var repository = new PartieDeChasseRepositoryForTests();
+            repository.Add(new PartieDeChasse(id, new Terrain("Pitibon sur Sauldre") {NbGalinettes = 3},
+            [
+                new("Dédé") { BallesRestantes = 20 },
+                new("Bernard") { BallesRestantes = 8 },
+                new("Robert") { BallesRestantes = 12 }
+            ]));
+            var service = new PartieDeChasseService(repository, TimeProvider);
+
+            service.TirerSurUneGalinette(id, "Bernard");
+
+            var savedPartieDeChasse = repository.SavedPartieDeChasse();
+            Check.That(savedPartieDeChasse!.Id).IsEqualTo(id);
+            Check.That(savedPartieDeChasse.Status).IsEqualTo(PartieStatus.EnCours);
+            Check.That(savedPartieDeChasse.Terrain.Nom).IsEqualTo("Pitibon sur Sauldre");
+            Check.That(savedPartieDeChasse.Terrain.NbGalinettes).IsEqualTo(2);
+            Check.That(savedPartieDeChasse.Chasseurs).HasSize(3);
+            // ... 8 lignes de Check.That sur Dédé, Bernard, Robert
+
+            AssertLastEvent(savedPartieDeChasse, "Bernard tire sur une galinette");
+        }
+    }
+}
+```
+
+---
+layout: section
+---
+
+<div class="text-lg space-y-4 max-w-3xl">
+
+# Ce test ne ment plus. Mais...
+
+Il n'a pas rétréci - il a même **grandi** d'une ligne. Chaque test d'erreur en a gagné deux (`.WithMessage(...)`, `AssertLastEvent(...)`).
+
+Le signal (*"1 balle en moins, 1 galinette de plus pour Bernard"*) reste noyé dans le bruit (`Id`, `Nom`, `Terrain`... répétés à l'identique d'un test à l'autre).
+
+<div class="accent-badge mt-4">Combien de temps pour dire ce que ce test prouve, sans l'exécuter ?</div>
+
+</div>
+
+---
+layout: statement
+---
+
+# Une seule classe, `848+` lignes, des dizaines de tests qui se ressemblent tous
+
+<div class="accent-badge mt-6">Un bon test se lit / comprend en 5 secondes</div>
+
+---
+codeSlide: true
+---
+
+<div class="h-full flex items-center justify-center">
+
+<div class="flex flex-col items-center gap-4 max-w-2xl">
+
+# Test Data Builders
+
+Sans builder - couplé au constructeur :
+
+```csharp
+var address = new Address("Rue Sainte Catherine", "Bordeaux", new PostalCode("33000", "1 Bis"));
+```
+
+<div class="accent-badge">Si le constructeur d'Address change, chaque test qui construit une Address doit changer</div>
+
+<v-click>
+Avec un `Test Data Builder` :
+
+```csharp
+var address = ANewAddress()
+    .At("Bordeaux")
+    .InStreet("Rue Sainte Catherine")
+    .WithPostalCode(_ => _.WithNumber("1 Bis"))
+    .Build();
+```
+
+<a href="https://blog.ploeh.dk/2017/08/15/test-data-builders-in-c/" target="_blank" class="link-preview link-preview-sm mt-2">
+  <div class="link-preview-title">Test Data Builders in C#</div>
+  <div class="link-preview-url">blog.ploeh.dk/2017/08/15/test-data-builders-in-c</div>
+</a>
+</v-click>
+
+</div>
+
+</div>
+
+---
+codeSlide: true
+---
+
+# Le Builder : un point d'interception
+
+<div class="flex items-center gap-12">
+
+<div class="flex-1 min-w-0">
+
+
+
+```csharp {all|28-29}{maxHeight:'320px'}
+public class AddressBuilder
+{
+    private string _city = "Paris";
+    private string _street = "";
+    private PostalCodeBuilder _postalCode = new();
+
+    public static AddressBuilder ANewAddress() => new();
+
+    public AddressBuilder At(string city)
+    {
+        _city = city;
+        return this;
+    }
+
+    public AddressBuilder InStreet(string street)
+    {
+        _street = street;
+        return this;
+    }
+
+    public AddressBuilder WithPostalCode(
+        Func<PostalCodeBuilder, PostalCodeBuilder> configure)
+    {
+        _postalCode = configure(_postalCode);
+        return this;
+    }
+
+    // Seul endroit qui connaît la signature du constructeur d'Address
+    public Address Build() => new(_street, _city, _postalCode.Build());
+}
+```
+
+</div>
+
+<div class="flex-shrink-0 w-72 text-lg">
+
+Si `Address` gagne un champ, perd un champ, ou change l'ordre de ses paramètres : **un seul fichier à modifier**.
+
+<div class="accent-badge mt-4">Pas de résistance aux refactorings</div>
+
+</div>
+
+</div>
+
+---
+layout: statement
+---
+
+# "This eliminates the irrelevant, and amplifies the essentials of the test."
+
+Robert C. Martin
+
+---
+codeSlide: true
+---
+
+<div class="h-full flex items-center justify-center">
+
+<div class="flex flex-col items-center gap-4 max-w-2xl">
+
+# Object Mothers
+
+Des méthodes statiques nommées qui construisent un objet "connu" et réutilisable, pour ne pas ressaisir ses détails dans chaque test :
+
+```java
+Address anAdressAtDijon = Addresses.Dijon();
+```
+
+<div class="accent-badge">Mais la moindre variation fait exploser le nombre de méthodes</div>
+
+```java 
+Address anAdressAtParis = Addresses.Paris();
+Address anAdressAtLondon = Addresses.London();
+Address anAdressAtRennes = Addresses.Rennes();
+// ...
+```
+
+<div class="text-sm opacity-80">D'où l'intérêt de combiner Object Mother (points de départ nommés) et Builder (variations) - ce qu'on va faire dans le Bouchonnois.</div>
+
+<a href="http://www.natpryce.com/articles/000714.html" target="_blank" class="link-preview link-preview-sm mt-2">
+  <div class="link-preview-title">Test Data Builders vs Object Mother</div>
+  <div class="link-preview-url">natpryce.com/articles/000714.html</div>
+</a>
+
+</div>
+
+</div>
+
+---
+layout: section
+---
+
+# Des assertions qui parlent le métier
+
+<div class="text-lg space-y-3 max-w-2xl">
+
+`AssertLastEvent` (Histoire 1) est déjà une bonne intuition : une méthode nommée qui cache 2 `Check.That` derrière une phrase métier.
+
+On va généraliser cette intuition à tout le reste du bloc d'assertions - puis pousser le raisonnement un cran plus loin.
+
+</div>
+
+---
+layout: section
+---
+
+# Splitter la classe de tests
+
+<div class="flex flex-row items-center justify-center gap-6">
+  <img src="/02.le-bon-test-on-le-lit/extract-field.webp" class="w-3/5 rounded-lg" />
+  <img src="/02.le-bon-test-on-le-lit/pull-up-member.webp" class="w-2/5 rounded-lg" />
+</div>
+
+<div class="text-center mt-4">On centralise `Repository` / `Service` (extract field, puis pull up member)</div>
+
+---
+layout: section
+---
+
+<div class="flex flex-col items-center gap-4">
+  <img src="/02.le-bon-test-on-le-lit/move-to-file.webp" class="w-2/3 rounded-lg" />
+  <img src="/02.le-bon-test-on-le-lit/split-result.webp" class="w-1/3 rounded-lg" />
+</div>
+
+<div class="text-center mt-2">Chaque classe part `safe` dans son propre fichier</div>
+
+---
+layout: section
+---
+
+# Unit vs Acceptance
+
+<img src="/02.le-bon-test-on-le-lit/acceptance-unit.webp" class="w-2/5 mx-auto rounded-lg" />
+
+<div class="text-center mt-4">`ScenarioTests.cs` rejoue une partie entière : ce n'est pas un test unitaire, il mérite son propre dossier</div>
+
+---
+codeSlide: true
+---
+
+# Écrire son premier Test Data Builder
+
+<div class="flex flex-row items-center gap-8">
+
+<img src="/02.le-bon-test-on-le-lit/partie-de-chasse-builder.webp" class="w-1/2 rounded-lg" />
+
+<div class="flex-1">
+
+On écrit d'abord, en mots, ce qu'on voudrait pouvoir écrire, puis on génère le code depuis l'IDE.
+
+<a href="https://xtrem-tdd.netlify.app/Flavours/generate-code-from-usage" target="_blank" class="link-preview link-preview-sm mt-4">
+  <div class="link-preview-title">Generate Code From Usage</div>
+  <div class="link-preview-url">xtrem-tdd.netlify.app/Flavours/generate-code-from-usage</div>
+</a>
+
+</div>
+
+</div>
+
+---
+codeSlide: true
+---
+
+# PartieDeChasseBuilder
+
+```csharp {all|7|3-5|9-13|21-26}{maxHeight:'380px'}
+public class PartieDeChasseBuilder
+{
+    private int _nbGalinettes = 3;
+    private PartieStatus _status = PartieStatus.EnCours;
+    private ChasseurBuilder[] _chasseurs = [];
+
+    public static PartieDeChasseBuilder UnePartieDeChasseDuBouchonnois() => new();
+
+    public PartieDeChasseBuilder SurUnTerrainRicheEnGalinettes(int nbGalinettes = 3)
+    {
+        _nbGalinettes = nbGalinettes;
+        return this;
+    }
+
+    public PartieDeChasseBuilder Avec(params ChasseurBuilder[] chasseurs)
+    {
+        _chasseurs = chasseurs;
+        return this;
+    }
+
+    public PartieDeChasse Build() => new(
+        Guid.NewGuid(),
+        new Terrain("Pitibon sur Sauldre") { NbGalinettes = _nbGalinettes },
+        _chasseurs.Select(c => c.Build()).ToList(),
+        _status
+    );
+}
+```
+
+---
+codeSlide: true
+---
+
+# ChasseurBuilder : Builder + Object Mother
+
+```csharp {all|13-16}{maxHeight:'380px'}
+public class ChasseurBuilder
+{
+    private readonly string _nom;
+    private int _ballesRestantes;
+    private int _nbGalinettes;
+
+    private ChasseurBuilder(string nom, int ballesRestantes)
+    {
+        _nom = nom;
+        _ballesRestantes = ballesRestantes;
+    }
+
+    // Object Mothers
+    public static ChasseurBuilder Dédé() => new("Dédé", ballesRestantes: 20);
+    public static ChasseurBuilder Bernard() => new("Bernard", ballesRestantes: 8);
+    public static ChasseurBuilder Robert() => new("Robert", ballesRestantes: 12);
+
+    public Chasseur Build() => new(_nom)
+    {
+        BallesRestantes = _ballesRestantes,
+        NbGalinettes = _nbGalinettes
+    };
+}
+```
+
+---
+layout: section
+---
+
+# On identifie ce qu'on veut pouvoir écrire
+
+<img src="/02.le-bon-test-on-le-lit/assertions.webp" class="mx-auto rounded-lg" />
+
+---
+codeSlide: true
+---
+
+# Premier réflexe : `Should` / `Have`
+
+```csharp
+savedPartieDeChasse.ShouldHaveChasseurWith("Bernard", ballesRestantes: 7, galinettes: 1);
+savedPartieDeChasse.ShouldHaveGalinettesOnTerrain(2);
+savedPartieDeChasse.ShouldHaveEmittedEvent(Now, "Bernard tire sur une galinette");
+```
+
+<div class="mt-8 text-lg max-w-2xl">
+
+Déjà bien plus lisible qu'un bloc de `Check.That`. Mais `Should` / `Have` restent du vocabulaire de **testeur**, pas du vocabulaire **métier** - jamais dans la bouche d'un chasseur du Bouchonnois.
+
+</div>
+
+---
+codeSlide: true
+---
+
+# On nomme dans la langue du métier
+
+```csharp {all|3-9|11-18|20-24}{maxHeight:'340px'}
+public static class PartieDeChasseAssertions
+{
+    public static PartieDeChasse AÉmisLÉvénement(
+        this PartieDeChasse partieDeChasse, DateTime expectedTime, string expectedMessage)
+    {
+        Check.That(partieDeChasse.Events).HasSize(1);
+        Check.That(partieDeChasse.Events[0]).IsEqualTo(new Event(expectedTime, expectedMessage));
+        return partieDeChasse;
+    }
+
+    public static PartieDeChasse ContientLeChasseurAvec(
+        this PartieDeChasse partieDeChasse, string nom, int ballesRestantes, int galinettes)
+    {
+        var chasseur = partieDeChasse.Chasseurs.Single(c => c.Nom == nom);
+        Check.That(chasseur.BallesRestantes).IsEqualTo(ballesRestantes);
+        Check.That(chasseur.NbGalinettes).IsEqualTo(galinettes);
+        return partieDeChasse;
+    }
+
+    public static PartieDeChasse ContientLesGalinettes(this PartieDeChasse partieDeChasse, int nbGalinettes)
+    {
+        Check.That(partieDeChasse.Terrain.NbGalinettes).IsEqualTo(nbGalinettes);
+        return partieDeChasse;
+    }
+}
+```
+
+---
+layout: section
+---
+
+<div class="text-lg space-y-4 max-w-3xl">
+
+# Pourquoi ça compte vraiment ?
+
+Chaînées, ces assertions se lisent comme une phrase qui décrit l'état attendu de la partie de chasse - pas comme une checklist technique.
+
+C'est le nom de la méthode qui apparaît dans le message d'échec quand le test devient rouge :
+
+```
+at PartieDeChasseAssertions.ContientLeChasseurAvec(...)
+```
+
+<div class="accent-badge mt-4">Moins de traduction mentale entre l'échec et sa compréhension = moins de charge cognitive</div>
+
+</div>
+
+---
+codeSlide: true
+---
+
+# Le test se réduit à ce qui compte
+
+```csharp
+[Fact]
+public void AvecUnChasseurAyantDesBallesEtAssezDeGalinettesSurLeTerrain()
+{
+    var partieDeChasse = AvecUnePartieDeChasseExistante(
+        UnePartieDeChasseDuBouchonnois()
+            .SurUnTerrainRicheEnGalinettes()
+            .Avec(Dédé(), Bernard(), Robert())
+    );
+
+    PartieDeChasseService.TirerSurUneGalinette(partieDeChasse.Id, "Bernard");
+
+    Repository.SavedPartieDeChasse()!
+        .ContientLeChasseurAvec("Bernard", ballesRestantes: 7, galinettes: 1)
+        .ContientLesGalinettes(2)
+        .AÉmisLÉvénement(Now, "Bernard tire sur une galinette");
+}
+```
+
+<div class="accent-badge mt-6">De 33 à 8 lignes</div>
+
+---
+layout: section
+---
+
+# On vérifie la fiabilité de ces nouveaux outils
+
+<img src="/02.le-bon-test-on-le-lit/mutant-chasseur.webp" class="mx-auto rounded-lg" />
+
+<div class="text-center mt-4">Mutant introduit à la main (chasseurQuiTire.NbGalinettes++) : détecté ✅</div>
+
+---
+layout: statement
+---
+
+# Le bon test, on le lit en 5 secondes
+
+<div class="accent-badge mt-6">Test Data Builders + Object Mothers + assertions métier</div>
+
+---
 layout: statement
 ---
 
