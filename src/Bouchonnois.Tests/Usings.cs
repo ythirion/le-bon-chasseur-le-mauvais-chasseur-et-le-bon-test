@@ -1,2 +1,10 @@
 global using Xunit;
 global using NFluent;
+global using Bouchonnois.Domain;
+global using Bouchonnois.Domain.Exceptions;
+global using Bouchonnois.Service;
+global using Bouchonnois.Tests.Doubles;
+global using Bouchonnois.Tests.Builders;
+global using Bouchonnois.Tests.Assertions;
+global using static Bouchonnois.Tests.Builders.PartieDeChasseBuilder;
+global using static Bouchonnois.Tests.Builders.ChasseurBuilder;

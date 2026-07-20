@@ -1,8 +1,4 @@
-using Bouchonnois.Domain.Exceptions;
-using Bouchonnois.Service;
-using Bouchonnois.Tests.Doubles;
-
-namespace Bouchonnois.Tests.Service;
+namespace Bouchonnois.Tests.Acceptance;
 
 public class ScenarioTests
 {
