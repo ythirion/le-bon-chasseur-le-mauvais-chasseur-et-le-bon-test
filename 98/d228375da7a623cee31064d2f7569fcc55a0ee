@@ -1,0 +1,28 @@
+slides/slides.md
+  s_679d83ea9ad200::t_87391a8a862780 396,632,639-650
+  h_0a88d9aba8622a 456-458,463,551,592-594,596,638,655,677,686,709-710,719
+  s_679d83ea9ad200::t_006a2d480059a3 621-625
+  s_679d83ea9ad200::t_2030595cb249ea 393-395
+  s_679d83ea9ad200::t_8a2b8312121efa 397-399
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "98d228375da7a623cee31064d2f7569fcc55a0ee",
+  "prompts": {},
+  "humans": {
+    "h_0a88d9aba8622a": {
+      "author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_679d83ea9ad200": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "60636a25-1afd-436c-87ac-5dc07fb42202",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  }
+}
