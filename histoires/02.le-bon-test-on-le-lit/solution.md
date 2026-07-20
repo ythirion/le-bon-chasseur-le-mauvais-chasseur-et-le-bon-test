@@ -141,17 +141,24 @@ Puis on génère les classes correspondantes depuis l'IDE ([`Generate Code From 
 
 ```csharp
 // Bouchonnois.Tests.Builders
-internal class PartieDeChasseBuilder
+public class PartieDeChasseBuilder
 {
-    private int _nbGalinettes;
+    private int _nbGalinettes = 3;
     private PartieStatus _status = PartieStatus.EnCours;
     private ChasseurBuilder[] _chasseurs = [];
+    private List<Event>? _historique;
 
     public static PartieDeChasseBuilder UnePartieDeChasseDuBouchonnois() => new();
 
     public PartieDeChasseBuilder SurUnTerrainRicheEnGalinettes(int nbGalinettes = 3)
     {
         _nbGalinettes = nbGalinettes;
+        return this;
+    }
+
+    public PartieDeChasseBuilder SurUnTerrainSansGalinettes()
+    {
+        _nbGalinettes = 0;
         return this;
     }
 
@@ -173,22 +180,32 @@ internal class PartieDeChasseBuilder
         return this;
     }
 
-    public PartieDeChasse Build() => new(
-        Guid.NewGuid(),
-        new Terrain("Pitibon sur Sauldre") { NbGalinettes = _nbGalinettes },
-        _chasseurs.Select(c => c.Build()).ToList(),
-        _status
-    );
+    // Pour les tests de ConsulterStatus, qui rejouent un historique d'événements plutôt qu'un état
+    public PartieDeChasseBuilder AvecCommeHistorique(params Event[] events)
+    {
+        _historique = events.ToList();
+        return this;
+    }
+
+    public PartieDeChasse Build()
+    {
+        var terrain = new Terrain("Pitibon sur Sauldre") { NbGalinettes = _nbGalinettes };
+        var chasseurs = _chasseurs.Select(c => c.Build()).ToList();
+
+        return _historique is not null
+            ? new PartieDeChasse(Guid.NewGuid(), terrain, chasseurs, _historique)
+            : new PartieDeChasse(Guid.NewGuid(), terrain, chasseurs, _status);
+    }
 }
 ```
 
 On combine avec un `ChasseurBuilder`, qui mélange `Builder` et `Object Mother` (les 3 chasseurs "connus" du fichier de tests) :
 
 ```csharp
-internal class ChasseurBuilder
+public class ChasseurBuilder
 {
     private readonly string _nom;
-    private readonly int _ballesRestantes;
+    private int _ballesRestantes;
     private int _nbGalinettes;
 
     private ChasseurBuilder(string nom, int ballesRestantes)
@@ -201,6 +218,12 @@ internal class ChasseurBuilder
     public static ChasseurBuilder Dédé() => new("Dédé", ballesRestantes: 20);
     public static ChasseurBuilder Bernard() => new("Bernard", ballesRestantes: 8);
     public static ChasseurBuilder Robert() => new("Robert", ballesRestantes: 12);
+
+    public ChasseurBuilder SansBalles()
+    {
+        _ballesRestantes = 0;
+        return this;
+    }
 
     public ChasseurBuilder AyantDéjàCapturé(int nbGalinettes)
     {
@@ -256,14 +279,24 @@ On identifie d'abord ce qu'on veut pouvoir écrire :
 
 ![Assertions ciblées](img/assertions.webp)
 
+Premier jet, en anglais, avec le préfixe `Should` par réflexe (c'est celui de `FluentAssertions`, qu'on a l'habitude de croiser) :
+
+```csharp
+savedPartieDeChasse.ShouldHaveChasseurWith("Bernard", ballesRestantes: 7, galinettes: 1);
+savedPartieDeChasse.ShouldHaveGalinettesOnTerrain(2);
+savedPartieDeChasse.ShouldHaveEmittedEvent(Now, "Bernard tire sur une galinette");
+```
+
+C'est déjà nettement plus lisible qu'un bloc de `Check.That`. Mais `Should` / `Have` restent du vocabulaire de testeur - le genre de mot qu'on trouve dans la documentation d'une librairie d'assertion, jamais dans la bouche d'un chasseur du Bouchonnois. On renomme pour que chaque méthode se lise comme une affirmation sur l'état de la `PartieDeChasse`, pas comme une case à cocher :
+
 ```csharp
 // Bouchonnois.Tests.Assertions
 // Remplace le AssertLastEvent statique de l'Histoire 1 : même vérification, mais découvrable
 // directement en autocomplete depuis `partieDeChasse.` et chaînable avec les autres assertions
-internal static class PartieDeChasseAssertions
+public static class PartieDeChasseAssertions
 {
     // On renvoie `partieDeChasse` pour pouvoir chaîner plusieurs assertions sur le même objet
-    internal static PartieDeChasse ShouldHaveEmittedEvent(
+    public static PartieDeChasse AÉmisLÉvénement(
         this PartieDeChasse partieDeChasse,
         DateTime expectedTime,
         string expectedMessage)
@@ -273,7 +306,7 @@ internal static class PartieDeChasseAssertions
         return partieDeChasse;
     }
 
-    internal static PartieDeChasse ShouldHaveChasseurWith(
+    public static PartieDeChasse ContientLeChasseurAvec(
         this PartieDeChasse partieDeChasse,
         string nom,
         int ballesRestantes,
@@ -285,9 +318,15 @@ internal static class PartieDeChasseAssertions
         return partieDeChasse;
     }
 
-    internal static PartieDeChasse ShouldHaveGalinettesOnTerrain(this PartieDeChasse partieDeChasse, int nbGalinettes)
+    public static PartieDeChasse ContientLesGalinettes(this PartieDeChasse partieDeChasse, int nbGalinettes)
     {
         Check.That(partieDeChasse.Terrain.NbGalinettes).IsEqualTo(nbGalinettes);
+        return partieDeChasse;
+    }
+
+    public static PartieDeChasse ALeStatus(this PartieDeChasse partieDeChasse, PartieStatus expected)
+    {
+        Check.That(partieDeChasse.Status).IsEqualTo(expected);
         return partieDeChasse;
     }
 }
@@ -307,14 +346,23 @@ public void AvecUnChasseurAyantDesBallesEtAssezDeGalinettesSurLeTerrain()
 
     PartieDeChasseService.TirerSurUneGalinette(partieDeChasse.Id, "Bernard");
 
-    var savedPartieDeChasse = Repository.SavedPartieDeChasse()!;
-    savedPartieDeChasse.ShouldHaveChasseurWith("Bernard", ballesRestantes: 7, galinettes: 1);
-    savedPartieDeChasse.ShouldHaveGalinettesOnTerrain(2);
-    savedPartieDeChasse.ShouldHaveEmittedEvent(Now, "Bernard tire sur une galinette");
+    Repository.SavedPartieDeChasse()!
+        .ContientLeChasseurAvec("Bernard", ballesRestantes: 7, galinettes: 1)
+        .ContientLesGalinettes(2)
+        .AÉmisLÉvénement(Now, "Bernard tire sur une galinette");
 }
 ```
 
-33 lignes -> 8 lignes, et le "1 balle en moins, 1 galinette de plus pour Bernard, 1 de moins sur le terrain" saute maintenant aux yeux.
+33 lignes -> 8 lignes, et le "1 balle en moins, 1 galinette de plus pour Bernard, 1 de moins sur le terrain" saute maintenant aux yeux. Chaînées, ces trois lignes se lisent comme une phrase : *"la partie de chasse contient le chasseur Bernard avec 7 balles et 1 galinette, contient 2 galinettes sur le terrain, et a émis l'événement..."* On comprend le changement d'état attendu sans repasser par la case traduction technique.
+
+Ce n'est pas qu'une question de goût. C'est le nom de la méthode qui apparaît dans le message d'échec quand le test devient rouge :
+
+```
+Bouchonnois.Tests.Unit.Service.TirerSurUneGalinette.AvecUnChasseurAyantDesBallesEtAssezDeGalinettesSurLeTerrain
+  at PartieDeChasseAssertions.ContientLeChasseurAvec(...)
+```
+
+`ContientLeChasseurAvec` qui échoue te dit, dans la langue du métier et sans détour, quel fait attendu sur la partie de chasse ne s'est pas produit. `ShouldHaveChasseurWith` aurait dit la même chose, mais dans un vocabulaire qu'il faut d'abord retraduire mentalement en "ah, ça doit vouloir dire que Bernard a le mauvais nombre de balles ou de galinettes". Et un `Check.That(savedPartieDeChasse.Chasseurs[1].BallesRestantes).IsEqualTo(7)` qui échoue ne dit rien du tout du métier - juste qu'un entier ne vaut pas un autre entier, à toi de reconstituer le contexte. Cette différence est minime en train de lire le test tranquillement ; elle devient significative en pleine CI, sous pression, à essayer de comprendre en 10 secondes pourquoi le build est cassé. Moins de traduction mentale entre l'échec et sa compréhension, c'est moins de charge cognitive exactement au moment où on en a le moins à revendre.
 
 ### On vérifie la fiabilité de ces nouveaux outils
 Les `Builders` et les assertions vont devenir le socle de tous les tests du fichier : s'ils mentent, c'est toute la suite de tests qui en hérite silencieusement. On introduit un mutant à la main dans `PartieDeChasseService`, exactement comme en Histoire 1 :
@@ -362,9 +410,9 @@ public void AvecUnChasseurAyantDesBallesEtAssezDeGalinettesSurLeTerrain()
 
     Then(savedPartieDeChasse =>
     {
-        savedPartieDeChasse.ShouldHaveChasseurWith("Bernard", ballesRestantes: 7, galinettes: 1);
-        savedPartieDeChasse.ShouldHaveGalinettesOnTerrain(2);
-        savedPartieDeChasse.ShouldHaveEmittedEvent(Now, "Bernard tire sur une galinette");
+        savedPartieDeChasse.ContientLeChasseurAvec("Bernard", ballesRestantes: 7, galinettes: 1);
+        savedPartieDeChasse.ContientLesGalinettes(2);
+        savedPartieDeChasse.AÉmisLÉvénement(Now, "Bernard tire sur une galinette");
     });
 }
 ```
@@ -431,12 +479,19 @@ public void AvecUnChasseurAyantDesBallesEtAssezDeGalinettesSurLeTerrain()
     PartieDeChasseService.TirerSurUneGalinette(partieDeChasse.Id, "Bernard");
 
     Repository.SavedPartieDeChasse()!
-        .ShouldHaveChasseurWith("Bernard", ballesRestantes: 7, galinettes: 1)
-        .ShouldHaveGalinettesOnTerrain(2)
-        .ShouldHaveEmittedEvent(Now, "Bernard tire sur une galinette");
+        .ContientLeChasseurAvec("Bernard", ballesRestantes: 7, galinettes: 1)
+        .ContientLesGalinettes(2)
+        .AÉmisLÉvénement(Now, "Bernard tire sur une galinette");
 }
 ```
 
-Même comportement vérifié (`Events` compris - Histoire 1 n'a pas été perdue en route), même robustesse aux mutants - mais un seul se lit en 5 secondes.
+Même comportement vérifié (`Events` compris - Histoire 1 n'a pas été perdue en route), même robustesse aux mutants - mais un seul se lit en 5 secondes, dans la langue du métier plutôt que dans celle du framework de test.
 
 ![Test Data Builders](img/builders.webp)
+
+## Le résultat dans le code
+Cette étape (sans le DSL `Given` / `When` / `Then`, laissé en exercice) est appliquée dans `src/Bouchonnois.Tests/` :
+- `Builders/PartieDeChasseBuilder.cs` et `Builders/ChasseurBuilder.cs`
+- `Assertions/PartieDeChasseAssertions.cs` (`ALeStatus`, `ContientLesGalinettes`, `ContientLeChasseurAvec`, `AÉmisLÉvénement`)
+- `Unit/Service/*.cs` (une classe de test par comportement, héritant de `PartieDeChasseServiceTest`)
+- `Acceptance/ScenarioTests.cs` (déplacé hors de `Unit/`, seul test qui rejoue une partie de bout en bout)

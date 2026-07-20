@@ -95,9 +95,13 @@ On peut aller plus loin en structurant chaque test autour de 3 étapes explicite
 C'est un outil puissant, mais qui a un coût - on y reviendra dans le `Reflect`.
 
 ### Des assertions qui parlent le métier
-`AssertLastEvent` (le fruit de l'Histoire 1) est déjà une bonne intuition : une méthode nommée qui cache 2 `Check.That` derrière une phrase métier. On va simplement généraliser cette intuition à tout le reste du bloc d'assertions.
+`AssertLastEvent` (le fruit de l'Histoire 1) est déjà une bonne intuition : une méthode nommée qui cache 2 `Check.That` derrière une phrase métier. On va généraliser cette intuition à tout le reste du bloc d'assertions - puis pousser le raisonnement un cran plus loin.
 
-Plutôt que d'enchaîner `Check.That(...).IsEqualTo(...)` sur chaque champ, on peut écrire de simples méthodes d'extension sur `PartieDeChasse` (`savedPartieDeChasse.ShouldHaveChasseurWith("Bernard", ballesRestantes: 7, galinettes: 1)`) qui encapsulent en interne les `Check.That` nécessaires. Pas besoin de plonger dans l'API d'extensibilité interne de [`NFluent`](https://www.n-fluent.net/) (`ICheck<T>`, `ExecuteCheck`, ...) pour ça : une méthode d'extension classique sur l'objet métier suffit, se lit aussi bien, et reste accessible à qui ne connaît pas les entrailles de la librairie d'assertion.
+Plutôt que d'enchaîner `Check.That(...).IsEqualTo(...)` sur chaque champ, on écrit de simples méthodes d'extension sur `PartieDeChasse` qui encapsulent en interne les `Check.That` nécessaires. Pas besoin de plonger dans l'API d'extensibilité interne de [`NFluent`](https://www.n-fluent.net/) (`ICheck<T>`, `ExecuteCheck`, ...) pour ça : une méthode d'extension classique sur l'objet métier suffit, se lit aussi bien, et reste accessible à qui ne connaît pas les entrailles de la librairie d'assertion.
+
+Attention cependant au nom que tu leur donnes. `ShouldHaveChasseurWith(...)` est déjà plus lisible qu'un bloc de `Check.That`, mais `Should` / `Have` restent du vocabulaire de testeur, pas du vocabulaire métier - c'est un test de `PartieDeChasse`, pas un test de framework. Préfère une phrase qui pourrait sortir de la bouche d'un chasseur du Bouchonnois : `partieDeChasse.ContientLeChasseurAvec("Bernard", ballesRestantes: 7, galinettes: 1)`, `.ContientLesGalinettes(2)`, `.AÉmisLÉvénement(...)`. Chaînées, ces assertions se lisent comme une phrase qui décrit l'état attendu de la partie de chasse - pas comme une checklist technique.
+
+C'est plus qu'une question de style : quand un de ces tests échoue en CI, le nom de la méthode qui a levé l'exception **est** le message d'erreur. `ContientLeChasseurAvec` qui échoue te dit immédiatement, dans le langage du métier, quel changement d'état attendu ne s'est pas produit - pas besoin de retraduire mentalement un `Check.That(x.Y).IsEqualTo(z)` générique pour comprendre ce qui a cassé. C'est exactement au moment où tu en as le moins (un test rouge, en pleine CI, sous pression) que cette charge mentale en moins compte le plus.
 
 > ⚠️ Ces `Builders` et ces assertions vont devenir le socle de tous les tests du fichier. S'ils mentent ou laissent passer un mutant, c'est toute la suite de tests qui en hérite. Applique-leur la même exigence qu'à l'Histoire 1.
 
@@ -106,7 +110,7 @@ En partant du test `AvecUnChasseurAyantDesBallesEtAssezDeGalinettesSurLeTerrain`
 
 1. **Split** la classe de tests : sors chaque classe imbriquée (`DemarrerUnePartieDeChasse`, `TirerSurUneGalinette`, `Tirer`, ...) dans son propre fichier, avec une classe de base commune qui centralise l'instanciation du `Repository` / `Service` - et qui récupère au passage `Now`, `TimeProvider` et `AssertLastEvent` (il te suffit de les rendre `protected`, tu les as déjà écrits en Histoire 1).
 2. **Écris un `PartieDeChasseBuilder`** (et un `ChasseurBuilder` avec ses `Object Mothers` `Dédé()` / `Bernard()` / `Robert()`) pour remplacer la construction manuelle de `PartieDeChasse` dans l'`Arrange`.
-3. **Écris des méthodes d'extension** sur `PartieDeChasse` pour remplacer le bloc de 13 `Check.That` par 2-3 lignes qui nomment le comportement vérifié - `AssertLastEvent` devient l'une d'entre elles.
+3. **Écris des méthodes d'extension** sur `PartieDeChasse` pour remplacer le bloc de 13 `Check.That` par 2-3 lignes qui nomment le comportement vérifié - `AssertLastEvent` devient l'une d'entre elles. Nomme-les avec le vocabulaire du métier (`ContientLeChasseurAvec`, `AÉmisLÉvénement`, ...), pas avec le vocabulaire `Should`/`Have` calqué sur l'anglais des frameworks de test.
 4. Vérifie que ces nouveaux outils sont dignes de confiance : introduis un mutant à la main dans `PartieDeChasseService` (ex : commente `chasseurQuiTire.NbGalinettes++;`) et assure-toi que ton assertion le détecte.
 5. Propage la même stratégie aux tests voisins (`Tirer`, `PrendreLApéro`, `ReprendreLaPartieDeChasse`, `TerminerLaPartieDeChasse`, ...).
 
@@ -117,6 +121,8 @@ En partant du test `AvecUnChasseurAyantDesBallesEtAssezDeGalinettesSurLeTerrain`
 
 ## Reflect
 Compare un test avant et après ce refactoring : qu'est-ce qui saute aux yeux en premier maintenant ? Est-ce que tu peux répondre à *"qu'est-ce que ce test prouve ?"* en 5 secondes ?
+
+Regarde aussi le nom de tes méthodes d'assertion : sonnent-elles comme une phrase que dirait un chasseur du Bouchonnois, ou comme un vocabulaire de testeur (`Should` / `Have`) plaqué sur le métier ? Imagine ce test rouge en pleine CI, sous pression : est-ce que le nom de la méthode qui a échoué te dit, sans réfléchir, quel changement d'état attendu ne s'est pas produit ?
 
 Si tu es allé jusqu'au DSL `Given` / `When` / `Then`, prends aussi le temps de lister ses limites :
 - Que devient un test simple, à une seule assertion, une fois passé dans le DSL ? Est-ce toujours plus lisible ?
