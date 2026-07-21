@@ -58,7 +58,7 @@ Sauf qu'ici, le gibier n'est pas sur le terrain de Pitibon sur Sauldre. Il est d
 - [Histoire 2 : Le bon test, on le lit](histoires/02.le-bon-test-on-le-lit/enonce.md) : Test Data Builders, Object Mothers, DSL Given/When/Then - ou comment transformer un test de 30 lignes en spec métier lisible en 5 secondes.
 - [Histoire 3 : Le bon test, parfois, ne s'écrit pas à la main](histoires/03.le-bon-test-ne-secrit-pas-a-la-main/enonce.md) : l'Approval Testing pour les scénarios à grosses assertions, et les pièges qui vont avec.
 - [Histoire 4 : Le bon test couvre ce que tu n'as pas pensé à tester](histoires/04.le-bon-test-couvre-ce-que-tu-nas-pas-pense-a-tester/enonce.md) : une propriété, 100 exécutions, et les cas tordus que t'aurais mis des mois à imaginer seul.
-- **Histoire 5 : Le bon test protège l'architecture** : matérialiser les règles d'oignon, d'hexagonal, de Clean Architecture en tests qui échouent au premier merge incorrect.
+- [Histoire 5 : Le bon test protège l'architecture](histoires/05.le-bon-test-protege-larchitecture/enonce.md) : un `using` mort, une règle `ArchUnitNET`, et la couche qui ne devrait dépendre de rien d'autre.
 
 ## Slides
 Les slides de présentation ([Slidev](https://sli.dev/), thème custom repris de la charte visuelle de l'atelier) sont dans [`slides/`](slides).
