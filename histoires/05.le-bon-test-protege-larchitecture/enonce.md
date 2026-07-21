@@ -70,8 +70,14 @@ En `Ports & Adapters`, un port (l'interface) appartient à la couche qui en a be
 2. Ajoute une règle `ApplicationServicesRules` : `Service` ne doit dépendre d'aucune classe de `Repository` (l'éventuelle infrastructure concrète, à venir).
 3. Essaie d'ajouter une règle `InfrastructureRules` (*"tout ce qui réside dans `Repository` doit implémenter `IPartieDeChasseRepository`"*) et lance-la. Que se passe-t-il, maintenant que plus aucune classe ne réside dans ce namespace ? Est-ce que le résultat te semble légitime ?
 
-## Ta mission (partie 4) : une règle d'équipe
-Les règles d'architecture ne se limitent pas aux couches - elles peuvent aussi documenter des conventions d'équipe. Ajoute une règle `Guidelines` : toutes les interfaces du projet doivent commencer par `I` (déjà vrai aujourd'hui - la règle agit comme un garde-fou pour la suite, pas comme un correctif).
+## Ta mission (partie 4) : des règles d'équipe
+Les règles d'architecture ne se limitent pas aux couches - elles peuvent aussi documenter des conventions de nommage. Ajoute une classe `Guidelines` avec :
+- Toutes les interfaces du projet doivent commencer par `I` (déjà vrai aujourd'hui).
+- Une méthode `GetXxx` ne doit pas retourner `void`.
+- Une méthode `IsXxx`/`HasXxx` doit retourner un `bool`.
+- Une méthode `SetXxx` doit retourner `void`.
+
+Lance-les. Est-ce que toutes se comportent pareil ? Que se passe-t-il pour celles qui portent sur des méthodes qui n'existent tout simplement pas encore dans le projet - même piège qu'en partie 3, ou différent ? Si le `Given` vide te bloque à nouveau, cherche comment l'assumer explicitement plutôt que de renoncer à la règle - est-ce toujours la bonne décision, ici, comparé à `InfrastructureRules` ?
 
 ## Pour aller plus loin
 - Repère d'autres frontières qui mériteraient une règle explicite (ex : les classes d'`Exceptions` ne devraient dépendre de rien d'autre que du strict nécessaire).

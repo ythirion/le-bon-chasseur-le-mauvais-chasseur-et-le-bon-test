@@ -18,26 +18,28 @@ using ArchUnitNET.Fluent;
 using ArchUnitNET.Fluent.Syntax.Elements.Types;
 using ArchUnitNET.Loader;
 using ArchUnitNET.xUnit;
-using Bouchonnois.Service;
 using static ArchUnitNET.Fluent.ArchRuleDefinition;
 
-namespace Bouchonnois.Tests.Architecture;
-
-public static class ArchUnitExtensions
+namespace Bouchonnois.Tests.Architecture
 {
-    private static readonly ArchUnitNET.Domain.Architecture Architecture =
-        new ArchLoader()
-            .LoadAssemblies(typeof(PartieDeChasseService).Assembly)
-            .Build();
+    public static class ArchUnitExtensions
+    {
+        public static readonly ArchUnitNET.Domain.Architecture Architecture =
+            new ArchLoader()
+                .LoadAssemblies(typeof(PartieDeChasseService).Assembly)
+                .Build();
 
-    public static GivenTypesConjunction TypesInAssembly() =>
-        Types().That().Are(Architecture.Types);
+        public static GivenTypesConjunction TypesInAssembly() =>
+            Types().That().Are(Architecture.Types);
 
-    public static void Check(this IArchRule rule) => rule.Check(Architecture);
+        public static void Check(this IArchRule rule) => rule.Check(Architecture);
+    }
 }
 ```
 
-`ArchLoader` charge l'assembly compilée `Bouchonnois.dll` (via un type qu'elle contient, `PartieDeChasseService`) et construit un graphe `Architecture` - la liste des types et de leurs dépendances réelles, telles qu'elles existent dans le binaire.
+`ArchLoader` charge l'assembly compilée `Bouchonnois.dll` (via un type qu'elle contient, `PartieDeChasseService` - accessible sans `using` explicite grâce au `global using Bouchonnois.Service;` du fichier `Usings.cs`) et construit un graphe `Architecture` - la liste des types et de leurs dépendances réelles, telles qu'elles existent dans le binaire.
+
+> 🔵 `Architecture` est `public`, pas `private` : la classe `Guidelines` (partie 4) en a besoin pour scoper sa propre règle sur les interfaces au même assembly.
 
 ## Première règle : le Domain ne dépend de rien d'autre
 ```csharp
@@ -159,34 +161,83 @@ Ni vert, ni rouge classique : `ArchUnitNET` **refuse d'évaluer** la règle. Ici
 
 On **n'ajoute pas** cette règle pour l'instant : `Infrastructure` est vide, il n'y a rien à protéger. Le jour où un vrai adapter (SQL, fichier, ...) arrive dans `Repository`, la règle redevient pertinente - elle attend, documentée ici, prête à être réactivée.
 
-## Une règle d'équipe
+## Des règles d'équipe
+Les règles d'architecture ne se limitent pas aux couches - elles documentent aussi des conventions de nommage, à l'identique de l'ancien atelier :
+
 ```csharp
+using ArchUnitNET.Fluent.Syntax.Elements.Members.MethodMembers;
+using ArchUnitNET.Fluent.Syntax.Elements.Types.Interfaces;
+using static ArchUnitNET.Fluent.ArchRuleDefinition;
+
+namespace Bouchonnois.Tests.Architecture;
+
 public class Guidelines
 {
-    private static ArchUnitNET.Fluent.Syntax.Elements.Types.Interfaces.GivenInterfacesConjunction InterfaceTypes() =>
+    private static GivenInterfacesConjunction InterfaceTypes() =>
         Interfaces().That().Are(ArchUnitExtensions.Architecture.Types);
+
+    private static GivenMethodMembersThat Methods() => MethodMembers().That().AreNoConstructors().And();
+
+    [Fact]
+    public void NoGetMethodShouldReturnVoid() =>
+        Methods()
+            .HaveNameMatching("Get[A-Z].*").Should()
+            .NotHaveReturnType(typeof(void))
+            .Check();
+
+    [Fact]
+    public void IserAndHaserShouldReturnBooleans() =>
+        Methods()
+            .HaveNameMatching("Is[A-Z].*").Or()
+            .HaveNameMatching("Has[A-Z].*").Should()
+            .HaveReturnType(typeof(bool))
+            .WithoutRequiringPositiveResults()
+            .Check();
+
+    [Fact]
+    public void SettersShouldNotReturnSomething() =>
+        Methods()
+            .HaveNameMatching("Set[A-Z].*").Should()
+            .HaveReturnType(typeof(void))
+            .WithoutRequiringPositiveResults()
+            .Check();
 
     [Fact]
     public void InterfacesShouldStartWithI() =>
         InterfaceTypes().Should()
             .HaveNameMatching("^I[A-Z].*")
-            .Because("Convention C#")
+            .Because("C# convention...")
             .Check();
 }
 ```
 
-Déjà vrai aujourd'hui (`IPartieDeChasseRepository`) - la règle n'est pas là pour corriger quelque chose de cassé, mais pour empêcher une régression future : la prochaine interface ajoutée au projet, dans six mois, par quelqu'un qui n'a jamais lu ce README, devra suivre la même convention.
+> 🔵 `.HaveNameMatching(pattern)` remplace le `.HaveName(pattern, useRegularExpressions: true)` de l'ancien atelier - la version `ArchUnitNET` utilisée ici sépare une correspondance exacte (`HaveName`) d'une correspondance par pattern (`HaveNameMatching`), au lieu d'un booléen optionnel sur une seule méthode.
+
+`NoGetMethodShouldReturnVoid` a un `Given` non vide dès aujourd'hui - `IPartieDeChasseRepository.GetById` existe - et se comporte comme une règle classique. `InterfacesShouldStartWithI` aussi (`IPartieDeChasseRepository`).
+
+### Encore le piège du Given vide - mais traité différemment cette fois
+Aucune méthode du projet ne s'appelle `Is...`/`Has...` ou `Set...` aujourd'hui. En lançant `IserAndHaserShouldReturnBooleans` sans `WithoutRequiringPositiveResults()`, même échec qu'`InfrastructureRules` plus haut :
+
+```text
+FailedArchRuleException : "Method members that are no constructors and have name matching "Is[A-Z].*" or have name matching "Has[A-Z].*" should have return type "System.Boolean"" failed:
+	The rule requires positive evaluation, not just absence of violations. Use WithoutRequiringPositiveResults() or improve your rule's predicates.
+```
+
+Même cause qu'avant (`Given` vide) - mais cette fois, on ne retire pas la règle, on l'assume explicitement avec `.WithoutRequiringPositiveResults()`. La différence avec `InfrastructureRules` :
+
+- `InfrastructureRules` dépend d'une couche qui n'existe pas encore (aucun adapter concret dans `Repository`) - la règle n'a tout simplement rien à protéger tant que cette couche n'existe pas. On la laisse de côté jusqu'à ce jour.
+- `IserAndHaserShouldReturnBooleans` et `SettersShouldNotReturnSomething` sont des conventions de nommage intemporelles, comme `InterfacesShouldStartWithI` - elles ne dépendent d'aucune couche particulière et peuvent légitimement rester "vides" pendant des mois, jusqu'au jour où quelqu'un ajoute une méthode `IsValide()` ou `SetNom(...)`. Le `Given` vide n'est pas un signe que la règle est inutile ; ici, on l'assume.
 
 ## Reflect
 - Une suite 100% verte (Histoires 1 à 4) peut cohabiter avec une architecture qui part en vrille en toute discrétion : aucun de ces tests ne regarde qui dépend de qui. Les règles d'architecture comblent un angle mort que ni l'`example-based`, ni le `Property-Based Testing` ne couvrent.
 - `Never trust a test you haven't seen fail` (Histoire 1) s'applique texto ici : le mutant temporaire sur `PartieDeChasse` a servi exactement à ça - voir `DomainModelRules` échouer pour une bonne raison, avant de lui faire confiance.
-- Le crash de `InfrastructureRules` sur un `Given` vide est le même risque que les mauvais exemples de l'Histoire 1 ou les générateurs trop étroits de l'Histoire 4 - un test qui ne peut pas vraiment échouer ne prouve rien. Ce qui change ici : ce n'est pas nous qui l'avons repéré à la relecture, c'est la librairie elle-même qui a refusé de laisser passer ce faux vert.
+- Le crash sur un `Given` vide (`InfrastructureRules`, puis `IserAndHaserShouldReturnBooleans`) est le même risque que les mauvais exemples de l'Histoire 1 ou les générateurs trop étroits de l'Histoire 4 - un test qui ne peut pas vraiment échouer ne prouve rien. Ce qui change ici : ce n'est pas nous qui l'avons repéré à la relecture, c'est la librairie elle-même qui a refusé de laisser passer ce faux vert - à charge pour nous de décider, au cas par cas, si on retire la règle (`InfrastructureRules`) ou si on assume le vide (`IserAndHaserShouldReturnBooleans`, `SettersShouldNotReturnSomething`).
 
 ## Le résultat dans le code
 Cette étape s'applique à :
 - `src/Bouchonnois.Tests/Bouchonnois.Tests.csproj` : `TngTech.ArchUnitNET.xUnit`
 - `src/Bouchonnois.Tests/Architecture/ArchitectureRules.cs` : `ArchUnitExtensions`, `DomainModelRules`, `ApplicationServicesRules`
-- `src/Bouchonnois.Tests/Architecture/Guidelines.cs` : `InterfacesShouldStartWithI`
+- `src/Bouchonnois.Tests/Architecture/Guidelines.cs` : `NoGetMethodShouldReturnVoid`, `IserAndHaserShouldReturnBooleans`, `SettersShouldNotReturnSomething`, `InterfacesShouldStartWithI`
 - `src/Bouchonnois/Domain/PartieDeChasse.cs` : suppression du `using Bouchonnois.Service;` mort
 - `src/Bouchonnois/Domain/IPartieDeChasseRepository.cs` : déplacé depuis `Repository/`
 - `src/Bouchonnois/Service/PartieDeChasseService.cs` : suppression du `using Bouchonnois.Repository;` devenu inutile
