@@ -1,0 +1,26 @@
+slides/slides.md
+  s_679d83ea9ad200::t_c9d88022bac4bd 1740-1744,1746-1747
+  s_679d83ea9ad200::t_9b2d7f81ad5527 1634,1637-1678,1680-1689,1691-1700,1702-1731,1733-1739,1748-1812,1814-1818,1820-1831,1834-1844,1847-1853,1855-1880,1882-1900,1902-1917
+  h_0a88d9aba8622a 1635-1636,1679,1690,1701,1732,1745,1813,1819,1832-1833,1845-1846,1854,1881,1901
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "85fe1ebd82e0989c7e2fd21dd29c25fdebc53542",
+  "prompts": {},
+  "humans": {
+    "h_0a88d9aba8622a": {
+      "author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_679d83ea9ad200": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "60636a25-1afd-436c-87ac-5dc07fb42202",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  }
+}
