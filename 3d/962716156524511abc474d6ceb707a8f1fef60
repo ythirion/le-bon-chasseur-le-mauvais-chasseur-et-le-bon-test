@@ -1,0 +1,33 @@
+slides/PLAN.md
+  h_0a88d9aba8622a 1
+slides/slides.md
+  h_0a88d9aba8622a 732,1031-1034,1044-1046,1263,1267-1271
+  s_679d83ea9ad200::t_bf14dc992317e7 854
+  s_679d83ea9ad200::t_76721a9c0a0f91 710,1254-1262,1264-1266,1272
+  s_679d83ea9ad200::t_b5c2e0f974007e 711-731,733-746
+  s_679d83ea9ad200::t_6d19622889f516 1016-1020
+  s_679d83ea9ad200::t_5560393a51e45e 1001-1005,1030
+histoires/02.le-bon-test-on-le-lit/enonce.md
+  h_0a88d9aba8622a 5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "3d962716156524511abc474d6ceb707a8f1fef60",
+  "prompts": {},
+  "humans": {
+    "h_0a88d9aba8622a": {
+      "author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_679d83ea9ad200": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "60636a25-1afd-436c-87ac-5dc07fb42202",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  }
+}
