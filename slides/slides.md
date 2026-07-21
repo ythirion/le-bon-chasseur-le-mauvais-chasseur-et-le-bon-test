@@ -1993,14 +1993,286 @@ codeSlide: true
 <div class="accent-badge mt-6">Le bon test couvre ce que tu n'as pas pensé à tester</div>
 
 ---
+layout: image
+image: 05.le-bon-test-protege-larchitecture/cover.webp
+---
+
+---
 layout: statement
 ---
 
-# Merci !
+# J'ai déjà retrouvé un connecteur Kafka en plein cœur d'un Domain Model...
 
-Des questions ?
+---
+codeSlide: true
+---
 
-<div class="accent-badge mt-6">#sharingiscaring</div>
+# Le Bouchonnois et ailleurs ?
+
+<div class="text-lg space-y-2 mt-4">
+
+- Jour 1 : une belle archi, co-construite, ultra clean
+  - Le projet grossit, les devs tournent, les cas d'usage se complexifient
+- Résultat : tout dépend de tout, plus personne ne mesure l'impact d'un changement
+
+</div>
+
+<div class="accent-badge mt-6">Coder les règles, les vérifier en continu éviterait ce genre de situation</div>
+
+<!-- exactement ce qui a manqué au Kafka du dessus -->
+
+---
+layout: statement
+---
+
+# Comment garantir la pérennité de nos principes / guidances d'architecture ?
+
+---
+layout: section
+---
+
+# Le concept : Architecture (Unit) Tests
+
+<div class="flex items-center gap-12">
+
+<div class="flex-1">
+
+
+Une règle de conception - une frontière entre couches, un sens de dépendance - vérifiée automatiquement, à chaque run, exactement comme n'importe quel autre test.
+
+</div>
+
+<a href="https://xtrem-tdd.netlify.app/Flavours/Architecture/archunit" target="_blank" class="link-preview flex-shrink-0">
+  <div class="link-preview-title">Architecture Unit Tests</div>
+  <div class="link-preview-url">xtrem-tdd.netlify.app/Flavours/Architecture/archunit</div>
+</a>
+
+</div>
+
+---
+layout: section
+---
+
+# Onion Architecture
+
+<img src="/05.le-bon-test-protege-larchitecture/onion.webp" class="w-2/5 mx-auto rounded-lg" />
+
+<div class="text-center mt-4">Le <code>Domain Model</code> au centre - les couches externes en dépendent, jamais l'inverse</div>
+
+---
+layout: section
+---
+
+# Ports & Adapters
+
+<img src="/05.le-bon-test-protege-larchitecture/hexagonal.webp" class="w-3/5 mx-auto rounded-lg" />
+
+<div class="text-center mt-4">Un <code>Port</code> (l'interface) appartient au <code>Domain</code> - seul un <code>Adapter</code> concret appartient à l'infrastructure</div>
+
+<a href="https://xtrem-tdd.netlify.app/Flavours/Architecture/clean-architecture" target="_blank" class="link-preview link-preview-sm absolute top-1 right-1">
+  <div class="link-preview-title">Clean Architecture</div>
+  <div class="link-preview-url">xtrem-tdd.netlify.app/Flavours/Architecture/clean-architecture</div>
+</a>
+
+---
+layout: section
+---
+
+<div class="flex items-center gap-12">
+
+<div class="flex-1">
+
+# ArchUnitNET
+
+```bash
+dotnet add package TngTech.ArchUnitNET.xUnit
+```
+
+```csharp
+using ArchUnitNET.Fluent;
+using ArchUnitNET.Loader;
+using ArchUnitNET.xUnit;
+using static ArchUnitNET.Fluent.ArchRuleDefinition;
+```
+
+</div>
+
+<a href="https://github.com/TNG/ArchUnitNET" target="_blank" class="link-preview flex-shrink-0">
+  <div class="link-preview-title">ArchUnitNET</div>
+  <div class="link-preview-url">github.com/TNG/ArchUnitNET</div>
+</a>
+
+</div>
+
+---
+codeSlide: true
+---
+
+# Le Domain ne dépend de rien d'autre...
+
+```csharp {1-16|18-22}{maxHeight:'340px'}
+private static GivenTypesConjunctionWithDescription ApplicationServices() =>
+    ArchUnitExtensions.TypesInAssembly().And()
+        .ResideInNamespaceMatching(".*Service.*")
+        .As("Application Services");
+
+private static GivenTypesConjunctionWithDescription DomainModel() =>
+    ArchUnitExtensions.TypesInAssembly().And()
+        .ResideInNamespaceMatching(".*Domain.*")
+        .As("Domain Model");
+
+private static GivenTypesConjunctionWithDescription Infrastructure() =>
+    ArchUnitExtensions.TypesInAssembly().And()
+        .ResideInNamespaceMatching(".*Repository.*")
+        .As("Infrastructure");
+
+[Fact]
+public void DomainModelRules() =>
+    DomainModel().Should()
+        .NotDependOnAny(ApplicationServices()).AndShould()
+        .NotDependOnAny(Infrastructure())
+        .Check();
+```
+
+---
+codeSlide: true
+---
+
+# Démo
+
+<v-click>
+
+```csharp
+// Ajout temporaire dans PartieDeChasse.cs
+public class PartieDeChasse
+{
+    public Terrain? Terrain { get; set; }
+    private PartieDeChasseService? _service; // <- vrai couplage, cette fois
+    ...
+}
+```
+
+```text
+FailedArchRuleException:
+	Bouchonnois.Domain.PartieDeChasse does depend on "Bouchonnois.Service.PartieDeChasseService"
+```
+
+<div class="mt-4 text-lg">Rouge, avec un message qui pointe la classe et la dépendance en cause. On retire le champ temporaire, on revient au vert.</div>
+
+</v-click>
+
+---
+layout: statement
+---
+
+# Le port du repository : où doit vivre `IPartieDeChasseRepository` ?
+
+---
+codeSlide: true
+---
+
+# On déplace le port dans le Domain
+
+```csharp
+// Bouchonnois/Domain/IPartieDeChasseRepository.cs (déplacé depuis Repository/)
+namespace Bouchonnois.Domain;
+
+public interface IPartieDeChasseRepository
+{
+    void Save(PartieDeChasse partieDeChasse);
+    PartieDeChasse GetById(Guid partieDeChasseId);
+}
+```
+
+```csharp
+[Fact]
+public void ApplicationServicesRules() =>
+    ApplicationServices().Should()
+        .NotDependOnAny(Infrastructure())
+        .Check();
+```
+
+<div class="mt-4 text-lg"><code>Bouchonnois.Repository</code> ne contient plus aucune classe de production - il attend une future implémentation concrète.</div>
+
+---
+codeSlide: true
+---
+
+# Des règles d'équipe
+
+```csharp {1-6|8-15|17-22}{maxHeight:'340px'}
+[Fact]
+public void NoGetMethodShouldReturnVoid() =>
+    Methods()
+        .HaveNameMatching("Get[A-Z].*").Should()
+        .NotHaveReturnType(typeof(void))
+        .Check();
+
+[Fact]
+public void IserAndHaserShouldReturnBooleans() =>
+    Methods()
+        .HaveNameMatching("Is[A-Z].*").Or()
+        .HaveNameMatching("Has[A-Z].*").Should()
+        .HaveReturnType(typeof(bool))
+        .WithoutRequiringPositiveResults()
+        .Check();
+
+[Fact]
+public void InterfacesShouldStartWithI() =>
+    InterfaceTypes().Should()
+        .HaveNameMatching("^I[A-Z].*")
+        .Because("C# convention...")
+        .Check();
+```
+
+<div class="mt-4 text-lg"><code>WithoutRequiringPositiveResults()</code> : un Given vide n'est pas toujours un signe que la règle est inutile - certaines conventions restent "vides" pendant des mois, prêtes à réagir.</div>
+
+---
+codeSlide: true
+---
+
+# Ce qu'il faut retenir
+
+<div class="mt-4 text-lg space-y-2">
+
+- Un `Architecture Test` protège la **structure**, pas le comportement
+- Il garantit dans le temps le respect des principes/guidances d'architecture - pas juste au moment où l'archi a été dessinée
+- En complément de l'analyse statique de code (`SonarCloud`, ...), pas à sa place : elle regarde le code, lui regarde les dépendances entre composants
+
+</div>
+
+<div class="accent-badge mt-6">Le bon test protège l'architecture - et entretient la confiance qu'on lui porte</div>
+
+---
+codeSlide: true
+---
+
+# 5 questions à se poser
+
+<div class="flex items-center gap-12">
+
+<div class="flex-1 mt-4 text-base space-y-1.5">
+
+**Histoire 1 : Le bon test ne ment pas**
+- [ ] Ce test a-t-il déjà échoué pour une bonne raison ?
+
+**Histoire 2 : Le bon test, on le lit**
+- [ ] Est-ce que je le comprends en 5 secondes, ou dois-je le déchiffrer ?
+
+**Histoire 3 : Le bon test, parfois, ne s'écrit pas à la main**
+- [ ] Est-ce que je vérifie ce qui compte, ou une checklist recopiée à la main ?
+
+**Histoire 4 : Le bon test couvre ce que tu n'as pas pensé à tester**
+- [ ] Ne couvre-t-il que les valeurs que j'ai pensé à écrire ?
+
+**Histoire 5 : Le bon test protège l'architecture**
+- [ ] Protège-t-il aussi la structure, ou seulement le comportement ?
+
+</div>
+
+<img src="/conclusion/win.webp" class="h-72 w-auto object-contain flex-shrink-0" />
+
+</div>
 
 ---
 layout: statement
@@ -2009,3 +2281,34 @@ layout: statement
 # "Never trust a test you haven't seen fail."
 
 Vladimir Khorikov
+
+
+---
+layout: section
+---
+
+# Ressources
+
+<div class="flex items-center justify-center gap-12">
+
+<a href="https://github.com/ythirion/refactoring-du-bouchonnois/" target="_blank" class="flex-1 flex justify-center">
+  <img src="/conclusion/refactoring-du-bouchonnois.webp" class="max-h-[35vh] w-auto object-contain rounded-lg" />
+</a>
+
+<img src="/conclusion/unit-testing-book.webp" class="max-h-[55vh] w-auto object-contain rounded-lg" />
+
+</div>
+
+---
+layout: image
+image: /conclusion/aoc.webp
+---
+
+<div class="w-full h-full">
+<a href="https://coda-dijon.github.io/advent-2026/" target="_blank" class="block w-full h-full"></a>
+</div>
+
+---
+layout: image
+image: /conclusion/conclusion.webp
+---
