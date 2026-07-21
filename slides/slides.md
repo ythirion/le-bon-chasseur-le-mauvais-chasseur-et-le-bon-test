@@ -1632,6 +1632,290 @@ codeSlide: true
 <div class="accent-badge mt-6">Accorder la même importance à nos tests qu'à notre code de production</div>
 
 ---
+layout: image
+image: 04.le-bon-test-couvre-ce-que-tu-nas-pas-pense-a-tester/le-bon-test-couvre-ce-que-tu-nas-pas-imaginé.webp
+---
+
+---
+codeSlide: true
+---
+
+# Un exemple, c'est un point. La règle, c'est une droite.
+
+```csharp
+[Fact]
+public Task AvecPlusieursChasseurs()
+{
+    var command = DémarrerUnePartieDeChasse()
+        .Avec((Chasseurs.Dédé, 20), (Chasseurs.Bernard, 8), (Chasseurs.Robert, 12))
+        .SurUnTerrainRicheEnGalinettes(3);
+
+    PartieDeChasseService.Demarrer(command.Terrain, command.Chasseurs);
+
+    return Verify(Repository.SavedPartieDeChasse())
+        .DontScrubDateTimes();
+}
+```
+
+<div class="mt-6 text-lg">3 chasseurs nommés, un terrain à 3 galinettes. Est-ce que ce sont ces valeurs précises qui comptent - ou une règle plus générale qu'elles illustrent ?</div>
+
+---
+layout: statement
+---
+
+# Un seul test avec des exemples fixes ne peut te dire que : "ça marche pour ces valeurs-là"
+
+---
+layout: section
+---
+
+<img src="/04.le-bon-test-couvre-ce-que-tu-nas-pas-pense-a-tester/pbt-quadrant.webp" class="w-1/2 mx-auto rounded-lg" />
+
+<div class="text-center mt-4">Les tests <code>example-based</code> couvrent bien la conformité métier, mal l'espace des entrées possibles</div>
+
+---
+layout: section
+---
+# Le concept : Property-Based Testing
+
+<div class="flex items-center gap-12">
+
+<div class="flex-1">
+
+
+On fixe une **règle** censée être vraie pour *toute* entrée valide, puis on laisse un framework **générer** des dizaines d'entrées aléatoires pour essayer de la mettre en défaut.
+
+</div>
+
+<a href="https://xtrem-tdd.netlify.app/Flavours/Testing/pbt/" target="_blank" class="link-preview flex-shrink-0">
+  <div class="link-preview-title">Property-Based Testing</div>
+  <div class="link-preview-url">xtrem-tdd.netlify.app/Flavours/Testing/pbt</div>
+</a>
+
+</div>
+
+---
+layout: section
+---
+
+<img src="/04.le-bon-test-couvre-ce-que-tu-nas-pas-pense-a-tester/pbt-details.webp" class="mx-auto rounded-lg" />
+
+---
+layout: section
+---
+
+<img src="/04.le-bon-test-couvre-ce-que-tu-nas-pas-pense-a-tester/pbt-generator.webp" class="w-2/5 mx-auto rounded-lg" />
+
+<div class="text-center mt-4">Un <code>Generator</code> produit les entrées, un <code>Shrinker</code> réduit l'entrée qui a fait échouer la propriété au plus petit cas possible</div>
+
+---
+layout: section
+---
+
+<div class="flex items-center gap-12">
+
+<div class="flex-1">
+
+# FsCheck
+
+```bash
+dotnet add package FsCheck.Xunit
+```
+
+```csharp
+using FsCheck.Fluent;
+using FsCheck.Xunit;
+```
+
+</div>
+
+<a href="https://fscheck.github.io/FsCheck/Properties.html" target="_blank" class="link-preview flex-shrink-0">
+  <div class="link-preview-title">FsCheck</div>
+  <div class="link-preview-url">fscheck.github.io/FsCheck/Properties.html</div>
+</a>
+
+</div>
+
+---
+layout: section
+---
+
+# Quelles propriétés identifier ?
+
+<img src="/04.le-bon-test-couvre-ce-que-tu-nas-pas-pense-a-tester/démarrer-example-mapping.webp" class="w-3/5 mx-auto rounded-lg mt-4" />
+
+---
+codeSlide: true
+---
+
+# Démarrer une partie : identifier la règle
+
+```text
+forall (terrain avec des galinettes, groupe de chasseurs tous armés)
+La partie de chasse doit démarrer avec succès
+```
+
+<div class="mt-6 text-lg space-y-2">
+
+- Peu importe le nom du terrain ou des chasseurs
+- Peu importe leur nombre
+- Seule compte la précondition : au moins 1 galinette, au moins 1 balle chacun
+
+</div>
+
+---
+codeSlide: true
+---
+
+# Les générateurs
+
+```csharp {all|1-2|4-7|9-12|14-17}{maxHeight:'380px'}
+private static FsCheck.Gen<string> NomGenerator()
+    => ArbMap.Default.GeneratorFor<string>().Where(nom => !string.IsNullOrWhiteSpace(nom));
+
+private static FsCheck.Arbitrary<(string nom, int nbGalinettes)> TerrainRicheEnGalinettesGenerator()
+    => (from nom in NomGenerator()
+        from nbGalinettes in Gen.Choose(1, 1000)
+        select (nom, nbGalinettes)).ToArbitrary();
+
+private static FsCheck.Gen<(string nom, int nbBalles)> ChasseurArméGenerator()
+    => from nom in NomGenerator()
+        from nbBalles in Gen.Choose(1, 1000)
+        select (nom, nbBalles);
+
+private static FsCheck.Arbitrary<List<(string nom, int nbBalles)>> GroupeDeChasseursArmésGenerator()
+    => (from nbChasseurs in Gen.Choose(1, 50)
+        from chasseurs in Gen.ListOf(ChasseurArméGenerator(), nbChasseurs)
+        select chasseurs).ToArbitrary();
+```
+
+---
+codeSlide: true
+---
+
+# La propriété
+
+```csharp
+[Property]
+public FsCheck.Property Sur1TerrainAvecGalinettesEtDesChasseursArmésLaPartieDémarre()
+    => Prop.ForAll(
+        TerrainRicheEnGalinettesGenerator(),
+        GroupeDeChasseursArmésGenerator(),
+        (terrain, chasseurs) =>
+        {
+            var id = PartieDeChasseService.Demarrer(terrain, chasseurs);
+            return Repository.SavedPartieDeChasse()!.Id == id;
+        });
+```
+
+<div class="mt-6 text-lg">1 seul test qui vaut, à lui seul, des dizaines d'exécutions de <code>Demarrer</code> avec des entrées différentes à chaque run.</div>
+
+<div class="accent-badge mt-4">Complémentaire avec des tests d'exemples, pas un remplacement</div>
+
+---
+layout: statement
+---
+
+# Les cas non-passants aussi sont des propriétés
+
+---
+codeSlide: true
+---
+
+# Sans chasseurs
+
+```text
+forall (terrain riche en galinettes)
+La partie ne démarre pas sans chasseurs
+```
+
+<v-click>
+
+```csharp
+[Property]
+public FsCheck.Property SansChasseursSurNImporteQuelTerrainRicheEnGalinettes()
+    => Prop.ForAll(
+        TerrainRicheEnGalinettesGenerator(),
+        terrain =>
+            EchoueAvec<ImpossibleDeDémarrerUnePartieSansChasseur>(
+                terrain,
+                [],
+                savedPartieDeChasse => savedPartieDeChasse == null));
+```
+
+</v-click>
+
+---
+codeSlide: true
+---
+
+# Sans galinettes
+
+```csharp {all|1-5|10-11|13-16}
+private static FsCheck.Arbitrary<(string nom, int nbGalinettes)> TerrainSansGalinettesGenerator()
+    => (from nom in NomGenerator()
+        // On généralise au-delà de 0 : n'importe quelle valeur "pas au moins 1" doit échouer
+        from nbGalinettes in Gen.Choose(-1000, 0)
+        select (nom, nbGalinettes)).ToArbitrary();
+
+[Property]
+public FsCheck.Property SurNImporteQuelTerrainSansGalinettesLaPartieNeDémarrePas()
+    => Prop.ForAll(
+        TerrainSansGalinettesGenerator(),
+        GroupeDeChasseursArmésOuVideGenerator().ToArbitrary(),
+        (terrain, chasseurs) =>
+            EchoueAvec<ImpossibleDeDémarrerUnePartieSansGalinettes>(
+                terrain,
+                chasseurs,
+                savedPartieDeChasse => savedPartieDeChasse == null));
+```
+
+<div class="mt-4 text-lg">Le code original ne vérifiait que <code>0</code> galinette. La propriété teste aussi <code>-1</code>, <code>-847</code>, ... - des cas que personne n'aurait pensé à écrire à la main.</div>
+
+---
+codeSlide: true
+---
+
+# Au moins un chasseur sans balle
+
+```csharp {maxHeight:'380px'}
+private static FsCheck.Gen<(string nom, int nbBalles)> ChasseurSansBalleGenerator()
+    => from nom in NomGenerator() select (nom, 0);
+
+private static FsCheck.Arbitrary<List<(string nom, int nbBalles)>> GroupeAvecAuMoinsUnChasseurSansBalleGenerator()
+    => (from chasseursArmés in GroupeDeChasseursArmésOuVideGenerator()
+        from chasseurSansBalle in ChasseurSansBalleGenerator()
+        select chasseursArmés.Append(chasseurSansBalle).ToList()).ToArbitrary();
+
+[Property]
+public FsCheck.Property SiAuMoinsUnChasseurSansBalleLaPartieNeDémarrePas()
+    => Prop.ForAll(
+        TerrainRicheEnGalinettesGenerator(),
+        GroupeAvecAuMoinsUnChasseurSansBalleGenerator(),
+        (terrain, chasseurs) =>
+            EchoueAvec<ImpossibleDeDémarrerUnePartieAvecUnChasseurSansBalle>(
+                terrain,
+                chasseurs,
+                savedPartieDeChasse => savedPartieDeChasse == null));
+```
+
+---
+codeSlide: true
+---
+
+# Ce qu'il faut retenir
+
+<div class="mt-4 text-lg space-y-2">
+
+- Une règle générale, pas une valeur : `forall(x, y, ...) la propriété tient`
+- Les cas passants **et** les cas d'échec se prêtent aux propriétés
+- Une propriété qui échoue se réduit (`shrinking`) au plus petit cas qui casse encore
+
+</div>
+
+<div class="accent-badge mt-6">Le bon test couvre ce que tu n'as pas pensé à tester</div>
+
+---
 layout: statement
 ---
 
