@@ -1,0 +1,28 @@
+README.md
+  s_679d83ea9ad200::t_a8cad03f7edf4b 60
+histoires/04.le-bon-test-couvre-ce-que-tu-nas-pas-pense-a-tester/enonce.md
+  s_679d83ea9ad200::t_b0267945518800 1-71
+histoires/04.le-bon-test-couvre-ce-que-tu-nas-pas-pense-a-tester/solution.md
+  s_679d83ea9ad200::t_2665a9f946d8d3 1-144
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "7128197c813fb6fad9d9544a666ea6452a66cda0",
+  "prompts": {},
+  "humans": {
+    "h_0a88d9aba8622a": {
+      "author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_679d83ea9ad200": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "60636a25-1afd-436c-87ac-5dc07fb42202",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  }
+}
