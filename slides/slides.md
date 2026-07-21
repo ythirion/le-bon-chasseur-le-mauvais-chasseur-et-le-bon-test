@@ -1633,7 +1633,7 @@ codeSlide: true
 
 ---
 layout: image
-image: 04.le-bon-test-couvre-ce-que-tu-nas-pas-pense-a-tester/le-bon-test-couvre-ce-que-tu-nas-pas-imaginé.webp
+image: 04.le-bon-test-couvre-ce-que-tu-nas-pas-pense-a-tester/le-bon-test-couvre-ce-que-tu-nas-pas-imaginee.webp
 ---
 
 ---
@@ -1742,7 +1742,7 @@ layout: section
 
 # Quelles propriétés identifier ?
 
-<img src="/04.le-bon-test-couvre-ce-que-tu-nas-pas-pense-a-tester/démarrer-example-mapping.webp" class="w-3/5 mx-auto rounded-lg mt-4" />
+<img src="/04.le-bon-test-couvre-ce-que-tu-nas-pas-pense-a-tester/demarrer-example-mapping.webp" class="w-3/5 mx-auto rounded-lg mt-4" />
 
 ---
 codeSlide: true
