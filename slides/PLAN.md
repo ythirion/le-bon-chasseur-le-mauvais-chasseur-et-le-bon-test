@@ -1,14 +1,4 @@
-- Un test qui contient un mensonge
-- Quoi mais on a 100% de code coverage - comment c'est possible ?
-- Code Coverage et Branch Coverage - métrique quantitative pas qualitative
-	- Bon indicateur négatif mais pas un bon indicateur positif
-- Mutation Testing à la rescousse
-	- Démo : mutation à la main
-- Stryker : trouve des mutants - screen
-  - Avoir un rapport sous la main
-  - Démo : tueur de mutant - assert EventHasBeenEmitted
-- A few minutes later
-- Plus de mutants
+
 ...
 - Conclusion : revenir sur la phrase -> comment distinguer un bon test d'un mauvais test
 - QR Code slides

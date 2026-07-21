@@ -708,6 +708,43 @@ layout: section
 <img src="/01.le-bon-test-ne-ment-pas/mutation-100.webp" class="mx-auto rounded-lg" />
 
 ---
+codeSlide: true
+---
+
+# Mutation Testing : ce qu'il faut retenir
+
+<div class="grid grid-cols-2 gap-8 mt-4">
+
+<div>
+
+### Code Coverage
+Métrique **quantitative**
+
+Combien de lignes/branches sont *exécutées* par les tests
+
+</div>
+
+<div>
+
+### Mutation Testing
+Métrique **qualitative**
+
+En quoi ce qui est exécuté est réellement *vérifié* par les tests
+
+</div>
+
+</div>
+
+<div class="mt-8 text-lg space-y-2">
+
+- Permet de jauger la **qualité** de nos tests
+- Permet aussi d'identifier des **cas limites** auxquels on n'avait pas pensé
+
+</div>
+
+<div class="accent-badge mt-6">Lent à exécuter</div>
+
+---
 layout: image
 image: /02.le-bon-test-on-le-lit/le-bon-test-on-le-lit.webp
 ---
@@ -814,6 +851,7 @@ var address = new Address("Rue Sainte Catherine", "Bordeaux", new PostalCode("33
 <div class="accent-badge">Si le constructeur d'Address change, chaque test qui construit une Address doit changer</div>
 
 <v-click>
+
 Avec un `Test Data Builder` :
 
 ```csharp
@@ -960,7 +998,11 @@ layout: section
   <img src="/02.le-bon-test-on-le-lit/pull-up-member.webp" class="w-2/5 rounded-lg" />
 </div>
 
-<div class="text-center mt-4">On centralise `Repository` / `Service` (extract field, puis pull up member)</div>
+<div class="text-center mt-4">
+
+On centralise `Repository` / `Service` (extract field, puis pull up member)
+
+</div>
 
 ---
 layout: section
@@ -971,7 +1013,11 @@ layout: section
   <img src="/02.le-bon-test-on-le-lit/split-result.webp" class="w-1/3 rounded-lg" />
 </div>
 
-<div class="text-center mt-2">Chaque classe part `safe` dans son propre fichier</div>
+<div class="text-center mt-2">
+
+Chaque classe part `safe` dans son propre fichier
+
+</div>
 
 ---
 layout: section
@@ -981,7 +1027,11 @@ layout: section
 
 <img src="/02.le-bon-test-on-le-lit/acceptance-unit.webp" class="w-2/5 mx-auto rounded-lg" />
 
-<div class="text-center mt-4">`ScenarioTests.cs` rejoue une partie entière : ce n'est pas un test unitaire, il mérite son propre dossier</div>
+<div class="text-center mt-4">
+
+`ScenarioTests.cs` rejoue une partie entière : ce n'est pas un test unitaire, il mérite son propre dossier
+
+</div>
 
 ---
 codeSlide: true
@@ -991,7 +1041,9 @@ codeSlide: true
 
 <div class="flex flex-row items-center gap-8">
 
-<img src="/02.le-bon-test-on-le-lit/partie-de-chasse-builder.webp" class="w-1/2 rounded-lg" />
+<v-click>
+    <img src="/02.le-bon-test-on-le-lit/partie-de-chasse-builder.webp" class="w-1/2 rounded-lg" />
+</v-click>
 
 <div class="flex-1">
 
@@ -1198,6 +1250,25 @@ layout: statement
 # Le bon test, on le lit en 5 secondes
 
 <div class="accent-badge mt-6">Test Data Builders + Object Mothers + assertions métier</div>
+
+---
+codeSlide: true
+---
+
+# Le bon test, on le lit : ce qu'il faut retenir
+
+<div class="mt-4 text-lg space-y-2">
+
+- **Test Data Builders + Object Mothers** : cachent le bruit de l'`Arrange`, ne laissent apparaître que ce qui compte pour le test
+- **Assertions métier** (`ContientLeChasseurAvec`, `AÉmisLÉvénement`, ...) : le nom de la méthode devient le message d'erreur quand le test échoue
+
+</div>
+
+<div class="accent-badge mt-6">
+
+Élimine ce qui n'est pas pertinent, et amplifie l'essentiel du test.
+
+</div>
 
 ---
 layout: statement

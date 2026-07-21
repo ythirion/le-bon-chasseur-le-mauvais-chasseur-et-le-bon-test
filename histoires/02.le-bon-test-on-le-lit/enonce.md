@@ -2,7 +2,7 @@
 > "Any fool can write code that a computer can understand. Good programmers write code that humans can understand." — Martin Fowler
 
 ## Un test qu'il faut déchiffrer
-Si tu as fait l'Histoire 1, tu as tué tes mutants : `PartieDeChasseServiceTests.cs` vérifie maintenant `Events` partout, `Stryker` ne trouve plus grand-chose à se mettre sous la dent, et la CI est verte pour de bonnes raisons. Bravo.
+Si tu as fait l'Histoire 1, tu as tué des mutants : `PartieDeChasseServiceTests.cs` vérifie maintenant `Events` partout, `Stryker` ne trouve plus grand-chose à se mettre sous la dent. Bravo.
 
 Regarde pourtant ce que ça a donné sur `AvecUnChasseurAyantDesBallesEtAssezDeGalinettesSurLeTerrain`, dans `src/Bouchonnois.Tests/Service/PartieDeChasseServiceTests.cs`, une fois la correction appliquée :
 
