@@ -1,6 +1,5 @@
 using Bouchonnois.Domain;
 using Bouchonnois.Domain.Exceptions;
-using Bouchonnois.Repository;
 
 namespace Bouchonnois.Service
 {
