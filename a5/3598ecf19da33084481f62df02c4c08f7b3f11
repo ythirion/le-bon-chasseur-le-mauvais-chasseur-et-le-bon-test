@@ -1,0 +1,41 @@
+src/Bouchonnois.Tests/Builders/ChasseurBuilder.cs
+  s_679d83ea9ad200::t_a908fe52796fbf 20-22
+src/Bouchonnois.Tests/Unit/Service/PartieDeChasseServiceTest.cs
+  s_679d83ea9ad200::t_240ba2ff81afab 24-39
+src/Bouchonnois.Tests/Unit/Service/Tirer.cs
+  s_679d83ea9ad200::t_4a40aed2d262ba 2-3,5
+  s_679d83ea9ad200::t_7fd0deaa3fda20 27,31,37,39,41-42,44-45
+  h_0a88d9aba8622a 1,4,40,43
+  s_679d83ea9ad200::t_bad0694ef7afb2 32-36,38
+  s_679d83ea9ad200::t_542888a10880b4 28-30
+  s_679d83ea9ad200::t_8cc5fdc9fbbbc2 121
+src/Bouchonnois.Tests/Bouchonnois.Tests.csproj
+  s_679d83ea9ad200::t_6442f08d9485e6 13
+src/Bouchonnois.Tests/Unit/Service/DemarrerUnePartieDeChasse.cs
+  s_679d83ea9ad200::t_0d288a90d71529 1-3
+  s_679d83ea9ad200::t_a800280d59c3bf 39-43,45-46,48-56,67-93,95-104
+  s_679d83ea9ad200::t_ee127fe72f2bf0 21,24,29,34,58
+  s_679d83ea9ad200::t_30ba85f3a36646 22,25-27,30-32,35-37,57,59-66,94
+  s_679d83ea9ad200::t_b9e12d3493b740 105
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "a53598ecf19da33084481f62df02c4c08f7b3f11",
+  "prompts": {},
+  "humans": {
+    "h_0a88d9aba8622a": {
+      "author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_679d83ea9ad200": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "60636a25-1afd-436c-87ac-5dc07fb42202",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  }
+}
