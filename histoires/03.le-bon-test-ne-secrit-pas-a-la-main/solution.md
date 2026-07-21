@@ -10,28 +10,33 @@ Dans `PartieDeChasseServiceTests.cs` / `ScenarioTests.cs`, trois tests sont de b
 - `ConsulterStatus.QuandLaPartieVientDeDémarrer` / `QuandLaPartieEstTerminée` : la sortie textuelle complète de `ConsulterStatus`
 - `ScenarioTests.DéroulerUnePartie` : un scénario de bout en bout, validé par une seule `string` de 19 lignes recopiée depuis une exécution passée
 
-Dans les trois cas, le point commun est le même : ce qui est vérifié n'est pas "2-3 faits", c'est **tout**. Les assertions métier de l'Histoire 2 ne changeraient rien au problème - elles ne feraient que renommer la même liste de vérifications ligne par ligne.
+Sur `AvecPlusieursChasseurs`, les assertions métier de l'Histoire 2 fonctionneraient (`ContientLeChasseurAvec(...)` répété pour chaque chasseur ferait déjà passer le test de 13 à ~6 lignes) - mais elles vérifient toujours "champ par champ", donc elles grossissent avec le nombre de chasseurs ou de champs. Sur `ConsulterStatus` et `ScenarioTests`, ce n'est même plus une option : ce qui est vérifié est une `string` narrative, il n'y a pas de "champ" sur lequel accrocher une assertion nommée. Dans les trois cas, l'`Approval Testing` évite d'avoir à écrire - et maintenir - une checklist à la main.
 
 ## Ajouter la dépendance
 ```bash
 dotnet add package Verify.xUnit
 ```
 
+Deux `global using` en plus dans `Usings.cs`, pour ne pas les répéter dans chaque fichier de test :
+
+```csharp
+global using VerifyTests;
+global using static VerifyXunit.Verifier;
+```
+
+> 🔵 Si tu as déjà croisé du code `Verify` avec une annotation `[UsesVerify]` sur la classe de test : elle a disparu des versions récentes de `Verify.xUnit` (elle servait à brancher xUnit sur des fonctionnalités que la librairie gère nativement aujourd'hui). Inutile de la chercher, `Verify(...)` suffit.
+
 ## Refactorer `DemarrerUnePartieDeChasse.AvecPlusieursChasseurs`
 On transforme le test en `Approval Test` :
-- Ajout de l'annotation `[UsesVerify]` sur la classe de test
 - La méthode de test renvoie désormais un `Task`
 - L'assertion devient un `return Verify(...)`
 
 ```csharp
-[UsesVerify]
 public class DemarrerUnePartieDeChasse : PartieDeChasseServiceTest
 {
     [Fact]
     public Task AvecPlusieursChasseurs()
     {
-        var repository = new PartieDeChasseRepositoryForTests();
-        var service = new PartieDeChasseService(repository, () => DateTime.Now);
         var chasseurs = new List<(string, int)>
         {
             ("Dédé", 20),
@@ -39,12 +44,14 @@ public class DemarrerUnePartieDeChasse : PartieDeChasseServiceTest
             ("Robert", 12)
         };
 
-        service.Demarrer(("Pitibon sur Sauldre", 3), chasseurs);
+        PartieDeChasseService.Demarrer(("Pitibon sur Sauldre", 3), chasseurs);
 
-        return Verify(repository.SavedPartieDeChasse());
+        return Verify(Repository.SavedPartieDeChasse());
     }
 }
 ```
+
+(`Repository` et `PartieDeChasseService` viennent de `PartieDeChasseServiceTest`, la classe de base introduite en Histoire 2 - inutile de recréer un `repository`/`service` local.)
 
 Premier lancement : le fichier `DemarrerUnePartieDeChasse.AvecPlusieursChasseurs.verified.txt` n'existe pas encore, le test échoue, et l'outil de comparaison de fichiers configuré s'ouvre :
 
@@ -87,7 +94,7 @@ Le contenu proposé - la sortie réelle du test - ressemble à ceci une fois app
 🔵 On perd cependant l'assertion qu'on avait avant sur l'horodatage exact. Si on veut la garder :
 
 ```csharp
-return Verify(repository.SavedPartieDeChasse())
+return Verify(Repository.SavedPartieDeChasse())
     .DontScrubDateTimes();
 ```
 
@@ -120,7 +127,6 @@ Même stratégie sur les deux tests de `ConsulterStatus` : on remplace le `Check
 C'est ici que le gain est le plus net : la `string` de 19 lignes recopiée à la main disparaît complètement.
 
 ```csharp
-[UsesVerify]
 public class ScenarioTests
 {
     [Fact]
@@ -159,7 +165,6 @@ Le test passe, il est fiable - mais pas très lisible : beaucoup de duplication 
 
 ### Extraction de champs
 ```csharp
-[UsesVerify]
 public class ScenarioTests
 {
     private DateTime _time = new(2024, 4, 25, 9, 0, 0);
@@ -249,7 +254,6 @@ act();
 Puis on l'utilise partout, `try / catch` compris (le tir sans balle attendu au milieu du scénario) :
 
 ```csharp
-[UsesVerify]
 public class ScenarioTests
 {
     private DateTime _time = new(2024, 4, 25, 9, 0, 0);
@@ -270,12 +274,12 @@ public class ScenarioTests
 
         var id = _service.Demarrer(command.Terrain, command.Chasseurs);
 
-        After(10.Minutes(), () => _service.Tirer(id, Chasseurs.Dédé));
-        After(30.Minutes(), () => _service.TirerSurUneGalinette(id, Chasseurs.Robert));
-        After(20.Minutes(), () => _service.PrendreLapéro(id));
-        After(1.Hours(), () => _service.ReprendreLaPartie(id));
+        After(TimeSpan.FromMinutes(10), () => _service.Tirer(id, Chasseurs.Dédé));
+        After(TimeSpan.FromMinutes(30), () => _service.TirerSurUneGalinette(id, Chasseurs.Robert));
+        After(TimeSpan.FromMinutes(20), () => _service.PrendreLapéro(id));
+        After(TimeSpan.FromHours(1), () => _service.ReprendreLaPartie(id));
         // ... reste du scénario, une ligne par action ...
-        After(30.Minutes(), () => _service.TerminerLaPartie(id));
+        After(TimeSpan.FromMinutes(30), () => _service.TerminerLaPartie(id));
 
         return Verify(_service.ConsulterStatus(id));
     }
@@ -297,6 +301,26 @@ public class ScenarioTests
 
 À chaque étape de ce nettoyage, on relance le test : il reste vert, le fichier `.verified.txt` ne bouge pas d'un caractère - la preuve qu'on a changé la forme du test, jamais ce qu'il approuve.
 
+`CommandBuilder` et `Chasseurs` ne servent pas qu'à `ScenarioTests` : `DemarrerUnePartieDeChasse.AvecPlusieursChasseurs` appelle `Demarrer` avec la même forme de commande. On en profite pour l'aligner :
+
+```csharp
+public class DemarrerUnePartieDeChasse : PartieDeChasseServiceTest
+{
+    [Fact]
+    public Task AvecPlusieursChasseurs()
+    {
+        var command = DémarrerUnePartieDeChasse()
+            .Avec((Chasseurs.Dédé, 20), (Chasseurs.Bernard, 8), (Chasseurs.Robert, 12))
+            .SurUnTerrainRicheEnGalinettes(3);
+
+        PartieDeChasseService.Demarrer(command.Terrain, command.Chasseurs);
+
+        return Verify(Repository.SavedPartieDeChasse())
+            .DontScrubDateTimes();
+    }
+}
+```
+
 ## Reflect
 - Le principal risque de l'Approval Testing, c'est d'approuver sans relire (*"rubber stamping"*) : le diff s'affiche, on clique "accepter" par réflexe parce que le test était rouge et qu'on veut qu'il redevienne vert. Sur `ScenarioTests`, ça reviendrait à valider un changement de comportement (un mauvais galinettes restantes, un message d'événement cassé) sans s'en rendre compte - exactement le mensonge que l'Histoire 1 nous a appris à traquer.
 - Le `scrubbing` ne résout pas le non-déterminisme, il le rend juste inoffensif pour la comparaison : la vraie date/le vrai `Guid` sont toujours générés, seulement remplacés par un placeholder stable au moment de la comparaison. C'est un compromis délibéré, pas une solution au non-déterminisme lui-même (qu'on gère par ailleurs via le `TimeProvider` figé, depuis l'Histoire 1).
@@ -304,6 +328,8 @@ public class ScenarioTests
 
 ## Le résultat dans le code
 Cette étape est appliquée dans `src/Bouchonnois.Tests/` :
-- `Unit/Service/DemarrerUnePartieDeChasse.cs` et `Unit/Service/ConsulterStatus.cs` (`[UsesVerify]`, un `.verified.txt` par test)
+- `Builders/CommandBuilder.cs` et `Builders/Chasseurs.cs`
+- `Unit/Service/DemarrerUnePartieDeChasse.cs` et `Unit/Service/ConsulterStatus.cs` (un `.verified.txt` par test)
 - `Acceptance/ScenarioTests.cs` (scénario nettoyé, toujours dans son propre dossier depuis l'Histoire 2)
+- `Usings.cs` : `global using VerifyTests;` et `global using static VerifyXunit.Verifier;`
 - `.gitignore` : ajout de `*.received.txt`

@@ -56,16 +56,18 @@ Check.That(service.ConsulterStatus(id))
     );
 ```
 
-À première vue, `AvecPlusieursChasseurs` ressemble à n'importe quel autre test "avant Histoire 2" - une checklist de `Check.That`. Et le test de `ScenarioTests` a l'air minutieux : une seule assertion, mais qui semble vérifier l'intégralité de l'historique produit par 19 actions.
+À première vue, `AvecPlusieursChasseurs` ressemble à n'importe quel autre test "avant Histoire 2" - une checklist de `Check.That`. On pourrait le corriger avec les outils de l'Histoire 2 : `savedPartieDeChasse.ALeStatus(EnCours).ContientLesGalinettes(3).ContientLeChasseurAvec("Dédé", 20, 0).ContientLeChasseurAvec("Bernard", 8, 0).ContientLeChasseurAvec("Robert", 12, 0).AÉmisLÉvénement(...)` fonctionnerait très bien, et ferait déjà passer le test de 13 à 6 lignes. Garde cette option sous le coude, on va y revenir.
+
+Le test de `ScenarioTests`, lui, a l'air minutieux : une seule assertion, mais qui semble vérifier l'intégralité de l'historique produit par 19 actions.
 
 **Essaie, honnêtement, d'écrire à la main la valeur attendue de cette `string` de 19 lignes - horodatages compris - sans lancer le test une seule fois.** Personne ne fait ça. Dans les faits, cette chaîne a été obtenue en exécutant le code une première fois, en lisant le résultat, puis en le recopiant tel quel dans le test. Ce n'est pas un jugement métier sur ce que le système *devrait* produire : c'est une capture de ce qu'il produit *déjà*, promue au rang d'assertion.
 
 ## Ta mission (partie 1)
 Pose-toi ces questions sur les deux tests ci-dessus :
 
-- Dans `AvecPlusieursChasseurs`, combien de lignes `Check.That` existent ? Si `Chasseur` gagne un nouveau champ obligatoire demain, combien de ces lignes faut-il toucher - alors que le comportement testé (`Demarrer` avec plusieurs chasseurs) n'a pas changé d'un poil ?
+- Dans `AvecPlusieursChasseurs`, combien de lignes `Check.That` existent ? Si `Chasseur` gagne un nouveau champ obligatoire demain, combien de ces lignes faut-il toucher - alors que le comportement testé (`Demarrer` avec plusieurs chasseurs) n'a pas changé d'un poil ? Et si, une fois passé aux assertions métier de l'Histoire 2, la partie de chasse comptait 20 chasseurs au lieu de 3 - qu'est-ce qui grossirait, `ContientLeChasseurAvec(...)` répété 20 fois, ou un `Approval Test` ?
 - Pour la `string` de `ScenarioTests`, d'où vient concrètement chaque horodatage ? Est-ce que tu peux l'expliquer sans relancer le test - ou est-ce que, comme tout le monde, tu ferais confiance au dernier run vert pour la regénérer ?
-- Est-ce que les techniques de l'Histoire 2 (`Test Data Builders`, assertions métier nommées) t'aideraient vraiment ici ? Essaie d'imaginer à quoi ressemblerait `ContientLeChasseurAvec(...)` répété 3 fois pour `AvecPlusieursChasseurs`, ou une assertion métier qui validerait 19 lignes d'historique d'un coup. Qu'est-ce que ça changerait, au fond ?
+- Essaie d'imaginer une assertion métier qui validerait les 19 lignes d'historique de `ScenarioTests` d'un coup, comme `ContientLeChasseurAvec` le fait pour un chasseur. À quoi ressemblerait-elle ? Qu'est-ce que ça te dit sur la différence entre "quelques faits ciblés" (Histoire 2) et "une trace complète" (ici) ?
 
 Note tes réponses, on va y revenir.
 
@@ -96,9 +98,8 @@ Un détail important : les données non déterministes (`Guid`, `DateTime`, ...)
 ## Ta mission (partie 2) : approuver ce qui mérite de l'être
 1. Ajoute la dépendance `Verify.xUnit` au projet de tests.
 2. Transforme `AvecPlusieursChasseurs` en `Approval Test` :
-   - Annotation `[UsesVerify]` sur la classe de test
    - La méthode de test retourne un `Task` et se termine par `return Verify(...)`
-   - Premier lancement : le fichier `[NomClasse].[NomTest].verified.txt` est vide, le test échoue, un outil de comparaison de fichiers s'ouvre - relis, puis approuve.
+   - Premier lancement : le fichier `[NomClasse].[NomTest].verified.txt` n'existe pas encore, le test échoue et produit un `.received.txt` - relis-le, puis copie-le en `.verified.txt` pour l'approuver (ou laisse ton IDE/outil de diff le faire pour toi).
 3. `Repository.SavedPartieDeChasse()` contient un `Guid` et un `DateTime` : regarde ce que le `scrubbing` par défaut en fait dans le fichier approuvé, puis désactive-le pour l'horodatage (`.DontScrubDateTimes()`) puisqu'on veut le garder sous contrôle.
 4. Casse volontairement le test (modifie le fichier `.verified.txt` à la main) pour t'assurer qu'il détecte bien un écart - `never trust a test you haven't seen fail`, Approval Test ou pas.
 5. Ajoute les fichiers `*.received.txt` au `.gitignore` (c'est la sortie produite à chaque run raté, jamais à committer).
