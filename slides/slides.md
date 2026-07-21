@@ -1633,7 +1633,7 @@ codeSlide: true
 
 ---
 layout: image
-image: 04.le-bon-test-couvre-ce-que-tu-nas-pas-pense-a-tester/le-bon-test-couvre-ce-que-tu-nas-pas-imaginee.webp
+image: 04.le-bon-test-couvre-ce-que-tu-nas-pas-pense-a-tester/le-bon-test-couvre-ce-que-tu-nas-pas-imagine.webp
 ---
 
 ---
