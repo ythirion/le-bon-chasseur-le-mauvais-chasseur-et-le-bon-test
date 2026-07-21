@@ -1737,6 +1737,31 @@ using FsCheck.Xunit;
 </div>
 
 ---
+codeSlide: true
+---
+
+# Écrire une propriété : l'addition
+
+<div class="text-lg mb-2">On annote avec <code>[Property]</code>, on retourne une <code>Property</code> - un prédicat passé à <code>.ToProperty()</code>. FsCheck génère lui-même les paramètres.</div>
+
+```csharp {all|1-4|6-9|11-14}
+// Commutativité : l'ordre des termes n'a pas d'importance -> 2 + 3 = 3 + 2
+[Property]
+public Property Commutativity(int x, int y) =>
+    (Add(x, y) == Add(y, x)).ToProperty();
+
+// Associativité : peu importe comment on regroupe les additions -> (x + 1) + 1 = x + 2
+[Property]
+public Property Associativity(int x) =>
+    (Add(Add(x, 1), 1) == Add(x, 2)).ToProperty();
+
+// Élément neutre : ajouter 0 laisse le nombre inchangé -> x + 0 = x
+[Property]
+public Property Identity(int x) =>
+    (Add(x, 0) == x).ToProperty();
+```
+
+---
 layout: section
 ---
 
