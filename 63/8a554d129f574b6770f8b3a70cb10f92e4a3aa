@@ -1,0 +1,35 @@
+histoires/03.le-bon-test-ne-secrit-pas-a-la-main/enonce.md
+  s_679d83ea9ad200::t_1b85701d1f69d0 59-61
+  s_679d83ea9ad200::t_186d17b2b5903d 102
+  s_679d83ea9ad200::t_3b5b271e9b856b 68,70
+histoires/03.le-bon-test-ne-secrit-pas-a-la-main/solution.md
+  s_679d83ea9ad200::t_e1bc96fd36277f 47,49,54
+  s_679d83ea9ad200::t_0f6244b0662463 97
+  s_679d83ea9ad200::t_3dc7ed17f438a3 304-323
+  s_679d83ea9ad200::t_9f2e9bbf32fca0 331,334
+  s_679d83ea9ad200::t_e65eef5cb0b7d3 13
+  s_679d83ea9ad200::t_3166b384f32cb4 20-28
+  s_679d83ea9ad200::t_797fed84254066 277-280,282,332
+  s_679d83ea9ad200::t_4a9e756912291a 55
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "638a554d129f574b6770f8b3a70cb10f92e4a3aa",
+  "prompts": {},
+  "humans": {
+    "h_0a88d9aba8622a": {
+      "author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_679d83ea9ad200": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "60636a25-1afd-436c-87ac-5dc07fb42202",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  }
+}
