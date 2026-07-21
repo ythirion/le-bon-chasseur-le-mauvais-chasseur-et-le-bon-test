@@ -1,0 +1,28 @@
+README.md
+  s_679d83ea9ad200::t_63d8a20b41fc41 61
+histoires/05.le-bon-test-protege-larchitecture/enonce.md
+  s_679d83ea9ad200::t_7192a6238657c7 1-86
+histoires/05.le-bon-test-protege-larchitecture/solution.md
+  s_679d83ea9ad200::t_e3f125f4a9382f 1-192
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "616a49540a866fbd31d09192769f2fd8457593f2",
+  "prompts": {},
+  "humans": {
+    "h_0a88d9aba8622a": {
+      "author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_679d83ea9ad200": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "60636a25-1afd-436c-87ac-5dc07fb42202",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  }
+}
