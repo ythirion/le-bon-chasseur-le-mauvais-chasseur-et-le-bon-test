@@ -1,0 +1,14 @@
+slides/slides.md
+  h_0a88d9aba8622a 1636
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "877a54136137e68002ced10b7675cd9b962329b4",
+  "prompts": {},
+  "humans": {
+    "h_0a88d9aba8622a": {
+      "author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  }
+}
