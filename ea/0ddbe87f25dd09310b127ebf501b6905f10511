@@ -1,0 +1,35 @@
+src/Bouchonnois.Tests/Architecture/ArchitectureRules.cs
+  s_679d83ea9ad200::t_0e5f210548962e 1-52
+src/Bouchonnois.Tests/Architecture/Guidelines.cs
+  h_0a88d9aba8622a 1,17,24-25,33,35,41
+  s_679d83ea9ad200::t_8b6df126c9b3da 2-11,14,39-40,43-45
+  s_679d83ea9ad200::t_d9565805b189b5 12-13,15-16,18-23,26,28-32,34,36-38,42
+  s_679d83ea9ad200::t_3cf8b1142b5858 27
+src/Bouchonnois.Tests/Bouchonnois.Tests.csproj
+  s_679d83ea9ad200::t_100f7ecaced90c 15
+src/Bouchonnois/Domain/IPartieDeChasseRepository.cs
+  s_679d83ea9ad200::t_0125577a1e77ac 1-8
+src/Bouchonnois/Domain/PartieDeChasse.cs
+  s_679d83ea9ad200::t_07d17668ddcb3f 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "ea0ddbe87f25dd09310b127ebf501b6905f10511",
+  "prompts": {},
+  "humans": {
+    "h_0a88d9aba8622a": {
+      "author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_679d83ea9ad200": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "60636a25-1afd-436c-87ac-5dc07fb42202",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  }
+}
