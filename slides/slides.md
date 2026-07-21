@@ -1810,8 +1810,6 @@ public FsCheck.Property Sur1TerrainAvecGalinettesEtDesChasseursArmésLaPartieDé
 
 <div class="mt-6 text-lg">1 seul test qui vaut, à lui seul, des dizaines d'exécutions de <code>Demarrer</code> avec des entrées différentes à chaque run.</div>
 
-<div class="accent-badge mt-4">Complémentaire avec des tests d'exemples, pas un remplacement</div>
-
 ---
 layout: statement
 ---
@@ -1898,6 +1896,60 @@ public FsCheck.Property SiAuMoinsUnChasseurSansBalleLaPartieNeDémarrePas()
                 chasseurs,
                 savedPartieDeChasse => savedPartieDeChasse == null));
 ```
+
+
+---
+codeSlide: true
+---
+
+Complémentaire avec des tests d'exemples
+
+```csharp {all|3-15|18-28|32-41}{maxHeight:'340px'}
+public class DemarrerUnePartieDeChasse : PartieDeChasseServiceTest
+{
+    // Exemple-based test : avec Approval
+    [Fact]
+    public Task AvecPlusieursChasseurs()
+    {
+        var command = DémarrerUnePartieDeChasse()
+            .Avec((Chasseurs.Dédé, 20), (Chasseurs.Bernard, 8), (Chasseurs.Robert, 12))
+            .SurUnTerrainRicheEnGalinettes(3);
+
+        PartieDeChasseService.Demarrer(command.Terrain, command.Chasseurs);
+
+        return Verify(Repository.SavedPartieDeChasse())
+            .DontScrubDateTimes();
+    }
+    ...
+    
+    // PBT : cas passant
+    [Property]
+    public FsCheck.Property Sur1TerrainAvecGalinettesEtDesChasseursArmésLaPartieDémarre()
+        => Prop.ForAll(
+            TerrainRicheEnGalinettesGenerator(),
+            GroupeDeChasseursArmésGenerator(),
+            (terrain, chasseurs) =>
+            {
+                var id = PartieDeChasseService.Demarrer(terrain, chasseurs);
+                return Repository.SavedPartieDeChasse()!.Id == id;
+            });
+
+    ...
+    
+    // PBT : cas non passants
+    [Property]
+    public FsCheck.Property SansChasseursSurNImporteQuelTerrainRicheEnGalinettes()
+        => Prop.ForAll(
+            TerrainRicheEnGalinettesGenerator(),
+            terrain =>
+                EchoueAvec<ImpossibleDeDémarrerUnePartieSansChasseur>(
+                    terrain,
+                    [],
+                    savedPartieDeChasse => savedPartieDeChasse == null));
+    ...
+```
+
+<div class="accent-badge mt-4">Pas un remplacement</div>
 
 ---
 codeSlide: true
