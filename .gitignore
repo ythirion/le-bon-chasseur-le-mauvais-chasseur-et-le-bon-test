@@ -39,3 +39,6 @@ Desktop.ini
 *.nuget.targets
 
 StrykerOutput/
+
+## Verify
+*.received.txt

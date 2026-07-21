@@ -1,5 +1,7 @@
 global using Xunit;
 global using NFluent;
+global using VerifyTests;
+global using static VerifyXunit.Verifier;
 global using Bouchonnois.Domain;
 global using Bouchonnois.Domain.Exceptions;
 global using Bouchonnois.Service;
@@ -8,3 +10,4 @@ global using Bouchonnois.Tests.Builders;
 global using Bouchonnois.Tests.Assertions;
 global using static Bouchonnois.Tests.Builders.PartieDeChasseBuilder;
 global using static Bouchonnois.Tests.Builders.ChasseurBuilder;
+global using static Bouchonnois.Tests.Builders.CommandBuilder;

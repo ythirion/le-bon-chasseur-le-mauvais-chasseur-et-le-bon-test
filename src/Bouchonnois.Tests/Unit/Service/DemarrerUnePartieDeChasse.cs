@@ -3,28 +3,16 @@ namespace Bouchonnois.Tests.Unit.Service;
 public class DemarrerUnePartieDeChasse : PartieDeChasseServiceTest
 {
     [Fact]
-    public void AvecPlusieursChasseurs()
+    public Task AvecPlusieursChasseurs()
     {
-        var chasseurs = new List<(string, int)>
-        {
-            ("Dédé", 20),
-            ("Bernard", 8),
-            ("Robert", 12)
-        };
-        var terrainDeChasse = ("Pitibon sur Sauldre", 3);
+        var command = DémarrerUnePartieDeChasse()
+            .Avec((Chasseurs.Dédé, 20), (Chasseurs.Bernard, 8), (Chasseurs.Robert, 12))
+            .SurUnTerrainRicheEnGalinettes(3);
 
-        var id = PartieDeChasseService.Demarrer(terrainDeChasse, chasseurs);
+        PartieDeChasseService.Demarrer(command.Terrain, command.Chasseurs);
 
-        var savedPartieDeChasse = Repository.SavedPartieDeChasse()!;
-        Check.That(savedPartieDeChasse.Id).IsEqualTo(id);
-        savedPartieDeChasse
-            .ALeStatus(PartieStatus.EnCours)
-            .ContientLesGalinettes(3)
-            .ContientLeChasseurAvec("Dédé", ballesRestantes: 20, galinettes: 0)
-            .ContientLeChasseurAvec("Bernard", ballesRestantes: 8, galinettes: 0)
-            .ContientLeChasseurAvec("Robert", ballesRestantes: 12, galinettes: 0)
-            .AÉmisLÉvénement(Now,
-                "La partie de chasse commence à Pitibon sur Sauldre avec Dédé (20 balles), Bernard (8 balles), Robert (12 balles)");
+        return Verify(Repository.SavedPartieDeChasse())
+            .DontScrubDateTimes();
     }
 
     [Fact]

@@ -3,7 +3,7 @@ namespace Bouchonnois.Tests.Unit.Service;
 public class ConsulterStatus : PartieDeChasseServiceTest
 {
     [Fact]
-    public void QuandLaPartieVientDeDémarrer()
+    public Task QuandLaPartieVientDeDémarrer()
     {
         var partieDeChasse = AvecUnePartieDeChasseExistante(
             UnePartieDeChasseDuBouchonnois()
@@ -17,14 +17,11 @@ public class ConsulterStatus : PartieDeChasseServiceTest
 
         var status = PartieDeChasseService.ConsulterStatus(partieDeChasse.Id);
 
-        Check.That(status)
-            .IsEqualTo(
-                "09:00 - La partie de chasse commence à Pitibon sur Sauldre avec Dédé (20 balles), Bernard (8 balles), Robert (12 balles)"
-            );
+        return Verify(status).DontScrubDateTimes();
     }
 
     [Fact]
-    public void QuandLaPartieEstTerminée()
+    public Task QuandLaPartieEstTerminée()
     {
         var partieDeChasse = AvecUnePartieDeChasseExistante(
             UnePartieDeChasseDuBouchonnois()
@@ -60,30 +57,7 @@ public class ConsulterStatus : PartieDeChasseServiceTest
 
         var status = PartieDeChasseService.ConsulterStatus(partieDeChasse.Id);
 
-        Check.That(status)
-            .IsEqualTo(
-                @"15:30 - La partie de chasse est terminée, vainqueur :  Robert - 3 galinettes
-15:00 - Robert tire sur une galinette
-14:41 - Bernard tire -> T'as plus de balles mon vieux, chasse à la main
-14:41 - Bernard tire
-14:41 - Bernard tire
-14:41 - Bernard tire
-14:41 - Bernard tire
-14:41 - Bernard tire
-14:41 - Bernard tire
-14:41 - Bernard tire
-14:30 - Reprise de la chasse
-11:40 - Petit apéro
-11:30 - Robert tire sur une galinette
-11:04 - Dédé tire sur une galinette
-11:03 - Bernard tire
-11:02 - Bernard tire
-11:00 - Reprise de la chasse
-10:00 - Petit apéro
-09:40 - Robert tire sur une galinette
-09:10 - Dédé tire
-09:00 - La partie de chasse commence à Pitibon sur Sauldre avec Dédé (20 balles), Bernard (8 balles), Robert (12 balles)"
-            );
+        return Verify(status).DontScrubDateTimes();
     }
 
     [Fact]
