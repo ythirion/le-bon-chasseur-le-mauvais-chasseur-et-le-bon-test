@@ -280,7 +280,8 @@ layout: section
 
 <img src="/codescene.webp" class="w-4/5 mx-auto" />
 <br/>
-2 hostpots : PartieDeChasseService.cs, PartieDeChasseServiceTests.cs
+
+2 hostpots : `PartieDeChasseService.cs`, `PartieDeChasseServiceTests.cs`
 
 ---
 codeSlide: true
@@ -711,7 +712,7 @@ layout: section
 codeSlide: true
 ---
 
-# Mutation Testing : ce qu'il faut retenir
+# Ce qu'il faut retenir
 
 <div class="grid grid-cols-2 gap-8 mt-4">
 
@@ -977,7 +978,7 @@ Address anAdressAtRennes = Addresses.Rennes();
 layout: section
 ---
 
-# Des assertions qui parlent le métier
+# Des assertions qui parlent métier
 
 <div class="text-lg space-y-3 max-w-2xl">
 
@@ -1156,7 +1157,7 @@ Déjà bien plus lisible qu'un bloc de `Check.That`. Mais `Should` / `Have` rest
 codeSlide: true
 ---
 
-# On nomme dans la langue du métier
+# On nomme dans le langage du métier
 
 ```csharp {all|3-9|11-18|20-24}{maxHeight:'340px'}
 public static class PartieDeChasseAssertions
@@ -1255,7 +1256,7 @@ layout: statement
 codeSlide: true
 ---
 
-# Le bon test, on le lit : ce qu'il faut retenir
+# Ce qu'il faut retenir
 
 <div class="mt-4 text-lg space-y-2">
 
@@ -1269,6 +1270,366 @@ codeSlide: true
 Élimine ce qui n'est pas pertinent, et amplifie l'essentiel du test.
 
 </div>
+
+---
+layout: image
+image: /03.le-bon-test-ne-secrit-pas-a-la-main/le-bon-test-ne-secrit-pas-a-la-main.webp
+---
+
+---
+codeSlide: true
+---
+
+# Un test compliqué...
+
+```csharp {all|14-17|19-20|22-23|25-26|28-29|69-75|83-105}{maxHeight:'340px'}
+[Fact]
+public void DéroulerUnePartie()
+{
+    var time = new DateTime(2024, 4, 25, 9, 0, 0);
+    var repository = new PartieDeChasseRepositoryForTests();
+    var service = new PartieDeChasseService(repository, () => time);
+    var chasseurs = new List<(string, int)>
+    {
+        ("Dédé", 20),
+        ("Bernard", 8),
+        ("Robert", 12)
+    };
+    var terrainDeChasse = ("Pitibon sur Sauldre", 4);
+    var id = service.Demarrer(
+        terrainDeChasse,
+        chasseurs
+    );
+
+    time = time.Add(TimeSpan.FromMinutes(10));
+    service.Tirer(id, "Dédé");
+
+    time = time.Add(TimeSpan.FromMinutes(30));
+    service.TirerSurUneGalinette(id, "Robert");
+
+    time = time.Add(TimeSpan.FromMinutes(20));
+    service.PrendreLapéro(id);
+
+    time = time.Add(TimeSpan.FromHours(1));
+    service.ReprendreLaPartie(id);
+
+    time = time.Add(TimeSpan.FromMinutes(2));
+    service.Tirer(id, "Bernard");
+
+    time = time.Add(TimeSpan.FromMinutes(1));
+    service.Tirer(id, "Bernard");
+
+    time = time.Add(TimeSpan.FromMinutes(1));
+    service.TirerSurUneGalinette(id, "Dédé");
+
+    time = time.Add(TimeSpan.FromMinutes(26));
+    service.TirerSurUneGalinette(id, "Robert");
+
+    time = time.Add(TimeSpan.FromMinutes(10));
+    service.PrendreLapéro(id);
+
+    time = time.Add(TimeSpan.FromMinutes(170));
+    service.ReprendreLaPartie(id);
+
+    time = time.Add(TimeSpan.FromMinutes(11));
+    service.Tirer(id, "Bernard");
+
+    time = time.Add(TimeSpan.FromSeconds(1));
+    service.Tirer(id, "Bernard");
+
+    time = time.Add(TimeSpan.FromSeconds(1));
+    service.Tirer(id, "Bernard");
+
+    time = time.Add(TimeSpan.FromSeconds(1));
+    service.Tirer(id, "Bernard");
+
+    time = time.Add(TimeSpan.FromSeconds(1));
+    service.Tirer(id, "Bernard");
+
+    time = time.Add(TimeSpan.FromSeconds(1));
+    service.Tirer(id, "Bernard");
+
+    time = time.Add(TimeSpan.FromSeconds(1));
+
+    try
+    {
+        service.Tirer(id, "Bernard");
+    }
+    catch (TasPlusDeBallesMonVieuxChasseALaMain)
+    {
+    }
+
+    time = time.Add(TimeSpan.FromMinutes(19));
+    service.TirerSurUneGalinette(id, "Robert");
+
+    time = time.Add(TimeSpan.FromMinutes(30));
+    service.TerminerLaPartie(id);
+
+    Check.That(service.ConsulterStatus(id))
+        .IsEqualTo(
+            @"15:30 - La partie de chasse est terminée, vainqueur : Robert - 3 galinettes
+15:00 - Robert tire sur une galinette
+14:41 - Bernard tire -> T'as plus de balles mon vieux, chasse à la main
+14:41 - Bernard tire
+14:41 - Bernard tire
+14:41 - Bernard tire
+14:41 - Bernard tire
+14:41 - Bernard tire
+14:41 - Bernard tire
+14:30 - Reprise de la chasse
+11:40 - Petit apéro
+11:30 - Robert tire sur une galinette
+11:04 - Dédé tire sur une galinette
+11:03 - Bernard tire
+11:02 - Bernard tire
+11:00 - Reprise de la chasse
+10:00 - Petit apéro
+09:40 - Robert tire sur une galinette
+09:10 - Dédé tire
+09:00 - La partie de chasse commence à Pitibon sur Sauldre avec Dédé (20 balles), Bernard (8 balles), Robert (12 balles)"
+        );
+}
+```
+
+<div class="mt-6 text-lg">Une seule assertion, mais qui vérifie l'intégralité de l'historique produit par 19 actions.</div>
+
+---
+layout: section
+---
+
+<div class="text-lg space-y-4 max-w-3xl">
+
+Cette chaîne n'a pas été écrite, elle a été **capturée** - exécutée une fois, puis recopiée telle quelle dans le test.
+
+</div>
+
+---
+layout: section
+---
+
+<div class="flex items-center gap-12">
+
+<div class="flex-1">
+
+# Le concept : Approval Testing
+
+Au lieu d'écrire la valeur attendue à la main, on **capture** la sortie réelle du code dans un fichier de référence, et on laisse un outil comparer, à chaque exécution, la sortie du jour à ce fichier.
+
+</div>
+
+<a href="https://github.com/ythirion/approval-testing-kata#2-approval-testing" target="_blank" class="link-preview flex-shrink-0 w-72">
+  <div class="link-preview-title">Approval Testing</div>
+  <div class="link-preview-url">github.com/ythirion/approval-testing-kata</div>
+</a>
+
+</div>
+
+---
+layout: section
+---
+
+# Le cycle capture / approuve / compare
+
+<div class="text-lg space-y-3 mt-4">
+
+- Pas de "fichier de référence" : le test échoue, on nous montre la sortie produite
+- On la relit, on l'**approuve**
+- Exécutions suivantes : identique 🟢, différent 🔴 (avec un diff sous les yeux)
+
+</div>
+
+---
+layout: statement
+---
+
+# Un air de déjà-vu : le `Golden Master`
+
+<div class="accent-badge mt-6">Michael Feathers - Working Effectively with Legacy Code</div>
+
+---
+layout: section
+---
+
+<div class="text-lg space-y-4 max-w-3xl">
+
+Face à du code existant, sans spec fiable, dont personne ne sait exactement ce qu'il est censé faire : on ne *devine* pas le comportement attendu, on **capture** le comportement actuel, tel quel.
+
+<div class="accent-badge mt-4">
+
+Un système développé par `Toshiba`, une `dette technique` jamais expliquée...
+
+</div>
+
+Ça te rappelle quelque chose ?
+
+</div>
+
+---
+layout: section
+---
+
+<div class="flex items-center gap-12">
+
+<div class="flex-1">
+
+# Verify
+
+```bash
+dotnet add package Verify.xUnit
+```
+
+```csharp
+global using VerifyTests;
+global using static VerifyXunit.Verifier;
+```
+
+</div>
+
+<a href="https://github.com/VerifyTests/Verify" target="_blank" class="link-preview flex-shrink-0 w-72">
+  <div class="link-preview-title">Verify</div>
+  <div class="link-preview-url">github.com/VerifyTests/Verify</div>
+</a>
+
+</div>
+
+---
+codeSlide: true
+---
+
+# Démo
+
+<v-click>
+
+```csharp {all|18}{maxHeight:'380px'}
+public class ScenarioTests
+{
+    [Fact]
+    public Task DéroulerUnePartie()
+    {
+        var time = new DateTime(2024, 4, 25, 9, 0, 0);
+        var repository = new PartieDeChasseRepositoryForTests();
+        var service = new PartieDeChasseService(repository, () => time);
+        var chasseurs = new List<(string, int)> { ("Dédé", 20), ("Bernard", 8), ("Robert", 12) };
+        var id = service.Demarrer(("Pitibon sur Sauldre", 4), chasseurs);
+
+        time = time.Add(TimeSpan.FromMinutes(10));
+        service.Tirer(id, "Dédé");
+        // ... les 17 autres actions du scénario, inchangées ...
+        time = time.Add(TimeSpan.FromMinutes(30));
+        service.TerminerLaPartie(id);
+
+        return Verify(service.ConsulterStatus(id));
+    }
+}
+```
+
+<div class="mt-4 text-lg">La <code>string</code> de 19 lignes recopiée à la main disparaît. Le test passe du premier coup 👌</div>
+
+</v-click>
+
+---
+layout: section
+---
+
+# Vérifier que le test peut échouer
+
+On modifie le fichier `.verified.txt` à la main et on relance.
+
+<div class="flex flex-col items-center gap-3 my-4">
+  <img src="/03.le-bon-test-ne-secrit-pas-a-la-main/compare-files.webp" class="w-4/5 rounded-lg" />
+</div>
+
+<div class="accent-badge">Never trust a test you haven't seen fail - Approval Test ou pas</div>
+
+---
+layout: section
+---
+
+# `.gitignore`
+
+```text
+*.received.txt
+```
+
+<div class="mt-4 text-lg"><code>*.received.txt</code> = la sortie produite à chaque run raté, jamais à committer. Seul le <code>.verified.txt</code> l'est.</div>
+
+---
+layout: section
+---
+
+<div class="flex items-center gap-12">
+
+<div class="flex-1">
+
+# `Boy Scout Rule`
+
+Le test est fiable - mais pas très lisible : duplication, `try / catch` vide, méthode de plus de 80 lignes.
+
+</div>
+
+<img src="/03.le-bon-test-ne-secrit-pas-a-la-main/boy-scout-rule.webp" class="w-2/5 flex-shrink-0 rounded-lg object-contain" />
+
+</div>
+
+---
+layout: image
+image: /01.le-bon-test-ne-ment-pas/a-few-minutes-later.webp
+---
+
+---
+codeSlide: true
+---
+
+# Version refactorée
+
+```csharp {all|3-6|16-19|23-26}{maxHeight:'400px'}
+public class ScenarioTests
+{
+    // Extraction de champs : _time, _repository, _service
+    private DateTime _time = new(2024, 4, 25, 9, 0, 0);
+    private readonly PartieDeChasseRepositoryForTests _repository = new();
+    private readonly PartieDeChasseService _service;
+
+    public ScenarioTests()
+    {
+        _service = new PartieDeChasseService(_repository, () => _time);
+    }
+
+    [Fact]
+    public Task DéroulerUnePartie()
+    {
+        // CommandBuilder + Chasseurs : suppression des string en dur
+        var command = DémarrerUnePartieDeChasse()
+            .Avec((Chasseurs.Dédé, 20), (Chasseurs.Bernard, 8), (Chasseurs.Robert, 12))
+            .SurUnTerrainRicheEnGalinettes();
+
+        var id = _service.Demarrer(command.Terrain, command.Chasseurs);
+
+        // Extraction de méthode : avance le temps, exécute, ignore l'exception éventuelle
+        After(TimeSpan.FromMinutes(10), () => _service.Tirer(id, Chasseurs.Dédé));
+        // ... reste du scénario, une ligne par action ...
+        After(TimeSpan.FromMinutes(30), () => _service.TerminerLaPartie(id));
+
+        return Verify(_service.ConsulterStatus(id));
+    }
+    ...
+}
+```
+
+---
+codeSlide: true
+---
+
+# Ce qu'il faut retenir
+
+<div class="mt-4 text-lg space-y-2">
+
+- `Approval Testing` = capturer la sortie réelle, l'approuver, laisser un outil comparer - à chaque lancement
+- Appliquer la `Boy Scout Rule` sur nos tests
+
+</div>
+
+<div class="accent-badge mt-6">Accorder la même importance à nos tests qu'à notre code de production</div>
 
 ---
 layout: statement
