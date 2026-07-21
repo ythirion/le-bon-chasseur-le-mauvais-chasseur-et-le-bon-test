@@ -21,4 +21,20 @@ public abstract class PartieDeChasseServiceTest
 
         return partieDeChasse;
     }
+
+    // Pour les tests de propriétés sur les cas non-passants : exécute `action` et valide
+    // qu'elle lève bien `TException`, avec une assertion optionnelle sur l'état sauvegardé.
+    protected bool MustFailWith<TException>(Action action, Func<PartieDeChasse?, bool>? assert = null)
+        where TException : Exception
+    {
+        try
+        {
+            action();
+            return false;
+        }
+        catch (TException)
+        {
+            return assert?.Invoke(Repository.SavedPartieDeChasse()) ?? true;
+        }
+    }
 }

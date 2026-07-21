@@ -1,3 +1,8 @@
+using FsCheck;
+using FsCheck.Fluent;
+using FsCheck.Xunit;
+using Check = NFluent.Check;
+
 namespace Bouchonnois.Tests.Unit.Service;
 
 public class Tirer : PartieDeChasseServiceTest
@@ -17,6 +22,25 @@ public class Tirer : PartieDeChasseServiceTest
             .ContientLeChasseurAvec("Bernard", ballesRestantes: 7, galinettes: 0)
             .ContientLesGalinettes(3)
             .AÉmisLÉvénement(Now, "Bernard tire");
+    }
+
+    [Property]
+    public Property TirerRetireExactementUneBalle(
+        NonEmptyString nom,
+        PositiveInt ballesInitiales)
+    {
+        var partieDeChasse = AvecUnePartieDeChasseExistante(
+            UnePartieDeChasseDuBouchonnois()
+                .SurUnTerrainRicheEnGalinettes()
+                .Avec(UnChasseurArmé(nom.Get, ballesInitiales.Get))
+        );
+
+        PartieDeChasseService.Tirer(partieDeChasse.Id, nom.Get);
+
+        return (Repository
+            .SavedPartieDeChasse()!
+            .Chasseurs
+            .Single().BallesRestantes == ballesInitiales.Get - 1).ToProperty();
     }
 
     [Fact]
