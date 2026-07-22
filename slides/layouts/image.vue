@@ -14,8 +14,14 @@ const props = defineProps({
   },
 })
 
+function resolveAssetUrl(url: string) {
+  if (url.startsWith('/'))
+    return import.meta.env.BASE_URL + url.slice(1)
+  return url
+}
+
 const style = computed(() => ({
-  backgroundImage: props.image ? `url("${props.image}")` : undefined,
+  backgroundImage: props.image ? `url("${resolveAssetUrl(props.image)}")` : undefined,
   backgroundRepeat: 'no-repeat',
   backgroundPosition: 'center',
   backgroundSize: props.backgroundSize,
