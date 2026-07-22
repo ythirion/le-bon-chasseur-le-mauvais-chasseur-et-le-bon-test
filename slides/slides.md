@@ -2315,13 +2315,21 @@ layout: section
 
 # Ressources
 
-<div class="flex items-center justify-center gap-12">
+<div class="flex items-start justify-center gap-12">
 
-<a href="https://github.com/ythirion/refactoring-du-bouchonnois/" target="_blank" class="flex-1 flex justify-center">
-  <img src="/conclusion/refactoring-du-bouchonnois.webp" class="max-h-[35vh] w-auto object-contain rounded-lg" />
+<div class="flex-1 flex flex-col items-center gap-4">
+
+<a href="https://github.com/ythirion/refactoring-du-bouchonnois/" target="_blank" class="flex justify-center">
+  <img src="/conclusion/refactoring-du-bouchonnois.webp" class="max-h-[50vh] w-auto object-contain rounded-lg" />
 </a>
 
-<img src="/conclusion/unit-testing-book.webp" class="max-h-[55vh] w-auto object-contain rounded-lg" />
+### Clean Architecture, Tell Don't Ask, FP / Monads, Event Sourcing, ...
+
+</div>
+
+<div class="flex-1 flex justify-center">
+  <img src="/conclusion/unit-testing-book.webp" class="max-h-[55vh] w-auto object-contain rounded-lg" />
+</div>
 
 </div>
 
@@ -2332,6 +2340,14 @@ link: https://coda-dijon.github.io/advent-2026/
 ---
 
 ---
-layout: image
-image: /conclusion/conclusion.webp
+layout: section
 ---
+
+# Merci
+
+<div class="flex items-center justify-center gap-12">
+
+<img src="/conclusion/merci.webp" class="w-3/5 rounded-lg" />
+<img src="/conclusion/qr.webp" class="w-1/5 rounded-lg" />
+
+</div>
