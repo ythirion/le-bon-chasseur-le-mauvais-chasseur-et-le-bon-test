@@ -2302,11 +2302,8 @@ layout: section
 ---
 layout: image
 image: /conclusion/aoc.webp
+link: https://coda-dijon.github.io/advent-2026/
 ---
-
-<div class="w-full h-full">
-<a href="https://coda-dijon.github.io/advent-2026/" target="_blank" class="block w-full h-full"></a>
-</div>
 
 ---
 layout: image
