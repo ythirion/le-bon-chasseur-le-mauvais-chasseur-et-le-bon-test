@@ -1,4 +1,4 @@
-## .NET / C#
+# .NET / C#
 bin/
 obj/
 *.user
@@ -6,31 +6,25 @@ obj/
 *.userosscache
 *.sln.docstates
 
-## Test results
+# Test results
 [Tt]est[Rr]esult*/
 *.trx
 *.coverage
 *.coveragexml
 
-## JetBrains Rider
+# JetBrains
 .idea/
 *.sln.iml
 
-## Visual Studio Code
-.vscode/
-
-## Visual Studio
-.vs/
-
-## macOS
+# macOS
 .DS_Store
 
-## Windows
+# Windows
 Thumbs.db
 ehthumbs.db
 Desktop.ini
 
-## NuGet
+# NuGet
 *.nupkg
 *.snupkg
 **/[Pp]ackages/*
@@ -39,6 +33,12 @@ Desktop.ini
 *.nuget.targets
 
 StrykerOutput/
+
+# Slidev
+node_modules
+dist
+.slidev
+*.local
 
 ## Verify
 *.received.txt
