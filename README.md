@@ -1,14 +1,21 @@
 # Le bon chasseur, le mauvais chasseur, et le bon test
 
 [![SonarCloud Analysis](https://github.com/ythirion/le-bon-chasseur-le-mauvais-chasseur-et-le-bon-test/actions/workflows/sonarcloud.yml/badge.svg)](https://github.com/ythirion/le-bon-chasseur-le-mauvais-chasseur-et-le-bon-test/actions/workflows/sonarcloud.yml)
+[![Publish Slides](https://github.com/ythirion/le-bon-chasseur-le-mauvais-chasseur-et-le-bon-test/actions/workflows/slides.yml/badge.svg)](https://github.com/ythirion/le-bon-chasseur-le-mauvais-chasseur-et-le-bon-test/actions/workflows/slides.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ythirion_le-bon-chasseur-le-mauvais-chasseur-et-le-bon-test&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=ythirion_le-bon-chasseur-le-mauvais-chasseur-et-le-bon-test)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=ythirion_le-bon-chasseur-le-mauvais-chasseur-et-le-bon-test&metric=coverage)](https://sonarcloud.io/summary/new_code?id=ythirion_le-bon-chasseur-le-mauvais-chasseur-et-le-bon-test)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+[![CodeScene general](https://codescene.io/images/analyzed-by-codescene-badge.svg)](https://codescene.io/projects/82673)
+[![CodeScene Average Code Health](https://codescene.io/projects/82673/status-badges/average-code-health)](https://codescene.io/projects/82673)
+[![CodeScene Hotspot Code Health](https://codescene.io/projects/82673/status-badges/hotspot-code-health)](https://codescene.io/projects/82673)
+[![CodeScene System Mastery](https://codescene.io/projects/82673/status-badges/system-mastery)](https://codescene.io/projects/82673)
 
 > "Le mauvais chasseur, il voit un truc qui bouge, il tire. 
 > Le bon chasseur, il voit un truc qui bouge, il tire… mais c'est un bon chasseur."
 
 ![Couverture de l'atelier "Le bon chasseur, le mauvais chasseur, et le bon test"](img/le-bon-chasseur-le-mauvais-chasseur-et-le-bon-test.webp)
+
 > "Le mauvais test, il assert un truc, il passe au vert. Le bon test, il assert un truc, il passe au vert… mais c'est un bon test."
 
 Vu de loin, les deux tests se ressemblent : verts, rapides, présents dans la CI depuis toujours. Vu de près, un seul des deux protège vraiment quelque chose.
@@ -48,11 +55,30 @@ Une base de code en `C#` / `.NET 10` : les chasseurs du Bouchonnois et leurs par
 Sauf qu'ici, le gibier n'est pas sur le terrain de Pitibon sur Sauldre. Il est dans les tests. À chaque histoire, on part à l'affût d'une espèce différente de mauvais test - celui qui ment, celui qu'on ne comprend plus, celui qu'on n'ose plus toucher - avec, à chaque fois, le même déroulé : un symptôme, un diagnostic, un remède.
 
 - [Histoire 1 : Le bon test ne ment pas](histoires/01.le-bon-test-ne-ment-pas/enonce.md) : la chasse aux mutants, pour débusquer les assertions qui passent toujours, parce que *"never trust a test you haven't seen fail"*.
-- **Histoire 2 : Le bon test, on le lit** : Test Data Builders, Object Mothers, DSL Given/When/Then - ou comment transformer un test de 30 lignes en spec métier lisible en 5 secondes.
-- **Histoire 3 : Le bon test, on le maintient** : SRP, DRY, hiérarchie de classes - les principes Clean Code s'appliquent aux tests autant qu'au code de prod.
-- **Histoire 4 : Le bon test, parfois, ne s'écrit pas à la main** : l'Approval Testing pour les scénarios à grosses assertions, et les pièges qui vont avec.
-- **Histoire 5 : Le bon test couvre ce que tu n'as pas pensé à tester** : une propriété, 100 exécutions, et les cas tordus que t'aurais mis des mois à imaginer seul.
-- **Histoire 6 : Le bon test protège l'architecture** : matérialiser les règles d'oignon, d'hexagonal, de Clean Architecture en tests qui échouent au premier merge incorrect.
+- [Histoire 2 : Le bon test, on le lit](histoires/02.le-bon-test-on-le-lit/enonce.md) : Test Data Builders, Object Mothers, DSL Given/When/Then - ou comment transformer un test de 30 lignes en spec métier lisible en 5 secondes.
+- [Histoire 3 : Le bon test, parfois, ne s'écrit pas à la main](histoires/03.le-bon-test-ne-secrit-pas-a-la-main/enonce.md) : l'Approval Testing pour les scénarios à grosses assertions, et les pièges qui vont avec.
+- [Histoire 4 : Le bon test couvre ce que tu n'as pas pensé à tester](histoires/04.le-bon-test-couvre-ce-que-tu-nas-pas-pense-a-tester/enonce.md) : une propriété, 100 exécutions, et les cas tordus que t'aurais mis des mois à imaginer seul.
+- [Histoire 5 : Le bon test protège l'architecture](histoires/05.le-bon-test-protege-larchitecture/enonce.md) : un `using` mort, une règle `ArchUnitNET`, et la couche qui ne devrait dépendre de rien d'autre.
+
+## Slides
+Les slides de présentation ([Slidev](https://sli.dev/), thème custom repris de la charte visuelle de l'atelier) sont dans [`slides/`](slides).
+
+En ligne : **https://ythirion.github.io/le-bon-chasseur-le-mauvais-chasseur-et-le-bon-test/**
+(publiées automatiquement sur GitHub Pages à chaque changement dans `slides/` sur `main`)
+
+**Lancer en local**
+```bash
+cd slides
+npm install
+npm run dev
+```
+Puis ouvre [http://localhost:3030](http://localhost:3030).
+
+**Autres commandes utiles**
+```bash
+npm run build   # build statique dans slides/dist
+npm run export  # export en PDF
+```
 
 ### Pour qui ?
 Développeur·se·s, tech leads, toute personne qui a déjà soupiré devant un fichier de tests de 900 lignes.
