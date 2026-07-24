@@ -1,0 +1,123 @@
+@import url('https://fonts.googleapis.com/css2?family=Bungee&family=Quicksand:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+  --sv-green: #1b3b32;
+  --sv-green-deep: #10241f;
+  --sv-yellow: #f2c14e;
+  --sv-orange: #dd7a4c;
+  --sv-cream: #faf7f0;
+  --sv-brown: #5c4033;
+
+  --slidev-theme-primary: var(--sv-orange);
+}
+
+.slidev-layout {
+  font-family: 'Quicksand', ui-sans-serif, system-ui, sans-serif;
+  background: var(--sv-cream);
+  color: var(--sv-green);
+}
+
+.slidev-layout h1,
+.slidev-layout h2,
+.slidev-layout h3 {
+  font-family: 'Bungee', ui-sans-serif, system-ui, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--sv-green);
+}
+
+.slidev-layout h1 {
+  font-size: 2.75rem;
+  line-height: 1.2;
+}
+
+.slidev-layout strong {
+  color: var(--sv-orange);
+}
+
+.slidev-layout a {
+  color: var(--sv-orange);
+}
+
+.slidev-layout code {
+  font-family: 'Fira Code', ui-monospace, monospace;
+}
+
+/* Dark, illustrated slides (cover / section / statement) */
+.slidev-layout.cover,
+.slidev-layout.section,
+.slidev-layout.statement {
+  background: var(--sv-green);
+  color: var(--sv-cream);
+}
+
+.slidev-layout.cover h1,
+.slidev-layout.cover h2,
+.slidev-layout.section h1,
+.slidev-layout.section h2,
+.slidev-layout.statement h1,
+.slidev-layout.statement h2 {
+  color: var(--sv-cream);
+}
+
+.accent-badge {
+  display: inline-block;
+  background: var(--sv-yellow);
+  color: var(--sv-green);
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.5em 1.2em;
+  font-size: 0.8rem;
+}
+
+.slidev-page {
+  background: var(--sv-cream);
+}
+
+.link-preview {
+  display: block;
+  background: var(--sv-cream);
+  border: 2px solid var(--sv-green);
+  border-radius: 0.5rem;
+  padding: 0.75em 1.2em;
+  text-decoration: none;
+  box-shadow: 0 2px 10px rgb(0 0 0 / 15%);
+  transition: background-color 0.15s ease;
+}
+
+.link-preview:hover {
+  background: color-mix(in srgb, var(--sv-yellow) 25%, transparent);
+}
+
+.link-preview .link-preview-title {
+  font-weight: 700;
+  color: var(--sv-green);
+  font-size: 1rem;
+}
+
+.link-preview .link-preview-url {
+  color: var(--sv-orange);
+  font-size: 0.85rem;
+  font-family: 'Fira Code', ui-monospace, monospace;
+}
+
+.link-preview.link-preview-sm {
+  padding: 0.4em 0.8em;
+}
+
+.link-preview.link-preview-sm .link-preview-title {
+  font-size: 0.8rem;
+}
+
+.link-preview.link-preview-sm .link-preview-url {
+  font-size: 0.65rem;
+}
+
+.mermaid-fit {
+  overflow: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
